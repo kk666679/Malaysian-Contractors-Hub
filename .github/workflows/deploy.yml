@@ -1,0 +1,53 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    
+    - name: Import GPG key
+      uses: crazy-max/ghaction-import-gpg@v5
+      with:
+        gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+        passphrase: ${{ secrets.GPG_PASSPHRASE }}
+        git_user_signingkey: true
+        git_commit_gpgsign: true
+    
+    - name: Setup SSH key
+      uses: webfactory/ssh-agent@v0.7.0
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+        cache: 'pnpm'
+    
+    - name: Install pnpm
+      uses: pnpm/action-setup@v2
+      with:
+        version: 10
+        run_install: false
+    
+    - name: Install dependencies
+      run: pnpm install
+    
+    - name: Build
+      run: pnpm build
+    
+    - name: Deploy
+      if: github.ref == 'refs/heads/main'
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        deploy_key: ${{ secrets.DEPLOY_KEY }}
+        publish_dir: ./dist

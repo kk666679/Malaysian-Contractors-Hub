@@ -1,0 +1,17 @@
+- [ ] Research and Planning
+  - [x] Gather detailed regulatory compliance documents (IWK, TM, JKR, CIDB, MS/ISO building codes)
+  - [x] Research MySejahtera Contractor requirements
+  - [x] Research material costs from Cement & Steel Suppliers Malaysia
+  - [x] Research labor rates by state (KL, Penang, Johor)
+  - [x] Research Green Building Index (GBI) documentation
+  - [x] Research BOMBA certifications for Fire Protection
+  - [x] Research KNX/BACnet for building automation
+  - [x] Research MATV/SMATV signal mapping
+  - [x] Research weather data for Monsoon Risk Planner
+- [x] Design Application Architecture
+- [x] Create Frontend Interface
+- [x] Develop Backend Services
+- [x] Implement Core Features
+- [x] Testing and Deployment
+- [x] Deliver Final Application
+
