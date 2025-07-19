@@ -1,12 +1,12 @@
-# Framer Motion v12 and Navigation Implementation
+# Framer Motion v10 and Navigation Implementation
 
 ## Overview
-This document summarizes the changes made to upgrade the project to Framer Motion v12 and implement comprehensive navigation functionality for all buttons and CTAs.
+This document summarizes the implementation of Framer Motion v10 and comprehensive navigation functionality for all buttons and CTAs.
 
 ## Key Changes
 
 ### 1. Button Component Enhancement
-- Updated the Button component to support Framer Motion v12 animations
+- Updated the Button component to support Framer Motion v10 animations
 - Added navigation functionality using React Router's `useNavigate` hook
 - Implemented consistent hover and tap animations
 - Added support for custom animation props

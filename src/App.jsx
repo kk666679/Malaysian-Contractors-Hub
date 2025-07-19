@@ -46,7 +46,7 @@ const Layout = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-grow pt-16"> {/* Added pt-16 for navbar spacing */}
-        <AnimatePresence mode="wait">
+        <AnimatePresence exitBeforeEnter>
           <Suspense fallback={<LoadingFallback />}>
             <Outlet />
           </Suspense>

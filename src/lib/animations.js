@@ -1,4 +1,4 @@
-// Animation variants for Framer Motion v12
+// Animation variants for Framer Motion v10
 
 export const fadeIn = {
   initial: { opacity: 0 },
@@ -41,10 +41,8 @@ export const buttonTap = {
 }
 
 export const staggerChildren = {
-  animate: {
-    transition: {
-      staggerChildren: 0.1
-    }
+  transition: {
+    staggerChildren: 0.1
   }
 }
 
@@ -56,6 +54,6 @@ export const springTransition = {
 
 export const easeTransition = {
   type: "tween",
-  ease: [0.22, 1, 0.36, 1],
+  ease: "easeInOut",
   duration: 0.4
 }
