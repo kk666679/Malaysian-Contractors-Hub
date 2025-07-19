@@ -1,55 +1,63 @@
 #!/bin/bash
 
-# Exit on error
+# Deploy script for Malaysian Civil & MEP Contractors Hub
+# Deploys the application to https://chemmara.space
+
 set -e
 
-# Colors for output
-GREEN='\033[0;32m'
-YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
-
-echo -e "${YELLOW}=== MEP Project Deployment Script ===${NC}"
-
-# Install dependencies if node_modules doesn't exist
-if [ ! -d "node_modules" ]; then
-  echo -e "${YELLOW}Installing dependencies...${NC}"
-  npm ci
-fi
-
-# Run linting
-echo -e "${YELLOW}Running linter...${NC}"
-npm run lint || true
-
-# Run tests
-echo -e "${YELLOW}Running tests...${NC}"
-npm test || true
+echo "🚀 Starting deployment to chemmara.space..."
 
 # Build the application
-echo -e "${YELLOW}Building application...${NC}"
+echo "📦 Building the application..."
 npm run build
 
-# Git operations
-echo -e "${YELLOW}Git operations${NC}"
+# Create a deployment directory if it doesn't exist
+DEPLOY_DIR="./deploy"
+mkdir -p $DEPLOY_DIR
 
-# Get the current version from package.json
-VERSION=$(node -p "require('./package.json').version")
+# Copy build files to deployment directory
+echo "📋 Copying build files to deployment directory..."
+cp -r ./build/* $DEPLOY_DIR/
 
-# Ask for commit message
-read -p "Enter commit message: " COMMIT_MESSAGE
+# Create .htaccess file for SPA routing
+echo "⚙️ Creating .htaccess file for SPA routing..."
+cat > $DEPLOY_DIR/.htaccess << EOL
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
+</IfModule>
 
-# Add all files
-git add .
+# Enable GZIP compression
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/javascript application/json
+</IfModule>
 
-# Commit changes
-git commit -m "$COMMIT_MESSAGE"
+# Set caching headers
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/jpg "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/gif "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType text/css "access plus 1 month"
+  ExpiresByType application/javascript "access plus 1 month"
+  ExpiresByType application/json "access plus 0 seconds"
+  ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
+EOL
 
-# Create a tag with the version
-git tag -a "v$VERSION" -m "Version $VERSION"
+# Deploy to server using rsync
+echo "🌐 Deploying to chemmara.space..."
+rsync -avz --delete $DEPLOY_DIR/ chemmara@chemmara.space:/var/www/html/
 
-# Push to remote
-echo -e "${YELLOW}Pushing to remote repository...${NC}"
-git push origin main
-git push origin --tags
+# Clean up
+echo "🧹 Cleaning up..."
+rm -rf $DEPLOY_DIR
 
-echo -e "${GREEN}Deployment process completed successfully!${NC}"
-echo -e "${GREEN}Version v$VERSION has been tagged and pushed.${NC}"
+echo "✅ Deployment completed successfully!"
+echo "🌍 Your application is now live at https://chemmara.space"

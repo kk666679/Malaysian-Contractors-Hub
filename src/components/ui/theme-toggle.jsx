@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Sun, Moon, Monitor } from 'lucide-react';
 import { useTheme } from '../../hooks/useTheme';
+import { hoverScale } from '../../lib/animations';
 
 export function ThemeToggle() {
   const { theme, setTheme, toggleTheme } = useTheme();
@@ -24,8 +25,16 @@ export function ThemeToggle() {
 
   // Animation variants for the icon
   const iconVariants = {
-    initial: { scale: 0.6, rotate: 0 },
-    animate: { scale: 1, rotate: 360, transition: { duration: 0.5 } },
+    initial: { scale: 0.6, rotate: 0, opacity: 0 },
+    animate: { scale: 1, rotate: 360, opacity: 1, transition: { duration: 0.5 } },
+    exit: { scale: 0.6, rotate: 0, opacity: 0 }
+  };
+
+  // Dropdown animation variants
+  const dropdownVariants = {
+    hidden: { opacity: 0, y: -10, scale: 0.95 },
+    visible: { opacity: 1, y: 0, scale: 1 },
+    exit: { opacity: 0, y: -10, scale: 0.95 }
   };
 
   // Get the current theme icon with animation
@@ -35,9 +44,10 @@ export function ThemeToggle() {
         return (
           <motion.div
             key="moon"
+            variants={iconVariants}
             initial="initial"
             animate="animate"
-            variants={iconVariants}
+            exit="exit"
           >
             <Moon className="h-[1.2rem] w-[1.2rem]" />
           </motion.div>
@@ -46,9 +56,10 @@ export function ThemeToggle() {
         return (
           <motion.div
             key="sun"
+            variants={iconVariants}
             initial="initial"
             animate="animate"
-            variants={iconVariants}
+            exit="exit"
           >
             <Sun className="h-[1.2rem] w-[1.2rem]" />
           </motion.div>
@@ -57,9 +68,10 @@ export function ThemeToggle() {
         return (
           <motion.div
             key="monitor"
+            variants={iconVariants}
             initial="initial"
             animate="animate"
-            variants={iconVariants}
+            exit="exit"
           >
             <Monitor className="h-[1.2rem] w-[1.2rem]" />
           </motion.div>
@@ -76,17 +88,20 @@ export function ThemeToggle() {
         whileTap={{ scale: 0.95 }}
         aria-label="Toggle theme"
       >
-        <ThemeIcon />
+        <AnimatePresence mode="wait" initial={false}>
+          <ThemeIcon />
+        </AnimatePresence>
         <span className="sr-only">Toggle theme</span>
       </motion.button>
       
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.15 }}
+            variants={dropdownVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            transition={{ type: "spring", stiffness: 500, damping: 30 }}
             className="absolute right-0 mt-2 w-36 rounded-md bg-background-secondary shadow-card border border-border z-50"
             onClick={(e) => e.stopPropagation()}
           >

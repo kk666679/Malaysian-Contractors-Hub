@@ -186,7 +186,7 @@ export default function DashboardLayout({ children }) {
       </motion.aside>
       
       {/* Mobile Sidebar */}
-      <AnimatePresence>
+      <AnimatePresence initial={false}>
         {isMobileMenuOpen && (
           <>
             <motion.div

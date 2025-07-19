@@ -3,7 +3,8 @@ import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
+  base: mode === 'production' ? 'https://chemmara.space/' : '/',
   plugins: [
     react(),
     VitePWA({
@@ -62,8 +63,8 @@ export default defineConfig({
     },
   },
   server: {
-    port: 5173,
-    strictPort: true,
+    port: 3000,
+    strictPort: false,
     host: true,
   },
-});
+}));

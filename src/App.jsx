@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, useLocation, Outlet } from 'react-router-dom'
-import { AnimatePresence } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import { ThemeProvider } from 'styled-components'
 import { Suspense, lazy, useState, useEffect } from 'react'
 import Navbar from './components/Navbar'
@@ -46,9 +46,18 @@ const Layout = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-grow pt-16"> {/* Added pt-16 for navbar spacing */}
-        <AnimatePresence exitBeforeEnter>
-          <Suspense fallback={<LoadingFallback />}>
-            <Outlet />
+        <AnimatePresence mode="wait">
+          <Suspense fallback={<LoadingFallback />} key={location.pathname}>
+            <motion.div
+              key={location.pathname}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="w-full"
+            >
+              <Outlet />
+            </motion.div>
           </Suspense>
         </AnimatePresence>
       </main>

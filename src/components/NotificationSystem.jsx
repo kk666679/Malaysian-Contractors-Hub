@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Bell, X, CheckCircle, AlertCircle, Info } from 'lucide-react'
 import { Button } from './ui/button'
 import { Badge } from './ui/badge'
+import { hoverScale } from '../lib/animations'
 
 const MOCK_NOTIFICATIONS = [
   {
@@ -73,6 +74,19 @@ export default function NotificationSystem() {
     }
   }
 
+  // Animation variants
+  const dropdownVariants = {
+    hidden: { opacity: 0, y: -10, scale: 0.95 },
+    visible: { opacity: 1, y: 0, scale: 1 },
+    exit: { opacity: 0, y: -10, scale: 0.95 }
+  }
+
+  const notificationVariants = {
+    hidden: { opacity: 0, height: 0, marginBottom: 0 },
+    visible: { opacity: 1, height: 'auto', marginBottom: 12 },
+    exit: { opacity: 0, height: 0, marginBottom: 0 }
+  }
+
   return (
     <div className="relative">
       <Button
@@ -92,13 +106,14 @@ export default function NotificationSystem() {
         <span className="sr-only">Notifications</span>
       </Button>
       
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {isOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.15 }}
+            variants={dropdownVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            transition={{ type: "spring", stiffness: 500, damping: 30 }}
             className="absolute right-0 mt-2 w-80 rounded-md bg-card shadow-lg ring-1 ring-black ring-opacity-5 z-50"
             onClick={(e) => e.stopPropagation()}
           >
@@ -116,15 +131,17 @@ export default function NotificationSystem() {
               </div>
               
               <div className="space-y-3 max-h-[300px] overflow-y-auto custom-scrollbar">
-                <AnimatePresence>
+                <AnimatePresence mode="popLayout" initial={false}>
                   {notifications.length > 0 ? (
                     notifications.map((notification) => (
                       <motion.div
                         key={notification.id}
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.2 }}
+                        layout
+                        variants={notificationVariants}
+                        initial="hidden"
+                        animate="visible"
+                        exit="exit"
+                        transition={{ type: "spring", stiffness: 500, damping: 30 }}
                         className={`p-3 rounded-md relative ${notification.read ? 'bg-card' : 'bg-muted'}`}
                         onClick={() => markAsRead(notification.id)}
                       >

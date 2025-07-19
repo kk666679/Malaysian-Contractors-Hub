@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { hoverScale } from '../lib/animations';
 import { Button } from './ui/button.jsx';
 import { ThemeToggle } from './ui/theme-toggle.jsx';
 import { DropdownMenu, DropdownItem, DropdownSeparator } from './ui/dropdown-menu.jsx';
@@ -133,7 +134,7 @@ const Navbar = () => {
                       </span>
                     </Button>
                     
-                    <AnimatePresence>
+                    <AnimatePresence mode="sync" initial={false}>
                       {(activeDropdown === item.name || (!activeDropdown && isActive(item.href))) && (
                         <motion.div
                           initial={{ opacity: 0, y: 10 }}
@@ -247,7 +248,7 @@ const Navbar = () => {
       </div>
 
       {/* Mobile Navigation */}
-      <AnimatePresence>
+      <AnimatePresence mode="sync" initial={false}>
         {isMenuOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
@@ -280,7 +281,7 @@ const Navbar = () => {
                         />
                       </Button>
                       
-                      <AnimatePresence>
+                      <AnimatePresence mode="sync" initial={false}>
                         {activeDropdown === item.name && (
                           <motion.div
                             initial={{ opacity: 0, height: 0 }}

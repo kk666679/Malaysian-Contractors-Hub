@@ -1,7 +1,9 @@
 import { useState, useRef } from 'react'
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion'
+import StaggerContainer from '../components/StaggerContainer'
 import { Button } from '../components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
+import { MotionCard } from '../components/ui/motion-card'
 import { Badge } from '../components/ui/badge'
 import PageTransition from '../components/PageTransition'
 import { 
@@ -206,23 +208,17 @@ const HomePage = () => {
           className="py-12 bg-muted"
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              {stats.map((stat, index) => (
-                <motion.div
-                  key={stat.label}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={statsInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="text-center"
-                >
+            <StaggerContainer inView={statsInView} staggerDelay={0.15} className="grid grid-cols-2 md:grid-cols-4 gap-8">
+              {stats.map((stat) => (
+                <div key={stat.label} className="text-center">
                   <div className="inline-flex items-center justify-center p-3 bg-background rounded-full mb-4">
                     {stat.icon}
                   </div>
                   <div className="text-3xl font-bold text-foreground">{stat.value}</div>
                   <div className="text-sm text-muted-foreground">{stat.label}</div>
-                </motion.div>
+                </div>
               ))}
-            </div>
+            </StaggerContainer>
           </div>
         </motion.section>
 
@@ -367,38 +363,31 @@ const HomePage = () => {
               </p>
             </motion.div>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <StaggerContainer inView={testimonialsInView} staggerDelay={0.2} className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {testimonials.map((testimonial, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={testimonialsInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                  transition={{ duration: 0.5, delay: index * 0.2 }}
-                >
-                  <Card className="h-full">
-                    <CardContent className="pt-6">
-                      <div className="flex mb-4">
-                        {[...Array(5)].map((_, i) => (
-                          <svg key={i} className="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                          </svg>
-                        ))}
+                <MotionCard key={index} layoutId={`testimonial-${index}`} className="h-full">
+                  <CardContent className="pt-6">
+                    <div className="flex mb-4">
+                      {[...Array(5)].map((_, i) => (
+                        <svg key={i} className="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    <p className="text-foreground italic mb-6">"{testimonial.quote}"</p>
+                    <div className="flex items-center">
+                      <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
+                        {testimonial.author.charAt(0)}
                       </div>
-                      <p className="text-foreground italic mb-6">"{testimonial.quote}"</p>
-                      <div className="flex items-center">
-                        <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
-                          {testimonial.author.charAt(0)}
-                        </div>
-                        <div className="ml-3">
-                          <p className="text-sm font-medium text-foreground">{testimonial.author}</p>
-                          <p className="text-xs text-muted-foreground">{testimonial.position}, {testimonial.company}</p>
-                        </div>
+                      <div className="ml-3">
+                        <p className="text-sm font-medium text-foreground">{testimonial.author}</p>
+                        <p className="text-xs text-muted-foreground">{testimonial.position}, {testimonial.company}</p>
                       </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
+                    </div>
+                  </CardContent>
+                </MotionCard>
               ))}
-            </div>
+            </StaggerContainer>
           </div>
         </motion.section>
 

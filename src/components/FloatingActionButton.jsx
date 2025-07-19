@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Plus, X, FileEdit, Calculator, Calendar, Users, MessageSquare } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { hoverScale } from '../lib/animations'
 
 export default function FloatingActionButton() {
   const [isOpen, setIsOpen] = useState(false)
@@ -42,7 +43,7 @@ export default function FloatingActionButton() {
   
   return (
     <div className="fixed right-6 bottom-6 z-40">
-      <AnimatePresence>
+      <AnimatePresence mode="sync" initial={false}>
         {isOpen && (
           <motion.div
             initial={{ opacity: 0 }}
@@ -80,10 +81,11 @@ export default function FloatingActionButton() {
         }`}
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
+        layout
       >
         <motion.div
           animate={{ rotate: isOpen ? 45 : 0 }}
-          transition={{ duration: 0.2 }}
+          transition={{ type: "spring", stiffness: 300, damping: 20 }}
         >
           {isOpen ? <X className="h-6 w-6" /> : <Plus className="h-6 w-6" />}
         </motion.div>

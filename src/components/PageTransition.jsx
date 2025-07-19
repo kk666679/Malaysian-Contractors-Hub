@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { slideUp, easeTransition } from '../lib/animations'
+import { pageTransition } from '../lib/animations'
 
 const PageTransition = ({ children, className = '' }) => {
   return (
@@ -7,8 +7,7 @@ const PageTransition = ({ children, className = '' }) => {
       initial="initial"
       animate="animate"
       exit="exit"
-      variants={slideUp}
-      transition={easeTransition}
+      variants={pageTransition}
       className={className}
     >
       {children}

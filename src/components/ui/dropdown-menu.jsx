@@ -20,7 +20,8 @@ const DropdownMenu = ({
   // Animation variants
   const menuVariants = {
     hidden: { opacity: 0, y: 10, scale: 0.95 },
-    visible: { opacity: 1, y: 0, scale: 1 }
+    visible: { opacity: 1, y: 0, scale: 1 },
+    exit: { opacity: 0, y: 10, scale: 0.95 }
   };
 
   return (
@@ -29,14 +30,14 @@ const DropdownMenu = ({
         {typeof trigger === 'function' ? trigger(isOpen) : trigger}
       </div>
       
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {isOpen && (
           <motion.div
+            variants={menuVariants}
             initial="hidden"
             animate="visible"
-            exit="hidden"
-            variants={menuVariants}
-            transition={{ duration: 0.2 }}
+            exit="exit"
+            transition={{ type: "spring", stiffness: 500, damping: 30 }}
             className={cn(
               "absolute z-50 mt-2 min-w-[10rem] rounded-md bg-background border border-border shadow-lg",
               align === 'left' ? 'left-0' : 'right-0',
@@ -59,7 +60,7 @@ const DropdownItem = ({
   icon
 }) => {
   return (
-    <button
+    <motion.button
       onClick={onClick}
       disabled={disabled}
       className={cn(
@@ -67,10 +68,11 @@ const DropdownItem = ({
         disabled && "opacity-50 cursor-not-allowed",
         className
       )}
+      whileHover={{ backgroundColor: 'rgba(0, 0, 0, 0.05)' }}
     >
       {icon && <span className="mr-2">{icon}</span>}
       {children}
-    </button>
+    </motion.button>
   );
 };
 

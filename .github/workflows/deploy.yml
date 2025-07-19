@@ -1,71 +1,88 @@
-name: Build and Deploy
+name: Deploy to chemmara.space
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
-permissions:
-  contents: write
-  pages: write
-  id-token: write
+    branches:
+      - main
+    tags:
+      - 'v*'
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
-    
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-    
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: 'v18.x'
-        cache: 'npm'
-    
-    - name: Install dependencies
-      run: |
-        # Make sure we have the correct dependencies for Vite
-        npm ci
-        # Install cssnano if it's not already installed
-        npm list cssnano || npm install --save-dev cssnano
-    
-    - name: Lint
-      run: npm run lint || true
-      
-    - name: Test
-      run: npm test || true
-    
-    - name: Build
-      run: |
-        # Make sure we're using vite build, not react-scripts
-        if grep -q "\"build\": \"react-scripts build\"" package.json; then
-          sed -i 's/"build": "react-scripts build"/"build": "vite build"/' package.json
-        fi
-        npm run build
-      
-    - name: Generate PWA Assets
-      run: |
-        # Check if dist directory exists (Vite output) or build directory (React output)
-        if [ -d "dist" ]; then
-          OUTPUT_DIR="dist"
-        else
-          OUTPUT_DIR="build"
-        fi
-        
-        mkdir -p $OUTPUT_DIR/assets
-        cp public/favicon.ico $OUTPUT_DIR/
-        cp public/avatar.png $OUTPUT_DIR/pwa-192x192.png
-        cp public/avatar.png $OUTPUT_DIR/pwa-512x512.png
-        cp public/avatar.png $OUTPUT_DIR/apple-touch-icon.png
-        echo 'User-agent: *\nAllow: /' > $OUTPUT_DIR/robots.txt
-    
-    - name: Deploy
-      if: github.ref == 'refs/heads/main'
-      uses: JamesIves/github-pages-deploy-action@v4
-      with:
-        folder: build  # Using build directory as specified in vite.config.js
-        clean: true
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Create .htaccess
+        run: |
+          cat > ./build/.htaccess << EOL
+          <IfModule mod_rewrite.c>
+            RewriteEngine On
+            RewriteBase /
+            RewriteRule ^index\.html$ - [L]
+            RewriteCond %{REQUEST_FILENAME} !-f
+            RewriteCond %{REQUEST_FILENAME} !-d
+            RewriteRule . /index.html [L]
+          </IfModule>
+
+          # Enable GZIP compression
+          <IfModule mod_deflate.c>
+            AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/javascript application/json
+          </IfModule>
+
+          # Set caching headers
+          <IfModule mod_expires.c>
+            ExpiresActive On
+            ExpiresByType image/jpg "access plus 1 year"
+            ExpiresByType image/jpeg "access plus 1 year"
+            ExpiresByType image/gif "access plus 1 year"
+            ExpiresByType image/png "access plus 1 year"
+            ExpiresByType image/svg+xml "access plus 1 year"
+            ExpiresByType text/css "access plus 1 month"
+            ExpiresByType application/javascript "access plus 1 month"
+            ExpiresByType application/json "access plus 0 seconds"
+            ExpiresByType text/html "access plus 0 seconds"
+          </IfModule>
+          EOL
+
+      - name: Deploy to server
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          ARGS: "-avz --delete"
+          SOURCE: "build/"
+          REMOTE_HOST: "chemmara.space"
+          REMOTE_USER: "chemmara"
+          TARGET: "/var/www/html"
+          
+      - name: Create deployment tag
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          echo "Deployed version ${{ github.ref_name }} to chemmara.space" > deployment.txt
+          
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: deployment.txt
+          name: Release ${{ github.ref_name }}
+          body: |
+            ## Deployment to chemmara.space
+            
+            This version has been automatically deployed to [chemmara.space](https://chemmara.space).
+            
+            ### Changes in this release:
+            - See commit history for details

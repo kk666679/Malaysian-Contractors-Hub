@@ -113,7 +113,7 @@ export default function SearchDialog() {
         </kbd>
       </button>
       
-      <AnimatePresence>
+      <AnimatePresence initial={false}>
         {isOpen && (
           <>
             <motion.div
