@@ -1,71 +1,125 @@
-import { forwardRef } from "react"
-import { cva } from "class-variance-authority"
-import { cn } from "../../lib/utils"
-import { motion } from "framer-motion"
-import { useNavigate } from "react-router-dom"
-import { buttonHover, buttonTap, springTransition } from "../../lib/animations"
+import { forwardRef } from "react";
+import { cva } from "class-variance-authority";
+import { cn } from "../../lib/utils";
+import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
-        default: "bg-primary text-primary-foreground shadow hover:bg-primary/90",
-        destructive: "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
-        outline: "border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground",
-        secondary: "bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80",
-        ghost: "hover:bg-accent hover:text-accent-foreground",
+        default: "bg-primary text-text-primary hover:bg-primary-hover shadow-sm",
+        destructive: "bg-accent-red text-white hover:bg-accent-red/90 shadow-sm",
+        outline: "border border-border bg-transparent hover:bg-background-tertiary hover:text-text shadow-sm",
+        secondary: "bg-background-tertiary text-text hover:bg-background-tertiary/80 shadow-sm",
+        ghost: "hover:bg-background-tertiary hover:text-text",
         link: "text-primary underline-offset-4 hover:underline",
+        gradient: "bg-gradient-primary text-text-primary shadow-sm hover:shadow-md",
       },
       size: {
-        default: "h-9 px-4 py-2",
-        sm: "h-8 rounded-md px-3 text-xs",
-        lg: "h-10 rounded-md px-8",
-        icon: "h-9 w-9",
+        default: "h-10 px-4 py-2",
+        xs: "h-7 rounded-md px-2 text-xs",
+        sm: "h-9 rounded-md px-3",
+        lg: "h-11 rounded-md px-8",
+        xl: "h-12 rounded-md px-10 text-lg",
+        icon: "h-10 w-10 rounded-full",
+        "icon-sm": "h-8 w-8 rounded-full",
+      },
+      animation: {
+        none: "",
+        pulse: "animate-pulse",
+        bounce: "animate-bounce",
       },
     },
     defaultVariants: {
       variant: "default",
       size: "default",
+      animation: "none",
     },
   }
-)
+);
 
-const MotionButton = motion.button
+// Default animation settings
+const defaultAnimations = {
+  whileHover: { scale: 1.02 },
+  whileTap: { scale: 0.98 },
+  transition: { type: "spring", stiffness: 400, damping: 17 }
+};
 
-const Button = forwardRef(({ className, variant, size, to, whileHover, whileTap, animate, initial, transition, ...props }, ref) => {
-  const navigate = useNavigate()
-  
-  const handleClick = (e) => {
-    if (to) {
-      e.preventDefault()
-      navigate(to)
-    }
-    
-    if (props.onClick) {
-      props.onClick(e)
-    }
-  }
-  
+const MotionButton = motion.button;
+const MotionLink = motion(Link);
+
+const Button = forwardRef(({ 
+  className, 
+  variant, 
+  size, 
+  animation,
+  to, 
+  href,
+  whileHover, 
+  whileTap, 
+  animate, 
+  initial, 
+  transition, 
+  children,
+  ...props 
+}, ref) => {
   const motionProps = {
-    whileHover: whileHover || buttonHover,
-    whileTap: whileTap || buttonTap,
-    animate: animate,
-    initial: initial,
-    transition: transition || springTransition
+    whileHover: whileHover || defaultAnimations.whileHover,
+    whileTap: whileTap || defaultAnimations.whileTap,
+    animate,
+    initial,
+    transition: transition || defaultAnimations.transition
+  };
+  
+  const classes = cn(buttonVariants({ variant, size, animation, className }));
+  
+  // External link
+  if (href) {
+    return (
+      <motion.a
+        href={href}
+        className={classes}
+        ref={ref}
+        target="_blank"
+        rel="noopener noreferrer"
+        {...motionProps}
+        {...props}
+      >
+        {children}
+      </motion.a>
+    );
   }
   
+  // Internal routing with react-router
+  if (to) {
+    return (
+      <MotionLink
+        to={to}
+        className={classes}
+        ref={ref}
+        {...motionProps}
+        {...props}
+      >
+        {children}
+      </MotionLink>
+    );
+  }
+  
+  // Regular button
   return (
     <MotionButton
-      className={cn(buttonVariants({ variant, size, className }))}
+      className={classes}
       ref={ref}
-      onClick={handleClick}
       {...motionProps}
       {...props}
-    />
-  )
-})
+    >
+      {children}
+    </MotionButton>
+  );
+});
 
-Button.displayName = "Button"
+Button.displayName = "Button";
 
-export { Button, buttonVariants }
+export { Button, buttonVariants };

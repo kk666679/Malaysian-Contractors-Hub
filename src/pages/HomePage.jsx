@@ -14,6 +14,7 @@ import {
   Shield,
   ChevronRight
 } from 'lucide-react'
+import { ROUTES, FEATURES } from '../lib/routeConfig'
 
 const HomePage = () => {
   const [activeTab, setActiveTab] = useState('bid-engine')
@@ -171,7 +172,7 @@ const HomePage = () => {
                 className="mt-10 flex flex-col sm:flex-row justify-center gap-4 sm:gap-x-6"
               >
                 <Button 
-                  to="/dashboard" 
+                  to={ROUTES.DASHBOARD} 
                   size="lg" 
                   className="w-full sm:w-auto"
                   whileHover={{ scale: 1.05 }}
@@ -181,7 +182,7 @@ const HomePage = () => {
                   <ChevronRight className="ml-2 h-4 w-4" />
                 </Button>
                 <Button 
-                  to="/services" 
+                  to={ROUTES.SERVICES} 
                   variant="outline" 
                   size="lg" 
                   className="w-full sm:w-auto"
@@ -325,7 +326,11 @@ const HomePage = () => {
                             </ul>
                             <div className="mt-6">
                               <Button 
-                                to={`/${feature.id}`}
+                                to={feature.id === 'bid-engine' ? '/bid-engine' : 
+                                   feature.id === 'compliance' ? '/compliance' : 
+                                   feature.id === 'marketplace' ? '/marketplace' : 
+                                   feature.id === 'monsoon-planner' ? '/monsoon-planner' : 
+                                   `/${feature.id}`}
                                 whileHover={{ scale: 1.05, x: 5 }}
                                 whileTap={{ scale: 0.95 }}
                               >
@@ -418,7 +423,7 @@ const HomePage = () => {
               className="mt-8"
             >
               <Button 
-                to="/dashboard"
+                to={ROUTES.DASHBOARD}
                 variant="secondary" 
                 size="lg" 
                 className="font-medium"

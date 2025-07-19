@@ -3,22 +3,19 @@ import { useLocation } from 'react-router-dom'
 import { Button } from './ui/button.jsx'
 import { Badge } from './ui/badge.jsx'
 import { motion } from 'framer-motion'
-import { Building2, Menu, X } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 import { ThemeToggle } from './ui/theme-toggle.jsx'
 import NotificationSystem from './NotificationSystem.jsx'
 import SearchDialog from './SearchDialog.jsx'
+import logoMep from '../assets/images/logo-mep.svg'
+import { HEADER_NAVIGATION, ROUTES } from '../lib/routeConfig'
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const location = useLocation()
 
-  const navigation = [
-    { name: 'Services', href: '/services' },
-    { name: 'Features', href: '/features' },
-    { name: 'Compliance', href: '/compliance' },
-    { name: 'Marketplace', href: '/marketplace' },
-    { name: 'About', href: '/about' }
-  ]
+  // Using centralized navigation configuration
+  const navigation = HEADER_NAVIGATION
 
   const isActive = (href) => location.pathname === href
 
@@ -32,7 +29,7 @@ const Header = () => {
             whileTap={{ scale: 0.97 }}
           >
             <Button to="/" variant="ghost" className="flex items-center space-x-2 p-0 h-auto hover:bg-transparent">
-              <Building2 className="h-8 w-8 text-primary" />
+              <img src={logoMep} alt="MEP Logo" className="h-10 w-10" />
               <span className="text-xl font-bold text-foreground">
                 Malaysian Contractors Hub
               </span>
@@ -82,7 +79,7 @@ const Header = () => {
             <NotificationSystem />
             <ThemeToggle />
             <Button 
-              to="/contact" 
+              to={ROUTES.CONTACT} 
               variant="outline" 
               size="sm"
               whileHover={{ scale: 1.05 }}
@@ -91,7 +88,7 @@ const Header = () => {
               Contact
             </Button>
             <Button 
-              to="/dashboard" 
+              to={ROUTES.DASHBOARD} 
               size="sm"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -138,7 +135,7 @@ const Header = () => {
               ))}
               <div className="pt-4 pb-2 space-y-2">
                 <Button 
-                  to="/contact" 
+                  to={ROUTES.CONTACT} 
                   variant="outline" 
                   size="sm" 
                   className="w-full"
@@ -149,7 +146,7 @@ const Header = () => {
                   Contact
                 </Button>
                 <Button 
-                  to="/dashboard" 
+                  to={ROUTES.DASHBOARD} 
                   size="sm" 
                   className="w-full"
                   onClick={() => setIsMenuOpen(false)}

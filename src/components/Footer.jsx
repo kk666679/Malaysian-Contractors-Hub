@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom'
-import { Building2, Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram } from 'lucide-react'
+import { Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram } from 'lucide-react'
+import logoMep from '../assets/images/logo-mep.svg'
+import { ROUTES } from '../lib/routeConfig'
 
 const Footer = () => {
   return (
@@ -9,7 +11,7 @@ const Footer = () => {
           {/* Company Info */}
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
-              <Building2 className="h-8 w-8 text-blue-400" />
+              <img src={logoMep} alt="MEP Logo" className="h-10 w-10" />
               <span className="text-xl font-bold">Malaysian Contractors Hub</span>
             </div>
             <p className="text-gray-300 text-sm">
@@ -37,27 +39,27 @@ const Footer = () => {
             <h3 className="text-lg font-semibold">Services</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link to="/services/civil" className="text-gray-300 hover:text-white transition-colors">
+                <Link to={ROUTES.CIVIL_ENGINEERING} className="text-gray-300 hover:text-white transition-colors">
                   Civil Engineering
                 </Link>
               </li>
               <li>
-                <Link to="/services/electrical" className="text-gray-300 hover:text-white transition-colors">
+                <Link to={ROUTES.ELECTRICAL_SYSTEMS} className="text-gray-300 hover:text-white transition-colors">
                   Electrical Systems
                 </Link>
               </li>
               <li>
-                <Link to="/services/sewerage" className="text-gray-300 hover:text-white transition-colors">
+                <Link to={ROUTES.SEWERAGE_DRAINAGE} className="text-gray-300 hover:text-white transition-colors">
                   Sewerage & Drainage
                 </Link>
               </li>
               <li>
-                <Link to="/services/elv" className="text-gray-300 hover:text-white transition-colors">
+                <Link to={ROUTES.ELV_SYSTEMS} className="text-gray-300 hover:text-white transition-colors">
                   ELV Systems
                 </Link>
               </li>
               <li>
-                <Link to="/services/acmv" className="text-gray-300 hover:text-white transition-colors">
+                <Link to={ROUTES.ACMV_SYSTEMS} className="text-gray-300 hover:text-white transition-colors">
                   ACMV Systems
                 </Link>
               </li>
@@ -69,27 +71,27 @@ const Footer = () => {
             <h3 className="text-lg font-semibold">Features</h3>
             <ul className="space-y-2 text-sm">
               <li>
-                <Link to="/bid-engine" className="text-gray-300 hover:text-white transition-colors">
+                <Link to={ROUTES.BID_ENGINE} className="text-gray-300 hover:text-white transition-colors">
                   Project Bid Engine
                 </Link>
               </li>
               <li>
-                <Link to="/site-management" className="text-gray-300 hover:text-white transition-colors">
+                <Link to={ROUTES.SITE_MANAGEMENT} className="text-gray-300 hover:text-white transition-colors">
                   Site Management
                 </Link>
               </li>
               <li>
-                <Link to="/marketplace" className="text-gray-300 hover:text-white transition-colors">
+                <Link to={ROUTES.MARKETPLACE} className="text-gray-300 hover:text-white transition-colors">
                   Specialist Marketplace
                 </Link>
               </li>
               <li>
-                <Link to="/material-alerts" className="text-gray-300 hover:text-white transition-colors">
+                <Link to={ROUTES.MATERIAL_ALERTS} className="text-gray-300 hover:text-white transition-colors">
                   Material Alerts
                 </Link>
               </li>
               <li>
-                <Link to="/monsoon-planner" className="text-gray-300 hover:text-white transition-colors">
+                <Link to={ROUTES.MONSOON_PLANNER} className="text-gray-300 hover:text-white transition-colors">
                   Monsoon Risk Planner
                 </Link>
               </li>
@@ -120,7 +122,7 @@ const Footer = () => {
               </div>
             </div>
             <div className="pt-2">
-              <Link to="/contact">
+              <Link to={ROUTES.CONTACT}>
                 <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors">
                   Get in Touch
                 </button>
@@ -136,13 +138,13 @@ const Footer = () => {
               © 2025 Malaysian Contractors Hub. All rights reserved.
             </div>
             <div className="flex space-x-6 mt-4 md:mt-0">
-              <Link to="/privacy" className="text-sm text-gray-400 hover:text-white transition-colors">
+              <Link to={ROUTES.PRIVACY} className="text-sm text-gray-400 hover:text-white transition-colors">
                 Privacy Policy
               </Link>
-              <Link to="/terms" className="text-sm text-gray-400 hover:text-white transition-colors">
+              <Link to={ROUTES.TERMS} className="text-sm text-gray-400 hover:text-white transition-colors">
                 Terms of Service
               </Link>
-              <Link to="/compliance" className="text-sm text-gray-400 hover:text-white transition-colors">
+              <Link to={ROUTES.COMPLIANCE} className="text-sm text-gray-400 hover:text-white transition-colors">
                 Compliance
               </Link>
             </div>

@@ -1,48 +1,52 @@
-# Project Fixes
+# MEP Project Updates
 
-This document outlines the issues found in the project and the fixes applied.
+## Fixed Issues
 
-## Issues Found
+1. **Package.json Updates**
+   - Fixed Vite version from `^7.0.5` to `^5.0.10` (compatible version)
+   - Fixed Vitest version from `^3.2.4` to `^0.34.6` (compatible version)
+   - Downgraded framer-motion from `^12.0.0` to `^10.16.4` (stable version)
+   - Downgraded react-router-dom from `^7.0.0` to `^6.20.0` (stable version)
+   - Added postinstall script to handle dependencies properly
 
-1. **Tailwind Configuration Issues**
-   - Missing Tailwind plugin in Vite configuration
-   - Inconsistent animation plugins in package.json
-   - Custom scrollbar classes used without the required plugin
+2. **React Router Compatibility**
+   - Updated App.jsx to use React Router v6 API
+   - Replaced createBrowserRouter with BrowserRouter
+   - Updated route configuration to use nested Routes and Route components
 
-2. **React Router Usage**
-   - Incorrect usage of AnimatePresence with React Router v7
-   - Unnecessary location and key props on Routes component
+3. **Build Process**
+   - Enhanced build.sh script to handle dependencies better
+   - Added proper PWA asset generation
+   - Improved error handling in build process
 
-3. **Missing Dependencies**
-   - Missing eslint-plugin-react in package.json despite being used in eslint.config.js
-   - Missing tailwind-scrollbar plugin for custom scrollbar classes
+## Added Features
 
-## Fixes Applied
+1. **Deployment Workflow**
+   - Created deploy.sh script for automated commit, tag, and push
+   - Added version tagging based on package.json version
+   - Streamlined deployment process
 
-1. **Vite Configuration**
-   - Added tailwindcss plugin to vite.config.js
+2. **Development Environment**
+   - Created setup.sh for initial project setup
+   - Added start.sh for easy development server startup
+   - Improved documentation for scripts
 
-2. **Tailwind Configuration**
-   - Added comment about the missing scrollbar plugin in tailwind.config.js
-   - Commented out scrollbar classes in App.css that require an additional plugin
-
-3. **Package.json Updates**
-   - Added eslint-plugin-react dependency
-   - Added tailwind-scrollbar plugin
-   - Removed redundant tw-animate-css package
-
-4. **React Router Fixes**
-   - Updated AnimatedRoutes component to properly use AnimatePresence with React Router v7
+3. **Project Structure**
+   - Added scripts directory with README
+   - Organized build and deployment scripts
+   - Improved project documentation
 
 ## Next Steps
 
-1. Run `pnpm install` to install the updated dependencies
-2. The custom scrollbar styles have been enabled with the tailwind-scrollbar v4.0.2 plugin
-3. Test the application to ensure all routes and animations work correctly
+1. **Testing**
+   - Add more comprehensive tests
+   - Configure test coverage reporting
 
-## Additional Fixes
+2. **CI/CD**
+   - Enhance GitHub Actions workflow
+   - Add automated testing in CI pipeline
 
-1. **Dependency Version Updates**
-   - Updated tailwind-scrollbar from v3.1.0 to v4.0.2 to be compatible with Tailwind CSS v4
-   - Enabled the scrollbar plugin in tailwind.config.js
-   - Uncommented the scrollbar styles in App.css
+3. **Documentation**
+   - Update component documentation
+   - Add API documentation
+   - Create user guides
