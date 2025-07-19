@@ -2,7 +2,7 @@
 
 A comprehensive platform for Malaysian Civil and MEP (Mechanical, Electrical, and Plumbing) contractors to manage projects, ensure compliance with local regulations, and connect with specialists.
 
-[![Build Status](https://img.shields.io/github/workflow/status/your-username/malaysian-contractors-app/Build%20and%20Deploy)](https://github.com/your-username/malaysian-contractors-app/actions)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/USERNAME/REPO/workflow-file.yml?branch=main)](https://github.com/USERNAME/REPO/actions)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
