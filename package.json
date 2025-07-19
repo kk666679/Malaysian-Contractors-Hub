@@ -13,7 +13,8 @@
     "setup": "./setup.sh",
     "release": "./release.sh",
     "deploy": "./deploy.sh",
-    "server-setup": "./server-setup.sh"
+    "server-setup": "./server-setup.sh",
+    "deploy-to-chemmara": "./deploy-to-chemmara.sh"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.0.4",
