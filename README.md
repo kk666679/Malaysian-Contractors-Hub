@@ -26,7 +26,6 @@ A comprehensive platform for Malaysian Civil and MEP (Mechanical, Electrical, an
 ### Prerequisites
 
 - Node.js (v18 or higher)
-- pnpm (v10 or higher)
 
 ### Installation
 
@@ -37,12 +36,12 @@ A comprehensive platform for Malaysian Civil and MEP (Mechanical, Electrical, an
 
 2. Install dependencies
    ```bash
-   pnpm install
+   npm install
    ```
 
 3. Start the development server
    ```bash
-   pnpm dev
+   npm run dev
    ```
 
 4. Open your browser and navigate to `http://localhost:5173`
