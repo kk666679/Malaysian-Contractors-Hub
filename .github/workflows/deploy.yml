@@ -16,23 +16,28 @@ jobs:
     
     # GPG and SSH steps removed to fix deployment errors
     
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '22'
-        cache: 'pnpm'
-    
     - name: Install pnpm
       uses: pnpm/action-setup@v2
       with:
         version: 10
         run_install: false
     
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'pnpm'
+    
+    - name: Verify environment
+      run: |
+        node --version
+        pnpm --version
+    
     - name: Install dependencies
       run: pnpm install
     
     - name: Build
-      run: pnpm build
+      run: pnpm build || npm run build:ci
     
     - name: Deploy
       if: github.ref == 'refs/heads/main'
