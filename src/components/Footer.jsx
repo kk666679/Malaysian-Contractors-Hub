@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram } from 'lucide-react'
-import logoMep from '../assets/images/logo-mep.svg'
+import logoMep from '../assets/images/logo-meppo.svg'
 import { ROUTES } from '../lib/routeConfig'
 
 const Footer = () => {

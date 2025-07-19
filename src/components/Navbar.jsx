@@ -8,7 +8,7 @@ import NotificationSystem from './NotificationSystem.jsx';
 import SearchDialog from './SearchDialog.jsx';
 import { 
   Menu, X, ChevronDown, Home, Briefcase, 
-  Shield, Users, BarChart2, Cloud, Tool, Settings, LogOut, User
+  Shield, Users, BarChart2, Cloud, Wrench, Settings, LogOut, User
 } from 'lucide-react';
 
 const Navbar = () => {
@@ -63,7 +63,7 @@ const Navbar = () => {
     { 
       name: 'Features', 
       href: '/features', 
-      icon: <Tool size={18} />,
+      icon: <Wrench size={18} />,
       dropdown: [
         { name: 'Project Bid Engine', href: '/bid-engine' },
         { name: 'Site Management', href: '/site-management' },
