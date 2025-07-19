@@ -3,6 +3,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../co
 import { Button } from '../components/ui/button.jsx'
 import { Badge } from '../components/ui/badge.jsx'
 import { fetchWeatherForecast, assessMonsoonRisk } from '../lib/mockApi'
+import PageTransition from '../components/PageTransition.jsx'
+import { motion } from 'framer-motion'
 import { 
   Cloud,
   AlertTriangle,
@@ -10,7 +12,8 @@ import {
   MapPin,
   Droplets,
   Sun,
-  CloudRain
+  CloudRain,
+  ArrowLeft
 } from 'lucide-react'
 
 const MonsoonRiskPlanner = () => {
@@ -76,8 +79,20 @@ const MonsoonRiskPlanner = () => {
   }
 
   return (
-    <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
-      <div className="max-w-7xl mx-auto">
+    <PageTransition>
+      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-8">
+            <Button 
+              to="/"
+              variant="ghost" 
+              className="flex items-center gap-2"
+              whileHover={{ x: -5 }}
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back to Home
+            </Button>
+          </div>
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">Monsoon Risk Planner</h2>
           <p className="text-lg text-gray-600">
@@ -162,6 +177,8 @@ const MonsoonRiskPlanner = () => {
                 onClick={assessRisk} 
                 disabled={loading}
                 className="w-full"
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
               >
                 {loading ? 'Analyzing Risk...' : 'Assess Weather Risk'}
               </Button>
@@ -318,6 +335,7 @@ const MonsoonRiskPlanner = () => {
         </div>
       </div>
     </section>
+    </PageTransition>
   )
 }
 

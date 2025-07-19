@@ -1,19 +1,137 @@
-// This file would handle all API calls to the marketplace backend
-// In a real application, these would make actual API calls
+// API service for marketplace functionality
+
+// API base URL - change this to match your backend server
+const API_BASE_URL = 'http://localhost:5000/api';
+
+// Helper function for API requests
+const apiRequest = async (endpoint, options = {}) => {
+  const url = `${API_BASE_URL}${endpoint}`;
+  
+  const defaultHeaders = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
+  };
+  
+  const config = {
+    ...options,
+    headers: {
+      ...defaultHeaders,
+      ...options.headers
+    }
+  };
+  
+  try {
+    const response = await fetch(url, config);
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.message || 'API request failed');
+    }
+    
+    return data;
+  } catch (error) {
+    console.error('API request error:', error);
+    throw error;
+  }
+};
 
 export const marketplaceService = {
   // Specialists
   getSpecialists: async (filters = {}) => {
-    // In a real app, this would be a fetch call to the API
-    // Example: return fetch('/api/marketplace/specialists?' + new URLSearchParams(filters))
-    
-    // For now, we'll simulate a successful response
+    const queryString = new URLSearchParams(filters).toString();
+    return apiRequest(`/marketplace/specialists${queryString ? '?' + queryString : ''}`);
+  },
+  
+  getSpecialistDetails: async (specialistId) => {
+    return apiRequest(`/marketplace/specialist/${specialistId}`);
+  },
+  
+  hireSpecialist: async (data) => {
+    return apiRequest('/marketplace/hire', {
+      method: 'POST',
+      body: JSON.stringify(data)
+    });
+  },
+  
+  getSpecialistCategories: async () => {
+    return apiRequest('/marketplace/categories');
+  },
+  
+  searchSpecialists: async (searchCriteria) => {
+    return apiRequest('/marketplace/search', {
+      method: 'POST',
+      body: JSON.stringify(searchCriteria)
+    });
+  },
+  
+  // Projects
+  getProjects: async (filters = {}) => {
+    const queryString = new URLSearchParams(filters).toString();
+    return apiRequest(`/marketplace/projects${queryString ? '?' + queryString : ''}`);
+  },
+  
+  createProject: async (projectData) => {
+    return apiRequest('/marketplace/projects', {
+      method: 'POST',
+      body: JSON.stringify(projectData)
+    });
+  },
+  
+  getProjectDetails: async (projectId) => {
+    return apiRequest(`/marketplace/projects/${projectId}`);
+  },
+  
+  submitProposal: async (projectId, proposalData) => {
+    return apiRequest(`/marketplace/projects/${projectId}/proposals`, {
+      method: 'POST',
+      body: JSON.stringify(proposalData)
+    });
+  },
+  
+  getProjectProposals: async (projectId) => {
+    return apiRequest(`/marketplace/projects/${projectId}/proposals`);
+  },
+  
+  // Suppliers
+  getSuppliers: async (filters = {}) => {
+    const queryString = new URLSearchParams(filters).toString();
+    return apiRequest(`/marketplace/suppliers${queryString ? '?' + queryString : ''}`);
+  },
+  
+  getSupplierCategories: async () => {
+    return apiRequest('/marketplace/suppliers/categories');
+  },
+  
+  getSupplierDetails: async (supplierId) => {
+    return apiRequest(`/marketplace/suppliers/${supplierId}`);
+  },
+  
+  getSupplierProducts: async (supplierId, filters = {}) => {
+    const queryString = new URLSearchParams(filters).toString();
+    return apiRequest(`/marketplace/suppliers/${supplierId}/products${queryString ? '?' + queryString : ''}`);
+  },
+  
+  requestQuote: async (supplierId, quoteData) => {
+    return apiRequest(`/marketplace/suppliers/${supplierId}/quote`, {
+      method: 'POST',
+      body: JSON.stringify(quoteData)
+    });
+  }
+};
+
+// Fallback to mock data if API is not available
+export const useMockData = (process.env.NODE_ENV === 'development');
+
+// Mock service implementation for development/testing
+export const mockMarketplaceService = {
+  // Specialists
+  getSpecialists: async (filters = {}) => {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve({
           success: true,
           data: {
-            specialists: [], // This would be populated from the API
+            specialists: [], // This would be populated with mock data
             total: 0,
             filters_applied: filters
           }
@@ -23,19 +141,17 @@ export const marketplaceService = {
   },
   
   getSpecialistDetails: async (specialistId) => {
-    // In a real app: return fetch(`/api/marketplace/specialist/${specialistId}`)
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve({
           success: true,
-          data: {} // This would be populated from the API
+          data: {} // This would be populated with mock data
         });
       }, 500);
     });
   },
   
   hireSpecialist: async (data) => {
-    // In a real app: return fetch('/api/marketplace/hire', { method: 'POST', body: JSON.stringify(data) })
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve({
@@ -53,13 +169,12 @@ export const marketplaceService = {
   
   // Projects
   getProjects: async (filters = {}) => {
-    // In a real app: return fetch('/api/marketplace/projects?' + new URLSearchParams(filters))
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve({
           success: true,
           data: {
-            projects: [], // This would be populated from the API
+            projects: [], // This would be populated with mock data
             total: 0,
             filters_applied: filters
           }
@@ -68,13 +183,12 @@ export const marketplaceService = {
     });
   },
   
-  postProject: async (projectData) => {
-    // In a real app: return fetch('/api/marketplace/projects', { method: 'POST', body: JSON.stringify(projectData) })
+  createProject: async (projectData) => {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve({
           success: true,
-          message: 'Project posted successfully',
+          message: 'Project created successfully',
           data: {
             project_id: `PRJ${Math.floor(Math.random() * 100000)}`,
             ...projectData,
@@ -86,84 +200,8 @@ export const marketplaceService = {
     });
   },
   
-  submitProposal: async (projectId, proposalData) => {
-    // In a real app: return fetch(`/api/marketplace/projects/${projectId}/proposals`, { method: 'POST', body: JSON.stringify(proposalData) })
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          success: true,
-          message: 'Proposal submitted successfully',
-          data: {
-            proposal_id: `PROP${Math.floor(Math.random() * 100000)}`,
-            project_id: projectId,
-            status: 'Pending Review'
-          }
-        });
-      }, 1000);
-    });
-  },
-  
-  // Suppliers
-  getSupplierCategories: async () => {
-    // In a real app: return fetch('/api/marketplace/suppliers/categories')
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          success: true,
-          data: {} // This would be populated from the API
-        });
-      }, 500);
-    });
-  },
-  
-  getSuppliers: async (filters = {}) => {
-    // In a real app: return fetch('/api/marketplace/suppliers?' + new URLSearchParams(filters))
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          success: true,
-          data: {
-            suppliers: [], // This would be populated from the API
-            total: 0,
-            filters_applied: filters
-          }
-        });
-      }, 500);
-    });
-  },
-  
-  getSupplierProducts: async (supplierId, filters = {}) => {
-    // In a real app: return fetch(`/api/marketplace/suppliers/${supplierId}/products?` + new URLSearchParams(filters))
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          success: true,
-          data: {
-            products: [], // This would be populated from the API
-            total: 0,
-            filters_applied: filters
-          }
-        });
-      }, 500);
-    });
-  },
-  
-  requestQuote: async (supplierId, productIds, requestData) => {
-    // In a real app: return fetch(`/api/marketplace/suppliers/${supplierId}/quote`, { method: 'POST', body: JSON.stringify({ products: productIds, ...requestData }) })
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          success: true,
-          message: 'Quote request submitted successfully',
-          data: {
-            quote_request_id: `QR${Math.floor(Math.random() * 100000)}`,
-            supplier_id: supplierId,
-            status: 'Pending'
-          }
-        });
-      }, 1000);
-    });
-  }
+  // Other mock methods would be implemented similarly
 };
 
-export default marketplaceService;
+// Export the appropriate service based on environment
+export default useMockData ? mockMarketplaceService : marketplaceService;

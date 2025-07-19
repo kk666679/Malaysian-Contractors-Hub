@@ -1,8 +1,12 @@
 import { useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { Button } from './ui/button.jsx'
 import { Badge } from './ui/badge.jsx'
+import { motion } from 'framer-motion'
 import { Building2, Menu, X } from 'lucide-react'
+import { ThemeToggle } from './ui/theme-toggle.jsx'
+import NotificationSystem from './NotificationSystem.jsx'
+import SearchDialog from './SearchDialog.jsx'
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -23,24 +27,32 @@ const Header = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
-            <Building2 className="h-8 w-8 text-primary" />
-            <span className="text-xl font-bold text-foreground">
-              Malaysian Contractors Hub
-            </span>
-          </Link>
+          <motion.div
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+          >
+            <Button to="/" variant="ghost" className="flex items-center space-x-2 p-0 h-auto hover:bg-transparent">
+              <Building2 className="h-8 w-8 text-primary" />
+              <span className="text-xl font-bold text-foreground">
+                Malaysian Contractors Hub
+              </span>
+            </Button>
+          </motion.div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex space-x-8">
             {navigation.map((item) => (
-              <Link
+              <Button
                 key={item.name}
                 to={item.href}
+                variant="ghost"
                 className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   isActive(item.href)
                     ? 'bg-primary/10 text-primary'
                     : 'text-foreground hover:text-primary hover:bg-accent'
                 }`}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
                 {item.name}
                 {item.name === 'Services' && (
@@ -58,22 +70,34 @@ const Header = () => {
                     4
                   </Badge>
                 )}
-              </Link>
+              </Button>
             ))}
           </nav>
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center space-x-4">
-            <Link to="/contact">
-              <Button variant="outline" size="sm">
-                Contact
-              </Button>
-            </Link>
-            <Link to="/dashboard">
-              <Button size="sm">
-                Get Started
-              </Button>
-            </Link>
+            <div className="mr-2">
+              <SearchDialog />
+            </div>
+            <NotificationSystem />
+            <ThemeToggle />
+            <Button 
+              to="/contact" 
+              variant="outline" 
+              size="sm"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Contact
+            </Button>
+            <Button 
+              to="/dashboard" 
+              size="sm"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Get Started
+            </Button>
           </div>
 
           {/* Mobile menu button */}
@@ -96,30 +120,44 @@ const Header = () => {
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t">
               {navigation.map((item) => (
-                <Link
+                <Button
                   key={item.name}
                   to={item.href}
-                  className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
+                  variant="ghost"
+                  className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium transition-colors ${
                     isActive(item.href)
                       ? 'bg-primary/10 text-primary'
                       : 'text-foreground hover:text-primary hover:bg-accent'
                   }`}
                   onClick={() => setIsMenuOpen(false)}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                 >
                   {item.name}
-                </Link>
+                </Button>
               ))}
               <div className="pt-4 pb-2 space-y-2">
-                <Link to="/contact" onClick={() => setIsMenuOpen(false)}>
-                  <Button variant="outline" size="sm" className="w-full">
-                    Contact
-                  </Button>
-                </Link>
-                <Link to="/dashboard" onClick={() => setIsMenuOpen(false)}>
-                  <Button size="sm" className="w-full">
-                    Get Started
-                  </Button>
-                </Link>
+                <Button 
+                  to="/contact" 
+                  variant="outline" 
+                  size="sm" 
+                  className="w-full"
+                  onClick={() => setIsMenuOpen(false)}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  Contact
+                </Button>
+                <Button 
+                  to="/dashboard" 
+                  size="sm" 
+                  className="w-full"
+                  onClick={() => setIsMenuOpen(false)}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  Get Started
+                </Button>
               </div>
             </div>
           </div>

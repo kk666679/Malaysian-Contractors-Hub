@@ -1,118 +1,187 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Bell, X, CheckCircle, AlertCircle, Info } from 'lucide-react'
+import { Button } from './ui/button'
+import { Badge } from './ui/badge'
 
-const NotificationItem = ({ notification, onClose }) => {
-  const [isVisible, setIsVisible] = useState(true)
+const MOCK_NOTIFICATIONS = [
+  {
+    id: 1,
+    type: 'info',
+    title: 'New compliance update',
+    message: 'CIDB has updated regulations for electrical installations',
+    time: '2 hours ago',
+    read: false
+  },
+  {
+    id: 2,
+    type: 'success',
+    title: 'Project bid accepted',
+    message: 'Your bid for Kuala Lumpur Tower renovation was accepted',
+    time: '1 day ago',
+    read: false
+  },
+  {
+    id: 3,
+    type: 'warning',
+    title: 'Material price alert',
+    message: 'Steel prices have increased by 5% in the last week',
+    time: '3 days ago',
+    read: true
+  }
+]
+
+export default function NotificationSystem() {
+  const [isOpen, setIsOpen] = useState(false)
+  const [notifications, setNotifications] = useState(MOCK_NOTIFICATIONS)
   
+  // Close the dropdown when clicking outside
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsVisible(false)
-      setTimeout(() => onClose(notification.id), 300) // Allow time for fade-out animation
-    }, notification.duration || 5000)
-    
-    return () => clearTimeout(timer)
-  }, [notification, onClose])
-  
-  const getTypeStyles = () => {
-    switch (notification.type) {
-      case 'success':
-        return 'bg-green-100 border-green-400 text-green-700'
-      case 'error':
-        return 'bg-red-100 border-red-400 text-red-700'
-      case 'warning':
-        return 'bg-yellow-100 border-yellow-400 text-yellow-700'
-      case 'info':
-      default:
-        return 'bg-blue-100 border-blue-400 text-blue-700'
+    const handleClickOutside = () => setIsOpen(false)
+    if (isOpen) {
+      document.addEventListener('click', handleClickOutside)
+      return () => document.removeEventListener('click', handleClickOutside)
+    }
+  }, [isOpen])
+
+  const handleToggle = (e) => {
+    e.stopPropagation()
+    setIsOpen(!isOpen)
+  }
+
+  const markAsRead = (id) => {
+    setNotifications(notifications.map(notification => 
+      notification.id === id ? { ...notification, read: true } : notification
+    ))
+  }
+
+  const markAllAsRead = () => {
+    setNotifications(notifications.map(notification => ({ ...notification, read: true })))
+  }
+
+  const removeNotification = (id) => {
+    setNotifications(notifications.filter(notification => notification.id !== id))
+  }
+
+  const unreadCount = notifications.filter(notification => !notification.read).length
+
+  const getIcon = (type) => {
+    switch (type) {
+      case 'success': return <CheckCircle className="h-5 w-5 text-emerald-500" />
+      case 'warning': return <AlertCircle className="h-5 w-5 text-amber-500" />
+      default: return <Info className="h-5 w-5 text-blue-500" />
     }
   }
-  
+
   return (
-    <div 
-      className={`${getTypeStyles()} border px-4 py-3 rounded mb-3 flex justify-between items-center transition-opacity duration-300 ${isVisible ? 'opacity-100' : 'opacity-0'}`}
-    >
-      <span>{notification.message}</span>
-      <button 
-        onClick={() => onClose(notification.id)} 
-        className="text-current"
+    <div className="relative">
+      <Button
+        variant="ghost"
+        size="icon"
+        onClick={handleToggle}
+        className="rounded-full relative"
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
       >
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-          <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-        </svg>
-      </button>
+        <Bell className="h-[1.2rem] w-[1.2rem]" />
+        {unreadCount > 0 && (
+          <span className="absolute top-0 right-0 h-4 w-4 rounded-full bg-primary text-[10px] font-medium flex items-center justify-center text-primary-foreground">
+            {unreadCount}
+          </span>
+        )}
+        <span className="sr-only">Notifications</span>
+      </Button>
+      
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.15 }}
+            className="absolute right-0 mt-2 w-80 rounded-md bg-card shadow-lg ring-1 ring-black ring-opacity-5 z-50"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-4">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-sm font-medium">Notifications</h3>
+                {unreadCount > 0 && (
+                  <button 
+                    onClick={markAllAsRead}
+                    className="text-xs text-primary hover:underline"
+                  >
+                    Mark all as read
+                  </button>
+                )}
+              </div>
+              
+              <div className="space-y-3 max-h-[300px] overflow-y-auto custom-scrollbar">
+                <AnimatePresence>
+                  {notifications.length > 0 ? (
+                    notifications.map((notification) => (
+                      <motion.div
+                        key={notification.id}
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className={`p-3 rounded-md relative ${notification.read ? 'bg-card' : 'bg-muted'}`}
+                        onClick={() => markAsRead(notification.id)}
+                      >
+                        <div className="flex gap-3">
+                          <div className="flex-shrink-0 mt-0.5">
+                            {getIcon(notification.type)}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-foreground">
+                              {notification.title}
+                            </p>
+                            <p className="text-xs text-muted-foreground mt-1">
+                              {notification.message}
+                            </p>
+                            <p className="text-xs text-muted-foreground/70 mt-1">
+                              {notification.time}
+                            </p>
+                          </div>
+                          <button 
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              removeNotification(notification.id)
+                            }}
+                            className="text-muted-foreground hover:text-foreground"
+                          >
+                            <X className="h-4 w-4" />
+                          </button>
+                        </div>
+                        {!notification.read && (
+                          <span className="absolute top-3 right-3 h-2 w-2 rounded-full bg-primary" />
+                        )}
+                      </motion.div>
+                    ))
+                  ) : (
+                    <div className="text-center py-6">
+                      <p className="text-sm text-muted-foreground">No notifications</p>
+                    </div>
+                  )}
+                </AnimatePresence>
+              </div>
+              
+              {notifications.length > 0 && (
+                <div className="mt-4 pt-3 border-t">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="w-full text-xs"
+                    to="/notifications"
+                  >
+                    View all notifications
+                  </Button>
+                </div>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   )
-}
-
-const NotificationContainer = ({ notifications, onClose }) => {
-  if (!notifications.length) return null
-  
-  return (
-    <div className="fixed top-5 right-5 z-50 w-80">
-      {notifications.map(notification => (
-        <NotificationItem 
-          key={notification.id} 
-          notification={notification} 
-          onClose={onClose} 
-        />
-      ))}
-    </div>
-  )
-}
-
-// Create a notification context for app-wide notifications
-const NotificationContext = React.createContext({
-  notifications: [],
-  addNotification: () => {},
-  removeNotification: () => {}
-})
-
-export const NotificationProvider = ({ children }) => {
-  const [notifications, setNotifications] = useState([])
-  
-  const addNotification = (notification) => {
-    const id = Date.now().toString()
-    setNotifications(prev => [...prev, { id, ...notification }])
-  }
-  
-  const removeNotification = (id) => {
-    setNotifications(prev => prev.filter(notification => notification.id !== id))
-  }
-  
-  return (
-    <NotificationContext.Provider value={{ notifications, addNotification, removeNotification }}>
-      {children}
-      <NotificationContainer 
-        notifications={notifications} 
-        onClose={removeNotification} 
-      />
-    </NotificationContext.Provider>
-  )
-}
-
-export const useNotification = () => {
-  const context = React.useContext(NotificationContext)
-  
-  if (context === undefined) {
-    throw new Error('useNotification must be used within a NotificationProvider')
-  }
-  
-  return {
-    notifications: context.notifications,
-    notify: (message, type = 'info', duration = 5000) => {
-      context.addNotification({ message, type, duration })
-    },
-    success: (message, duration = 5000) => {
-      context.addNotification({ message, type: 'success', duration })
-    },
-    error: (message, duration = 5000) => {
-      context.addNotification({ message, type: 'error', duration })
-    },
-    warning: (message, duration = 5000) => {
-      context.addNotification({ message, type: 'warning', duration })
-    },
-    info: (message, duration = 5000) => {
-      context.addNotification({ message, type: 'info', duration })
-    },
-    removeNotification: context.removeNotification
-  }
 }

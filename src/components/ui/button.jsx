@@ -1,6 +1,9 @@
 import { forwardRef } from "react"
 import { cva } from "class-variance-authority"
 import { cn } from "../../lib/utils"
+import { motion } from "framer-motion"
+import { useNavigate } from "react-router-dom"
+import { buttonHover, buttonTap, springTransition } from "../../lib/animations"
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50",
@@ -28,11 +31,36 @@ const buttonVariants = cva(
   }
 )
 
-const Button = forwardRef(({ className, variant, size, ...props }, ref) => {
+const MotionButton = motion.button
+
+const Button = forwardRef(({ className, variant, size, to, whileHover, whileTap, animate, initial, transition, ...props }, ref) => {
+  const navigate = useNavigate()
+  
+  const handleClick = (e) => {
+    if (to) {
+      e.preventDefault()
+      navigate(to)
+    }
+    
+    if (props.onClick) {
+      props.onClick(e)
+    }
+  }
+  
+  const motionProps = {
+    whileHover: whileHover || buttonHover,
+    whileTap: whileTap || buttonTap,
+    animate: animate,
+    initial: initial,
+    transition: transition || springTransition
+  }
+  
   return (
-    <button
+    <MotionButton
       className={cn(buttonVariants({ variant, size, className }))}
       ref={ref}
+      onClick={handleClick}
+      {...motionProps}
       {...props}
     />
   )

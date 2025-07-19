@@ -14,18 +14,18 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
     
-    - name: Import GPG key
-      uses: crazy-max/ghaction-import-gpg@v5
-      with:
-        gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
-        passphrase: ${{ secrets.GPG_PASSPHRASE }}
-        git_user_signingkey: true
-        git_commit_gpgsign: true
+    # - name: Import GPG key
+    #   uses: crazy-max/ghaction-import-gpg@v5
+    #   with:
+    #     gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+    #     passphrase: ${{ secrets.GPG_PASSPHRASE }}
+    #     git_user_signingkey: true
+    #     git_commit_gpgsign: true
     
-    - name: Setup SSH key
-      uses: webfactory/ssh-agent@v0.7.0
-      with:
-        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+    # - name: Setup SSH key
+    #   uses: webfactory/ssh-agent@v0.7.0
+    #   with:
+    #     ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
     
     - name: Setup Node.js
       uses: actions/setup-node@v3
@@ -49,5 +49,5 @@ jobs:
       if: github.ref == 'refs/heads/main'
       uses: peaceiris/actions-gh-pages@v3
       with:
-        deploy_key: ${{ secrets.DEPLOY_KEY }}
+        github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ./dist
