@@ -15,7 +15,16 @@ node_modules
 # Build
 dist
 dist-ssr
+build
 *.local
+
+# React specific
+.eslintcache
+coverage
+.env.development.local
+.env.test.local
+.env.production.local
+npm-debug.log*
 
 # Editor directories and files
 .vscode/*
