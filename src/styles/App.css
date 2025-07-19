@@ -1,27 +1,27 @@
 /* App-specific styles */
 
 .app-container {
-  @apply min-h-screen flex flex-col;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .app-header {
-  @apply sticky z-40 w-full border-b bg-[--color-background]/95;
+  position: sticky;
+  z-index: 40;
+  width: 100%;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(10, 14, 23, 0.95);
   top: 0;
   backdrop-filter: blur(10px);
 }
 
-@supports (backdrop-filter: blur(1px)) {
-  .app-header {
-    background-color: rgba(var(--color-background), 0.6);
-  }
-}
-
 .app-main {
-  @apply flex-1;
+  flex: 1;
 }
 
 .app-footer {
-  @apply border-t;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
 }
@@ -73,9 +73,9 @@
 /* Custom scrollbar - using standard CSS */
 .custom-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: rgba(var(--color-primary), 0.2) transparent;
+  scrollbar-color: rgba(0, 240, 255, 0.2) transparent;
 }
 
 .custom-scrollbar:hover {
-  scrollbar-color: rgba(var(--color-primary), 0.3) transparent;
+  scrollbar-color: rgba(0, 240, 255, 0.3) transparent;
 }
