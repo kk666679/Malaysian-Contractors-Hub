@@ -2,7 +2,9 @@
 
 A comprehensive platform for Malaysian Civil and MEP (Mechanical, Electrical, and Plumbing) contractors to manage projects, ensure compliance with local regulations, and connect with specialists.
 
-[![Build Status](https://img.shields.io/github/actions/workflow/status/USERNAME/REPO/workflow-file.yml?branch=main)](https://github.com/USERNAME/REPO/actions)
+# Malaysian Civil & MEP Contractors Hub
+
+![Malaysian Civil & MEP Contractors Hub](https://raw.githubusercontent.com/MatMoto-Admin/MEP/main/MEP-badge.svg)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
@@ -45,7 +47,7 @@ Our platform offers comprehensive solutions for Malaysian MEP contractors:
 
 ### Prerequisites
 
-- Node.js (v18 or higher)
+- Node.js (v20 or higher)
 - npm (v9 or higher)
 
 ### Installation
@@ -146,4 +148,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Contact
 
-For any questions or feedback, please reach out to us at [contact@example.com](mailto:contact@example.com).
+For any questions or feedback, please reach out to us at [info@matmotofix.pro](mailto:info@matmotofix.pro)
