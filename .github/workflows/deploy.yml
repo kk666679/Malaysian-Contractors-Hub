@@ -2,19 +2,17 @@ name: Deploy to chemmara.space
 
 on:
   push:
-    branches:
-      - main
-    tags:
-      - 'v*'
+    branches: [main]
+    tags: ['v*']
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
@@ -23,12 +21,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
+      - name: Build project
         run: npm run build
 
-      - name: Create .htaccess
+      - name: Add .htaccess for SPA and optimizations
         run: |
-          cat > ./build/.htaccess << EOL
+          cat > ./build/.htaccess << 'EOL'
           <IfModule mod_rewrite.c>
             RewriteEngine On
             RewriteBase /
@@ -38,12 +36,10 @@ jobs:
             RewriteRule . /index.html [L]
           </IfModule>
 
-          # Enable GZIP compression
           <IfModule mod_deflate.c>
             AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/javascript application/json
           </IfModule>
 
-          # Set caching headers
           <IfModule mod_expires.c>
             ExpiresActive On
             ExpiresByType image/jpg "access plus 1 year"
@@ -58,7 +54,7 @@ jobs:
           </IfModule>
           EOL
 
-      - name: Deploy to server
+      - name: Deploy to chemmara.space server
         uses: easingthemes/ssh-deploy@main
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
@@ -67,13 +63,12 @@ jobs:
           REMOTE_HOST: "chemmara.space"
           REMOTE_USER: "chemmara"
           TARGET: "/var/www/html"
-          
-      - name: Create deployment tag
+
+      - name: Document deployment (if tagged)
         if: startsWith(github.ref, 'refs/tags/')
-        run: |
-          echo "Deployed version ${{ github.ref_name }} to chemmara.space" > deployment.txt
-          
-      - name: Create GitHub Release
+        run: echo "Deployed version ${{ github.ref_name }} to chemmara.space" > deployment.txt
+
+      - name: Create GitHub Release (if tagged)
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v1
         with:
