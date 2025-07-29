@@ -1,11 +1,12 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowLeft, Bell, TrendingUp, TrendingDown, AlertTriangle, Package, Truck, Calendar, Filter, ChevronDown, Search, BarChart3, Percent, DollarSign, ShoppingCart } from 'lucide-react'
+import { ArrowLeft, Bell, TrendingUp, TrendingDown, AlertTriangle, Package, Truck, Calendar, Filter, ChevronDown, Search, BarChart3, Percent, DollarSign, ShoppingCart, Clock } from 'lucide-react'
 import { Button } from '../components/ui/button.jsx'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card.jsx'
 import { Badge } from '../components/ui/badge.jsx'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs.jsx'
 import PageTransition from '../components/PageTransition.jsx'
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
 
 const MaterialAlerts = () => {
   const [searchQuery, setSearchQuery] = useState('')
@@ -527,12 +528,18 @@ const MaterialAlerts = () => {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="h-64 flex items-center justify-center bg-background-secondary rounded-lg">
-                      <div className="text-center">
-                        <BarChart3 className="h-12 w-12 mx-auto mb-4 text-text-muted opacity-40" />
-                        <p className="text-text-muted">Price trend chart visualization</p>
-                      </div>
-                    </div>
+                    <ResponsiveContainer width="100%" height={256}>
+                      <BarChart data={[
+                        { name: 'Steel', priceChange: 15.2 },
+                        { name: 'Copper', priceChange: 22.8 },
+                        { name: 'Cement', priceChange: -3.5 }
+                      ]} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                        <XAxis dataKey="name" />
+                        <YAxis />
+                        <Tooltip />
+                        <Bar dataKey="priceChange" fill="#3b82f6" />
+                      </BarChart>
+                    </ResponsiveContainer>
                     
                     <div className="mt-6 space-y-3">
                       <div className="flex justify-between items-center p-3 bg-background-secondary rounded-lg">

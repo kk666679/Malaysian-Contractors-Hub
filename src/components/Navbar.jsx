@@ -136,13 +136,13 @@ const Navbar = () => {
                     
                     <AnimatePresence mode="sync" initial={false}>
                       {(activeDropdown === item.name || (!activeDropdown && isActive(item.href))) && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: 10 }}
-                          transition={{ duration: 0.2 }}
-                          className="absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-background border border-border overflow-hidden z-20"
-                        >
+<motion.div
+  initial={{ opacity: 0, y: 10 }}
+  animate={{ opacity: 1, y: 0 }}
+  exit={{ opacity: 0, y: 10 }}
+  transition={{ duration: 0.2 }}
+  className="absolute left-0 mt-2 w-56 rounded-md shadow-lg bg-background border border-border overflow-hidden z-20 pointer-events-auto"
+>
                           <div className="py-1">
                             {item.dropdown.map((subItem) => (
                               <Link
@@ -216,14 +216,14 @@ const Navbar = () => {
                   <div className="text-xs text-muted-foreground">ahmad@example.com</div>
                 </div>
                 
-                <DropdownItem icon={<User size={16} />}>
+                <DropdownItem icon={<User size={16} />} onClick={() => {}}>
                   Profile
                 </DropdownItem>
-                <DropdownItem icon={<Settings size={16} />}>
+                <DropdownItem icon={<Settings size={16} />} onClick={() => {}}>
                   Settings
                 </DropdownItem>
                 <DropdownSeparator />
-                <DropdownItem icon={<LogOut size={16} />} className="text-accent-red">
+                <DropdownItem icon={<LogOut size={16} />} className="text-accent-red" onClick={() => {}}>
                   Logout
                 </DropdownItem>
               </div>
