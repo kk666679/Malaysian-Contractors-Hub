@@ -1,8 +1,13 @@
-import { forwardRef } from "react";
+import React, { forwardRef } from "react";
 import { cva } from "class-variance-authority";
 import { cn } from "../../lib/utils";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+
+/**
+ * @typedef {import("react").MouseEventHandler<HTMLButtonElement | HTMLAnchorElement>} MouseEventHandler
+ * @typedef {import("react").ReactNode} ReactNode
+ */
 
 const buttonVariants = cva(
   "inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
@@ -50,21 +55,49 @@ const defaultAnimations = {
 const MotionButton = motion.button;
 const MotionLink = motion(Link);
 
-const Button = forwardRef(({ 
-  className, 
-  variant, 
-  size, 
-  animation,
-  to, 
-  href,
-  whileHover, 
-  whileTap, 
-  animate, 
-  initial, 
-  transition, 
-  children,
-  ...props 
-}, ref) => {
+/**
+ * @typedef ButtonProps
+ * @property {string} [className]
+ * @property {"default" | "destructive" | "outline" | "secondary" | "ghost" | "link" | "gradient"} [variant]
+ * @property {"default" | "xs" | "sm" | "lg" | "xl" | "icon" | "icon-sm"} [size]
+ * @property {"none" | "pulse" | "bounce"} [animation]
+ * @property {string} [to]
+ * @property {string} [href]
+ * @property {object} [whileHover]
+ * @property {object} [whileTap]
+ * @property {object} [animate]
+ * @property {object} [initial]
+ * @property {object} [transition]
+ * @property {ReactNode} [children]
+ * @property {MouseEventHandler} [onClick]
+ */
+
+/**
+ * @param {ButtonProps} props
+ * @param {React.Ref<HTMLButtonElement>} ref
+ */
+const Button = forwardRef((
+  /** @type {ButtonProps} */
+  {
+    className,
+    variant,
+    size,
+    animation,
+    to,
+    href,
+    whileHover,
+    whileTap,
+    animate,
+    initial,
+    transition,
+    children,
+    onClick,
+    ...props
+  },
+  ref
+) => {
+  const navigate = useNavigate();
+
   const motionProps = {
     whileHover: whileHover || defaultAnimations.whileHover,
     whileTap: whileTap || defaultAnimations.whileTap,
@@ -72,9 +105,14 @@ const Button = forwardRef(({
     initial,
     transition: transition || defaultAnimations.transition
   };
-  
+
   const classes = cn(buttonVariants({ variant, size, animation, className }));
-  
+
+  const handleClick = (e) => {
+    if (onClick) onClick(e);
+    if (to) navigate(to);
+  };
+
   // External link
   if (href) {
     return (
@@ -86,12 +124,13 @@ const Button = forwardRef(({
         rel="noopener noreferrer"
         {...motionProps}
         {...props}
+        onClick={onClick}
       >
         {children}
       </motion.a>
     );
   }
-  
+
   // Internal routing with react-router
   if (to) {
     return (
@@ -106,12 +145,13 @@ const Button = forwardRef(({
       </MotionLink>
     );
   }
-  
+
   // Regular button
   return (
     <MotionButton
       className={classes}
       ref={ref}
+      onClick={onClick}
       {...motionProps}
       {...props}
     >

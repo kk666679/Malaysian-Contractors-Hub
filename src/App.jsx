@@ -8,6 +8,7 @@ import FloatingActionButton from './components/FloatingActionButton'
 import HomePage from './pages/HomePage'
 import GlobalStyles from './styles/GlobalStyles'
 import { darkTheme, lightTheme, fonts } from './styles/theme'
+import ErrorBoundary from './components/ErrorBoundary'
 
 // Lazy load components for better performance
 const ServicesPage = lazy(() => import('./pages/ServicesPage'))
@@ -20,6 +21,7 @@ const SiteManagement = lazy(() => import('./pages/SiteManagement'))
 const MaterialAlerts = lazy(() => import('./pages/MaterialAlerts'))
 const DashboardPage = lazy(() => import('./pages/DashboardPage'))
 const ProjectDetailsPage = lazy(() => import('./pages/ProjectDetailsPage'))
+import BuildingAutomation from './pages/BuildingAutomation.jsx'
 const PlaceholderPage = lazy(() => import('./components/PlaceholderPage'))
 const Web3Dashboard = lazy(() => import('./components/Web3Dashboard'))
 const Web3DemoPage = lazy(() => import('./pages/Web3DemoPage'))
@@ -71,7 +73,11 @@ const Layout = () => {
 const AppRoutes = () => (
   <Routes>
     <Route path="/" element={<Layout />}>
-      <Route index element={<HomePage />} />
+      <Route index element={
+        <ErrorBoundary>
+          <HomePage />
+        </ErrorBoundary>
+      } />
       <Route path="services" element={<ServicesPage />} />
       <Route path="services/civil-engineering" element={<CivilEngineeringPage />} />
       <Route path="services/electrical-systems" element={<ElectricalSystemsPage />} />
@@ -89,8 +95,12 @@ const AppRoutes = () => (
       <Route path="dashboard/projects/:id" element={<ProjectDetailsPage />} />
       <Route path="bid-engine" element={<ProjectBidEngine />} />
       <Route path="site-management" element={<SiteManagement />} />
-      <Route path="material-alerts" element={<MaterialAlerts />} />
-      <Route path="building-automation" element={<PlaceholderPage title="Building Automation" />} />
+      <Route path="material-alerts" element={
+        <ErrorBoundary>
+          <MaterialAlerts />
+        </ErrorBoundary>
+      } />
+      <Route path="building-automation" element={<BuildingAutomation />} />
       <Route path="web3-demo" element={<Web3DemoPage />} />
       <Route path="*" element={<PlaceholderPage title="404 - Page Not Found" />} />
     </Route>
