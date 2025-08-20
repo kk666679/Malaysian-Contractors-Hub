@@ -13,6 +13,7 @@
 
 - [Overview](#-overview)
 - [UI Preview](#-ui-preview)
+- [Architecture](#-architecture)
 - [Core Features](#-core-features)
 - [Technical Stack](#-technical-stack)
 - [Quick Start](#-quick-start)
