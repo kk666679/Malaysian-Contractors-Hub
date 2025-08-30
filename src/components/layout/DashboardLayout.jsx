@@ -17,7 +17,7 @@ import {
   LogOut
 } from 'lucide-react'
 import { ThemeToggle } from '../ui/theme-toggle'
-import NotificationSystem from '../NotificationSystem'
+import NotificationSystem from './NotificationSystem'
 import { Button } from '../ui/button'
 import { Avatar, AvatarImage, AvatarFallback } from '../ui/avatar'
 import { Separator } from '../ui/separator'

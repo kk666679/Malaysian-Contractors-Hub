@@ -8,6 +8,7 @@ const marketplaceRoutes = require('./routes/marketplace');
 const complianceRoutes = require('./routes/compliance');
 const userRoutes = require('./routes/user');
 const weatherRoutes = require('./routes/weather');
+const civilEngineeringRoutes = require('./routes/civilEngineering');
 
 // Create Express app
 const app = express();
@@ -23,6 +24,7 @@ app.use('/api/marketplace', marketplaceRoutes);
 app.use('/api/compliance', complianceRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/weather', weatherRoutes);
+app.use('/api/civil-engineering', civilEngineeringRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

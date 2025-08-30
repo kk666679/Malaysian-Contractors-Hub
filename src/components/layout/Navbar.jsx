@@ -6,7 +6,7 @@ import { Button } from './ui/button.jsx';
 import { ThemeToggle } from './ui/theme-toggle.jsx';
 import { DropdownMenu, DropdownItem, DropdownSeparator } from './ui/dropdown-menu.jsx';
 import NotificationSystem from './NotificationSystem.jsx';
-import SearchDialog from './SearchDialog.jsx';
+import SearchDialog from '../forms/SearchDialog.jsx';
 import { 
   Menu, X, ChevronDown, Home, Briefcase, 
   Shield, Users, BarChart2, Cloud, Wrench, Settings, LogOut, User

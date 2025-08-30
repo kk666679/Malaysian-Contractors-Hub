@@ -1,174 +1,153 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowLeft, Bell, TrendingUp, TrendingDown, AlertTriangle, Package, Truck, Calendar, Filter, ChevronDown, Search, BarChart3, Percent, DollarSign, ShoppingCart, Clock } from 'lucide-react'
+import { ArrowLeft, Bell, TrendingUp, TrendingDown, AlertTriangle, Package, Truck, Calendar, Filter, ChevronDown, Search, BarChart3, Percent, DollarSign, ShoppingCart, Clock, Loader2 } from 'lucide-react'
 import { Button } from '../components/ui/button.jsx'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card.jsx'
 import { Badge } from '../components/ui/badge.jsx'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs.jsx'
 import PageTransition from '../components/PageTransition.jsx'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
+import materialAlertsService from '../lib/materialAlertsService.js'
 
 const MaterialAlerts = () => {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [showFilters, setShowFilters] = useState(false)
-  const [subscribedAlerts, setSubscribedAlerts] = useState([1, 3, 5, 8])
+  const [subscribedAlerts, setSubscribedAlerts] = useState([])
+  const [materialAlerts, setMaterialAlerts] = useState([])
+  const [shortageAlerts, setShortageAlerts] = useState([])
+  const [categories, setCategories] = useState([])
+  const [marketTrends, setMarketTrends] = useState([])
+  const [supplyChainInsights, setSupplyChainInsights] = useState([])
+  const [costForecasts, setCostForecasts] = useState([])
+  const [loading, setLoading] = useState({
+    materialAlerts: false,
+    shortageAlerts: false,
+    categories: false,
+    marketTrends: false,
+    supplyChainInsights: false,
+    costForecasts: false,
+    subscriptions: false
+  })
+  const [error, setError] = useState(null)
   
-  // Mock data for material alerts
-  const materialAlerts = [
-    {
-      id: 1,
-      material: "Steel Reinforcement Bars",
-      category: "structural",
-      priceChange: 8.5,
-      currentPrice: 3250,
-      unit: "per ton",
-      trend: "up",
-      impact: "high",
-      date: "2024-08-01",
-      suppliers: 4,
-      notes: "Global steel prices rising due to increased demand and supply chain constraints."
-    },
-    {
-      id: 2,
-      material: "Portland Cement",
-      category: "concrete",
-      priceChange: -2.1,
-      currentPrice: 21.50,
-      unit: "per bag",
-      trend: "down",
-      impact: "medium",
-      date: "2024-08-03",
-      suppliers: 6,
-      notes: "Local oversupply has led to price reductions from major suppliers."
-    },
-    {
-      id: 3,
-      material: "Copper Wiring",
-      category: "electrical",
-      priceChange: 12.3,
-      currentPrice: 42.80,
-      unit: "per kg",
-      trend: "up",
-      impact: "high",
-      date: "2024-08-02",
-      suppliers: 3,
-      notes: "Significant price increase due to global copper shortage and high demand."
-    },
-    {
-      id: 4,
-      material: "PVC Pipes (100mm)",
-      category: "plumbing",
-      priceChange: 0,
-      currentPrice: 18.75,
-      unit: "per meter",
-      trend: "stable",
-      impact: "low",
-      date: "2024-08-04",
-      suppliers: 8,
-      notes: "Prices remain stable with good availability across suppliers."
-    },
-    {
-      id: 5,
-      material: "HVAC Ductwork",
-      category: "mechanical",
-      priceChange: 5.2,
-      currentPrice: 85.30,
-      unit: "per meter",
-      trend: "up",
-      impact: "medium",
-      date: "2024-08-01",
-      suppliers: 4,
-      notes: "Moderate price increases due to rising aluminum costs."
-    },
-    {
-      id: 6,
-      material: "Ceramic Floor Tiles",
-      category: "finishing",
-      priceChange: -3.5,
-      currentPrice: 42.00,
-      unit: "per sqm",
-      trend: "down",
-      impact: "low",
-      date: "2024-08-03",
-      suppliers: 10,
-      notes: "Seasonal discounts from major suppliers to clear inventory."
-    },
-    {
-      id: 7,
-      material: "Structural Timber",
-      category: "structural",
-      priceChange: 15.8,
-      currentPrice: 2850,
-      unit: "per cubic meter",
-      trend: "up",
-      impact: "high",
-      date: "2024-07-30",
-      suppliers: 3,
-      notes: "Severe shortage due to export restrictions and high global demand."
-    },
-    {
-      id: 8,
-      material: "Electrical Conduit",
-      category: "electrical",
-      priceChange: 4.2,
-      currentPrice: 12.50,
-      unit: "per meter",
-      trend: "up",
-      impact: "medium",
-      date: "2024-08-02",
-      suppliers: 5,
-      notes: "Moderate price increase following rising PVC material costs."
+  // Load initial data
+  useEffect(() => {
+    loadInitialData();
+    loadSubscribedAlerts();
+  }, []);
+
+  // Load initial data
+  const loadInitialData = async () => {
+    try {
+      setLoading(prev => ({ ...prev, materialAlerts: true, categories: true }));
+      
+      const [alertsResponse, categoriesResponse] = await Promise.all([
+        materialAlertsService.getMaterialAlerts(),
+        materialAlertsService.getMaterialCategories()
+      ]);
+
+      if (alertsResponse.success) {
+        setMaterialAlerts(alertsResponse.data.alerts || []);
+      }
+
+      if (categoriesResponse.success) {
+        setCategories(categoriesResponse.data.categories || []);
+      }
+    } catch (error) {
+      setError('Failed to load material alerts data');
+      console.error('Error loading initial data:', error);
+    } finally {
+      setLoading(prev => ({ ...prev, materialAlerts: false, categories: false }));
     }
-  ]
-  
-  // Material shortage alerts
-  const shortageAlerts = [
-    {
-      id: 101,
-      material: "Microchips for Building Automation",
-      category: "automation",
-      severity: "critical",
-      estimatedDelay: "8-12 weeks",
-      affectedRegions: ["All Malaysia", "Singapore", "Thailand"],
-      alternatives: ["Simplified control systems", "Alternative suppliers from Taiwan"],
-      date: "2024-08-01"
-    },
-    {
-      id: 102,
-      material: "Specialized Fire-Rated Glass",
-      category: "fire_safety",
-      severity: "moderate",
-      estimatedDelay: "3-4 weeks",
-      affectedRegions: ["Kuala Lumpur", "Selangor"],
-      alternatives: ["Standard fire-rated alternatives", "Local substitutes with certification"],
-      date: "2024-08-03"
-    },
-    {
-      id: 103,
-      material: "High-Grade Insulation Materials",
-      category: "mechanical",
-      severity: "low",
-      estimatedDelay: "1-2 weeks",
-      affectedRegions: ["East Malaysia"],
-      alternatives: ["Alternative thickness combinations", "Different R-value materials"],
-      date: "2024-08-04"
+  };
+
+  // Load subscribed alerts
+  const loadSubscribedAlerts = async () => {
+    try {
+      setLoading(prev => ({ ...prev, subscriptions: true }));
+      const response = await materialAlertsService.getSubscribedAlerts();
+      if (response.success) {
+        setSubscribedAlerts(response.data.subscribedAlerts || []);
+      }
+    } catch (error) {
+      console.error('Error loading subscribed alerts:', error);
+    } finally {
+      setLoading(prev => ({ ...prev, subscriptions: false }));
     }
-  ]
-  
-  // Material categories
-  const categories = [
-    { id: 'all', name: 'All Categories' },
-    { id: 'structural', name: 'Structural' },
-    { id: 'concrete', name: 'Concrete' },
-    { id: 'electrical', name: 'Electrical' },
-    { id: 'plumbing', name: 'Plumbing' },
-    { id: 'mechanical', name: 'Mechanical' },
-    { id: 'finishing', name: 'Finishing' },
-    { id: 'automation', name: 'Automation' },
-    { id: 'fire_safety', name: 'Fire Safety' }
-  ]
-  
+  };
+
+  // Load shortage alerts
+  const loadShortageAlerts = async () => {
+    try {
+      setLoading(prev => ({ ...prev, shortageAlerts: true }));
+      const response = await materialAlertsService.getShortageAlerts();
+      if (response.success) {
+        setShortageAlerts(response.data.shortages || []);
+      }
+    } catch (error) {
+      console.error('Error loading shortage alerts:', error);
+    } finally {
+      setLoading(prev => ({ ...prev, shortageAlerts: false }));
+    }
+  };
+
+  // Load market trends
+  const loadMarketTrends = async () => {
+    try {
+      setLoading(prev => ({ ...prev, marketTrends: true }));
+      const response = await materialAlertsService.getMarketTrends();
+      if (response.success) {
+        setMarketTrends(response.data.trends || []);
+      }
+    } catch (error) {
+      console.error('Error loading market trends:', error);
+    } finally {
+      setLoading(prev => ({ ...prev, marketTrends: false }));
+    }
+  };
+
+  // Load supply chain insights
+  const loadSupplyChainInsights = async () => {
+    try {
+      setLoading(prev => ({ ...prev, supplyChainInsights: true }));
+      const response = await materialAlertsService.getSupplyChainInsights();
+      if (response.success) {
+        setSupplyChainInsights(response.data.insights || []);
+      }
+    } catch (error) {
+      console.error('Error loading supply chain insights:', error);
+    } finally {
+      setLoading(prev => ({ ...prev, supplyChainInsights: false }));
+    }
+  };
+
+  // Load cost forecasts
+  const loadCostForecasts = async () => {
+    try {
+      setLoading(prev => ({ ...prev, costForecasts: true }));
+      const response = await materialAlertsService.getCostForecasts();
+      if (response.success) {
+        setCostForecasts(response.data.forecasts || []);
+      }
+    } catch (error) {
+      console.error('Error loading cost forecasts:', error);
+    } finally {
+      setLoading(prev => ({ ...prev, costForecasts: false }));
+    }
+  };
+
+  // Handle tab change to load data on demand
+  const handleTabChange = (value) => {
+    if (value === 'shortage-alerts' && shortageAlerts.length === 0) {
+      loadShortageAlerts();
+    } else if (value === 'market-trends') {
+      if (marketTrends.length === 0) loadMarketTrends();
+      if (supplyChainInsights.length === 0) loadSupplyChainInsights();
+      if (costForecasts.length === 0) loadCostForecasts();
+    }
+  };
+
   // Filter alerts based on search query and category
   const filteredAlerts = materialAlerts.filter(alert => {
     const matchesSearch = alert.material.toLowerCase().includes(searchQuery.toLowerCase())
@@ -178,11 +157,25 @@ const MaterialAlerts = () => {
   })
   
   // Toggle alert subscription
-  const toggleAlertSubscription = (alertId) => {
-    if (subscribedAlerts.includes(alertId)) {
-      setSubscribedAlerts(subscribedAlerts.filter(id => id !== alertId))
-    } else {
-      setSubscribedAlerts([...subscribedAlerts, alertId])
+  const toggleAlertSubscription = async (alertId) => {
+    try {
+      setLoading(prev => ({ ...prev, subscriptions: true }));
+      
+      if (subscribedAlerts.includes(alertId)) {
+        const response = await materialAlertsService.unsubscribeFromAlert(alertId);
+        if (response.success) {
+          setSubscribedAlerts(subscribedAlerts.filter(id => id !== alertId));
+        }
+      } else {
+        const response = await materialAlertsService.subscribeToAlert(alertId);
+        if (response.success) {
+          setSubscribedAlerts([...subscribedAlerts, alertId]);
+        }
+      }
+    } catch (error) {
+      console.error('Error toggling alert subscription:', error);
+    } finally {
+      setLoading(prev => ({ ...prev, subscriptions: false }));
     }
   }
   
@@ -276,7 +269,7 @@ const MaterialAlerts = () => {
             </p>
           </div>
           
-          <Tabs defaultValue="price-alerts" className="mb-8">
+          <Tabs defaultValue="price-alerts" className="mb-8" onValueChange={handleTabChange}>
             <TabsList className="grid grid-cols-3 mb-8">
               <TabsTrigger value="price-alerts">Price Alerts</TabsTrigger>
               <TabsTrigger value="shortage-alerts">Shortage Alerts</TabsTrigger>
@@ -360,9 +353,32 @@ const MaterialAlerts = () => {
                 )}
               </div>
               
+              {/* Error message */}
+              {error && (
+                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                  <div className="flex items-center gap-2 text-red-700">
+                    <AlertTriangle className="h-5 w-5" />
+                    <span>{error}</span>
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="mt-2"
+                    onClick={loadInitialData}
+                  >
+                    Try Again
+                  </Button>
+                </div>
+              )}
+
               {/* Price Alerts List */}
               <div className="space-y-4">
-                {filteredAlerts.length > 0 ? (
+                {loading.materialAlerts ? (
+                  <div className="text-center py-12">
+                    <Loader2 className="h-8 w-8 mx-auto mb-4 animate-spin text-primary" />
+                    <p className="text-text-muted">Loading material alerts...</p>
+                  </div>
+                ) : filteredAlerts.length > 0 ? (
                   filteredAlerts.map((alert) => {
                     const trendIndicator = getTrendIndicator(alert.trend, alert.priceChange)
                     
@@ -457,8 +473,14 @@ const MaterialAlerts = () => {
               </div>
               
               <div className="space-y-4">
-                {shortageAlerts.map((alert) => (
-                  <Card key={alert.id}>
+                {loading.shortageAlerts ? (
+                  <div className="text-center py-12">
+                    <Loader2 className="h-8 w-8 mx-auto mb-4 animate-spin text-primary" />
+                    <p className="text-text-muted">Loading shortage alerts...</p>
+                  </div>
+                ) : shortageAlerts.length > 0 ? (
+                  shortageAlerts.map((alert) => (
+                    <Card key={alert.id}>
                     <CardContent className="p-6">
                       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
                         <div>
@@ -511,7 +533,14 @@ const MaterialAlerts = () => {
                       </div>
                     </CardContent>
                   </Card>
-                ))}
+                ))
+                ) : (
+                  <div className="text-center py-12 bg-background-secondary rounded-lg">
+                    <Package className="h-12 w-12 mx-auto mb-4 text-text-muted opacity-40" />
+                    <h4 className="text-lg font-medium mb-2">No shortage alerts found</h4>
+                    <p className="text-text-muted">No current material shortages reported</p>
+                  </div>
+                )}
               </div>
             </TabsContent>
             

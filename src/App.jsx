@@ -2,13 +2,13 @@ import { BrowserRouter, Routes, Route, useLocation, Outlet } from 'react-router-
 import { AnimatePresence, motion } from 'framer-motion'
 import { ThemeProvider } from 'styled-components'
 import { Suspense, lazy, useState, useEffect } from 'react'
-import Navbar from './components/Navbar'
-import Footer from './components/Footer'
-import FloatingActionButton from './components/FloatingActionButton'
+import Navbar from './components/layout/Navbar'
+import Footer from './components/layout/Footer'
+import FloatingActionButton from './components/layout/FloatingActionButton'
 import HomePage from './pages/HomePage'
 import GlobalStyles from './styles/GlobalStyles'
 import { darkTheme, lightTheme, fonts } from './styles/theme'
-import ErrorBoundary from './components/ErrorBoundary'
+import ErrorBoundary from './components/features/ErrorBoundary'
 
 // Lazy load components for better performance
 const ServicesPage = lazy(() => import('./pages/ServicesPage'))
@@ -19,11 +19,11 @@ const MonsoonRiskPlanner = lazy(() => import('./pages/MonsoonRiskPlanner'))
 const ProjectBidEngine = lazy(() => import('./pages/ProjectBidEngine'))
 const SiteManagement = lazy(() => import('./pages/SiteManagement'))
 const MaterialAlerts = lazy(() => import('./pages/MaterialAlerts'))
-const DashboardPage = lazy(() => import('./pages/DashboardPage'))
+const DashboardPage = lazy(() => import('./modules/Dashboard'))
 const ProjectDetailsPage = lazy(() => import('./pages/ProjectDetailsPage'))
 import BuildingAutomation from './pages/BuildingAutomation.jsx'
-const PlaceholderPage = lazy(() => import('./components/PlaceholderPage'))
-const Web3Dashboard = lazy(() => import('./components/Web3Dashboard'))
+const PlaceholderPage = lazy(() => import('./components/features/PlaceholderPage'))
+const Web3Dashboard = lazy(() => import('./components/features/Web3Dashboard'))
 const Web3DemoPage = lazy(() => import('./pages/Web3DemoPage'))
 
 // Service pages

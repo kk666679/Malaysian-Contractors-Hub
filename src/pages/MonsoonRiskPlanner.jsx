@@ -1,10 +1,11 @@
+
 import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card.jsx'
 import { Button } from '../components/ui/button.jsx'
 import { Badge } from '../components/ui/badge.jsx'
-import { fetchWeatherForecast, assessMonsoonRisk } from '../lib/mockApi'
 import PageTransition from '../components/PageTransition.jsx'
 import { motion } from 'framer-motion'
+import monsoonRiskService from '../lib/monsoonRiskService.js'
 import { 
   Cloud,
   AlertTriangle,
@@ -13,7 +14,8 @@ import {
   Droplets,
   Sun,
   CloudRain,
-  ArrowLeft
+  ArrowLeft,
+  Loader2
 } from 'lucide-react'
 
 const MonsoonRiskPlanner = () => {
@@ -26,6 +28,7 @@ const MonsoonRiskPlanner = () => {
   const [riskAssessment, setRiskAssessment] = useState(null)
   const [weatherForecast, setWeatherForecast] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
 
   const states = [
     { id: 'KL', label: 'Kuala Lumpur' },
@@ -63,15 +66,21 @@ const MonsoonRiskPlanner = () => {
 
   const assessRisk = async () => {
     setLoading(true)
+    setError(null)
     try {
-      // Get weather forecast using mock API
-      const forecastData = await fetchWeatherForecast(riskData.state, 7)
-      setWeatherForecast(forecastData)
+      // Get weather forecast using API service
+      const forecastResponse = await monsoonRiskService.fetchWeatherForecast(riskData.state, 7)
+      if (forecastResponse.success) {
+        setWeatherForecast(forecastResponse.data)
+      }
 
-      // Get risk assessment using mock API
-      const riskData2 = await assessMonsoonRisk(riskData)
-      setRiskAssessment(riskData2)
+      // Get risk assessment using API service
+      const riskResponse = await monsoonRiskService.assessMonsoonRisk(riskData)
+      if (riskResponse.success) {
+        setRiskAssessment(riskResponse.data)
+      }
     } catch (error) {
+      setError('Failed to assess monsoon risk. Please try again.')
       console.error('Error assessing risk:', error)
     } finally {
       setLoading(false)
@@ -99,6 +108,24 @@ const MonsoonRiskPlanner = () => {
             Weather impact analysis on drainage/earthwork schedules
           </p>
         </div>
+
+        {/* Error message */}
+        {error && (
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <div className="flex items-center gap-2 text-red-700">
+              <AlertTriangle className="h-5 w-5" />
+              <span>{error}</span>
+            </div>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="mt-2"
+              onClick={assessRisk}
+            >
+              Try Again
+            </Button>
+          </div>
+        )}
 
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Input Form */}
