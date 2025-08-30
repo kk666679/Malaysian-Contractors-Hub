@@ -1,6 +1,6 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const marketplaceController = require('../controllers/marketplaceController');
+import marketplaceController from '../controllers/marketplaceController.js';
 
 // Specialist routes
 router.get('/specialists', marketplaceController.getSpecialists);
@@ -23,4 +23,4 @@ router.get('/suppliers/:id', marketplaceController.getSupplierDetails);
 router.get('/suppliers/:id/products', marketplaceController.getSupplierProducts);
 router.post('/suppliers/:id/quote', marketplaceController.requestQuote);
 
-module.exports = router;
+export default router;

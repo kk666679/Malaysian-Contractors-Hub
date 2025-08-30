@@ -1,6 +1,6 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const weatherController = require('../controllers/weatherController');
+import weatherController from '../controllers/weatherController.js';
 
 // Get weather data for all regions
 router.get('/', weatherController.getAllWeather);
@@ -11,4 +11,4 @@ router.get('/:region', weatherController.getRegionWeather);
 // Get monsoon forecast
 router.get('/monsoon/forecast', weatherController.getMonsoonForecast);
 
-module.exports = router;
+export default router;

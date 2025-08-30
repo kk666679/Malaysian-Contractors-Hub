@@ -397,4 +397,4 @@ const marketplaceController = {
   }
 };
 
-module.exports = marketplaceController;
+export default marketplaceController;

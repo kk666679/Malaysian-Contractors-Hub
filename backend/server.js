@@ -1,14 +1,16 @@
-const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-const morgan = require('morgan');
+import express from 'express';
+import cors from 'cors';
+import bodyParser from 'body-parser';
+import morgan from 'morgan';
+import redisService from './services/redisService.js';
 
 // Import route modules
-const marketplaceRoutes = require('./routes/marketplace');
-const complianceRoutes = require('./routes/compliance');
-const userRoutes = require('./routes/user');
-const weatherRoutes = require('./routes/weather');
-const civilEngineeringRoutes = require('./routes/civilEngineering');
+import marketplaceRoutes from './routes/marketplace.js';
+import complianceRoutes from './routes/compliance.js';
+import userRoutes from './routes/user.js';
+import weatherRoutes from './routes/weather.js';
+import civilEngineeringRoutes from './routes/civilEngineering.js';
+import redisRoutes from './routes/redis.js';
 
 // Create Express app
 const app = express();
@@ -25,6 +27,7 @@ app.use('/api/compliance', complianceRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/weather', weatherRoutes);
 app.use('/api/civil-engineering', civilEngineeringRoutes);
+app.use('/api/redis', redisRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -36,9 +39,36 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+// Initialize Redis connection and start server
+async function startServer() {
+  try {
+    // Initialize Redis connection
+    await redisService.connect();
+
+    // Start server
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+      console.log('Redis service initialized');
+    });
+  } catch (error) {
+    console.error('Failed to start server:', error);
+    process.exit(1);
+  }
+}
+
+// Handle graceful shutdown
+process.on('SIGINT', async () => {
+  console.log('Shutting down server...');
+  await redisService.disconnect();
+  process.exit(0);
 });
 
-module.exports = app;
+process.on('SIGTERM', async () => {
+  console.log('Shutting down server...');
+  await redisService.disconnect();
+  process.exit(0);
+});
+
+startServer();
+
+export default app;

@@ -1,0 +1,156 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma-client"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  role      UserRole @default(CONTRACTOR)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  projects Project[]
+  bids     Bid[]
+  tasks    Task[]
+}
+
+enum UserRole {
+  ADMIN
+  CONTRACTOR
+  CLIENT
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  status      ProjectStatus @default(PLANNING)
+  budget      Float?
+  startDate   DateTime?
+  endDate     DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  ownerId String
+  owner   User   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  bids      Bid[]
+  materials Material[]
+  tasks     Task[]
+  civilEngineeringDesigns CivilEngineeringDesign[]
+  complianceChecks        ComplianceCheck[]
+}
+
+enum ProjectStatus {
+  PLANNING
+  BIDDING
+  APPROVED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+model Bid {
+  id        String   @id @default(cuid())
+  amount    Float
+  status    BidStatus @default(PENDING)
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  bidderId String
+  bidder   User   @relation(fields: [bidderId], references: [id], onDelete: Cascade)
+}
+
+enum BidStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  WITHDRAWN
+}
+
+model Material {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  quantity    Float
+  unit        String
+  unitPrice   Float
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model Task {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  status      TaskStatus @default(PENDING)
+  dueDate     DateTime?
+  completedAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  assignedToId String?
+  assignedTo   User?    @relation(fields: [assignedToId], references: [id], onDelete: SetNull)
+}
+
+enum TaskStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  BLOCKED
+}
+
+model CivilEngineeringDesign {
+  id          String   @id @default(cuid())
+  structureType String
+  material     String
+  dimensions   Json
+  loads        Json
+  capacity     Json
+  compliance   Json
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  projectId String?
+  project   Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+}
+
+model ComplianceCheck {
+  id          String   @id @default(cuid())
+  standard    String
+  status      ComplianceStatus @default(PASS)
+  issues      String[]
+  recommendations String[]
+  checkedAt   DateTime @default(now())
+  createdAt   DateTime @default(now())
+
+  projectId String
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+enum ComplianceStatus {
+  PASS
+  FAIL
+  WARNING
+  PENDING
+}

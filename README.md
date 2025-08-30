@@ -1,6 +1,6 @@
 # MC-Hub: Malaysian Contractors Hub
 
-MC-Hub is a web-based platform designed for contractors in Malaysia, providing tools to manage contracting projects in various sectors like civil engineering, electrical systems, building automation, and HVAC. The platform enables contractors to interact, generate bids, manage compliance, and track project progress using modern technologies such as **React**, **Vercel**, **Neon** for PostgreSQL, and **TailwindCSS**.
+MC-Hub is a web app platform designed for contractors in Malaysia, providing tools to manage contracting projects in various sectors like civil engineering, electrical systems, building automation, and HVAC. The platform enables contractors to interact, generate bids, manage compliance, and track project progress using modern technologies such as **React**, **Vercel**, **Neon** for PostgreSQL, and **TailwindCSS**.
 
 ## Table of Contents
 
@@ -212,6 +212,26 @@ npm run test
 * **Bid Generation**: A tool that generates custom bids based on project data.
 * **Compliance Tracking**: Real-time monitoring to ensure projects comply with local building codes.
 * **PWA**: Offline functionality and fast load times, even on unreliable networks.
+
+## Recent Implementations
+
+### Civil Engineering Module
+
+- Backend controller and service for structural capacity calculations, Malaysian standards compliance checking, design compliance verification, and structural design report generation.
+- Comprehensive test suites covering service and API endpoints.
+- API endpoints exposed for integration with frontend components.
+
+### Monsoon Risk Planner
+
+- Frontend React page for assessing weather impact on project schedules.
+- Integrates with backend weather API to fetch 7-day forecasts and monsoon risk assessments.
+- Provides detailed risk breakdown, recommendations, and optimal/avoid workday suggestions.
+
+### Material Alerts
+
+- Frontend React page for monitoring material price alerts, shortages, market trends, and supply chain insights.
+- Features subscription management for material alerts.
+- Visualizes market trends and cost forecasts with charts and detailed tables.
 
 ## Contributing
 

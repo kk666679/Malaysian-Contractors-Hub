@@ -1,6 +1,6 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const complianceController = require('../controllers/complianceController');
+import complianceController from '../controllers/complianceController.js';
 
 // Get all compliance data
 router.get('/', complianceController.getAllCompliance);
@@ -14,4 +14,4 @@ router.get('/cidb-requirements', complianceController.getCIDBRequirements);
 // Get local regulations
 router.get('/local-regulations', complianceController.getLocalRegulations);
 
-module.exports = router;
+export default router;

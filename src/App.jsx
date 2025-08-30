@@ -102,6 +102,7 @@ const AppRoutes = () => (
       } />
       <Route path="building-automation" element={<BuildingAutomation />} />
       <Route path="web3-demo" element={<Web3DemoPage />} />
+      <Route path="database-test" element={<DatabaseTestPage />} />
       <Route path="*" element={<PlaceholderPage title="404 - Page Not Found" />} />
     </Route>
   </Routes>

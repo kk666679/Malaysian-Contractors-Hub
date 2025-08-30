@@ -1,6 +1,6 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const userController = require('../controllers/userController');
+import userController from '../controllers/userController.js';
 
 // Get user profile
 router.get('/profile', userController.getProfile);
@@ -14,4 +14,4 @@ router.get('/projects', userController.getUserProjects);
 // Get user specialists
 router.get('/specialists', userController.getUserSpecialists);
 
-module.exports = router;
+export default router;

@@ -1,6 +1,6 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const civilEngineeringController = require('../controllers/civilEngineeringController');
+import civilEngineeringController from '../controllers/civilEngineeringController.js';
 
 // Calculate structural capacity
 router.post('/calculate-capacity', civilEngineeringController.calculateStructuralCapacity);
@@ -17,4 +17,4 @@ router.post('/check-compliance', civilEngineeringController.checkDesignComplianc
 // Generate design report
 router.post('/generate-report', civilEngineeringController.generateDesignReport);
 
-module.exports = router;
+export default router;

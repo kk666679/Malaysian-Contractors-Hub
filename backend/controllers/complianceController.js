@@ -103,4 +103,4 @@ const complianceController = {
   }
 };
 
-module.exports = complianceController;
+export default complianceController;
