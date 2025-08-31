@@ -57,9 +57,9 @@ class CivilEngineeringService {
     if (!validMaterials.includes(material)) {
       throw new Error(`Unsupported material: ${material}`);
     }
-    
+
     let capacity = {};
-    
+
     switch (structureType) {
       case 'beam':
         capacity = this.calculateBeamCapacity(material, dimensions, loads);
@@ -138,7 +138,7 @@ class CivilEngineeringService {
     }
     return this.calculateAxialCapacity(material, dimensions.width * dimensions.height);
   }
-  
+
   checkCompliance(structureType, material, capacity, dimensions) {
     const complianceIssues = [];
     const recommendations = [];
@@ -165,14 +165,14 @@ class CivilEngineeringService {
     // Check deflection limits
     if (structureType === 'beam' || structureType === 'slab') {
       const deflectionLimit = this.malaysianStandards['UBBL 1984'].requirements.structural.deflectionLimits[structureType + 's'];
-      
+
       if (capacity.deflection) {
         // Extract the actual deflection value from the string format "0.022 m (L/363)"
         const deflectionMatch = capacity.deflection.match(/(\d+\.\d+)/);
         if (deflectionMatch) {
           const actualDeflection = parseFloat(deflectionMatch[1]);
           const maxDeflectionRatio = 1 / parseInt(deflectionLimit.split('/')[1], 10);
-          
+
           // Check if deflection is actually excessive
           const isExcessive = actualDeflection > maxDeflectionRatio;
           if (isExcessive) {
@@ -284,4 +284,4 @@ class CivilEngineeringService {
   }
 }
 
-module.exports = new CivilEngineeringService();
+export default new CivilEngineeringService();

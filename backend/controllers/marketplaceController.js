@@ -1,8 +1,8 @@
 // Sample data for marketplace functionality
-const specialists = require('../data/specialists');
-const projects = require('../data/projects');
-const suppliers = require('../data/suppliers');
-const categories = require('../data/categories');
+import specialists from '../data/specialists.js';
+import projects from '../data/projects.js';
+import suppliers from '../data/suppliers.js';
+import categories from '../data/categories.js';
 
 const marketplaceController = {
   // Specialist controllers

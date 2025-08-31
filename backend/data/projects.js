@@ -1,4 +1,4 @@
-module.exports = [
+export default = [
   {
     id: 'PRJ001',
     title: 'Office Building ACMV Installation',

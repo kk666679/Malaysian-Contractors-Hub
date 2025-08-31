@@ -5,6 +5,7 @@ import morgan from 'morgan';
 import redisService from './services/redisService.js';
 
 // Import route modules
+import authRoutes from './routes/auth.js';
 import marketplaceRoutes from './routes/marketplace.js';
 import complianceRoutes from './routes/compliance.js';
 import userRoutes from './routes/user.js';
@@ -22,6 +23,7 @@ app.use(bodyParser.json());
 app.use(morgan('dev'));
 
 // API Routes
+app.use('/api/auth', authRoutes);
 app.use('/api/marketplace', marketplaceRoutes);
 app.use('/api/compliance', complianceRoutes);
 app.use('/api/user', userRoutes);

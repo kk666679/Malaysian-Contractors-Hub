@@ -1,4 +1,4 @@
-module.exports = [
+export default = [
   {
     id: 'SUP001',
     name: 'MalayMEP Supplies',

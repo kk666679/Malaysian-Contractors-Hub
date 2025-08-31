@@ -1,17 +1,18 @@
 import express from 'express';
 const router = express.Router();
 import userController from '../controllers/userController.js';
+import { authenticateToken } from '../middleware/auth.js';
 
-// Get user profile
-router.get('/profile', userController.getProfile);
+// Get user profile (protected)
+router.get('/profile', authenticateToken, userController.getProfile);
 
-// Update user profile
-router.put('/profile', userController.updateProfile);
+// Update user profile (protected)
+router.put('/profile', authenticateToken, userController.updateProfile);
 
-// Get user projects
-router.get('/projects', userController.getUserProjects);
+// Get user projects (protected)
+router.get('/projects', authenticateToken, userController.getUserProjects);
 
-// Get user specialists
-router.get('/specialists', userController.getUserSpecialists);
+// Get user specialists (protected)
+router.get('/specialists', authenticateToken, userController.getUserSpecialists);
 
 export default router;

@@ -1,4 +1,4 @@
-module.exports = {
+export default = {
   specialist_categories: {
     'plumbing': {
       'name': 'Plumbing & Water Systems',
