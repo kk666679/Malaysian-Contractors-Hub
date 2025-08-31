@@ -2,7 +2,9 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import morgan from 'morgan';
+import { createServer } from 'http';
 import redisService from './services/redisService.js';
+import socketService from './services/socketService.js';
 
 // Import route modules
 import authRoutes from './routes/auth.js';
@@ -15,9 +17,11 @@ import civilEngineeringRoutes from './routes/civilEngineering.js';
 import electricalSystemsRoutes from './routes/electricalSystems.js';
 import redisRoutes from './routes/redis.js';
 import projectRoutes from './routes/project.js';
+import notificationRoutes from './routes/notification.js';
 
 // Create Express app
 const app = express();
+const server = createServer(app);
 const PORT = process.env.PORT || 5000;
 
 // Middleware
@@ -35,6 +39,7 @@ app.use('/api/civil-engineering', civilEngineeringRoutes);
 app.use('/api/electrical-systems', electricalSystemsRoutes);
 app.use('/api/redis', redisRoutes);
 app.use('/api/projects', projectRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -52,10 +57,14 @@ async function startServer() {
     // Initialize Redis connection
     await redisService.connect();
 
+    // Initialize Socket.io
+    socketService.initialize(server);
+
     // Start server
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
       console.log('Redis service initialized');
+      console.log('Socket.io service initialized');
     });
   } catch (error) {
     console.error('Failed to start server:', error);

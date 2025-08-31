@@ -186,11 +186,17 @@ This TODO list will be updated regularly as development progresses. Each task sh
 ## 📋 Pending Tasks
 
 ### Priority: High
-- [x] Seed data for Malaysian standards and regulations
-- [x] JWT authentication implementation
-- [x] User registration and login endpoints
-- [x] Role-Based Access Control (RBAC)
-- [x] Password hashing and security
+
+### Priority: Medium
+
+### Priority: Low
+
+## ✅ Recently Completed Tasks
+*Updated: 2025-08-31*
+
+
+
+## Pending Tasks - Priority: High
 - [ ] Session management (refresh tokens)
 - [ ] Project creation and management
 - [ ] Real-time collaboration features
@@ -202,11 +208,7 @@ This TODO list will be updated regularly as development progresses. Each task sh
 - [ ] Theme system (dark/light mode)
 - [ ] PWA features implementation
 
-### Priority: Medium
-- [x] TNB compliance checking
-- [x] Electrical design calculations
-- [x] Frontend electrical design interface
-- [x] Electrical Systems API testing (voltage drop, cable sizing, transformer sizing, compliance)
+## Pending Tasks - Priority: Medium
 - [ ] Hydraulic modeling backend
 - [ ] JPS standards integration
 - [ ] Flood risk analysis tools
@@ -221,7 +223,7 @@ This TODO list will be updated regularly as development progresses. Each task sh
 - [ ] Frontend HVAC design interface
 - [ ] Energy efficiency optimization
 
-### Priority: Low
+## Pending Tasks - Priority: Low
 - [ ] 3D modeling support
 - [ ] IFC file handling
 - [ ] Clash detection algorithms
@@ -278,9 +280,16 @@ This TODO list will be updated regularly as development progresses. Each task sh
 - [ ] 95% regulatory compliance rate
 - [ ] 90% user satisfaction score
 
-## ✅ Recently Completed Tasks
-*Updated: 2025-08-31*
-
+## ✅ Completed Tasks
+- [x] Seed data for Malaysian standards and regulations
+- [x] JWT authentication implementation
+- [x] User registration and login endpoints
+- [x] Role-Based Access Control (RBAC)
+- [x] Password hashing and security
+- [x] TNB compliance checking
+- [x] Electrical design calculations
+- [x] Frontend electrical design interface
+- [x] Electrical Systems API testing (voltage drop, cable sizing, transformer sizing, compliance)
 - [x] User management dashboard
 - [x] Power grid simulator backend
 - [x] Integration with civil engineering module
