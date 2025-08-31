@@ -35,9 +35,31 @@ export const ROUTES = {
   
   // Other routes
   WEB3_DEMO: '/web3-demo',
-  PRIVACY: '/privacy',
-  TERMS: '/terms',
-  
+  PRIVACY: '/legal/privacy-policy',
+  TERMS: '/legal/terms-of-service',
+  API_TERMS: '/legal/api-terms',
+  COOKIES: '/legal/cookies-policy',
+  CONTENT_POLICY: '/resources/content-policy',
+  COMMUNITY_GUIDELINES: '/community/guidelines',
+  HELP_CENTER: '/support/help-center-policy',
+
+  // Developer routes (dev-only)
+  DEV_ROUTES: '/dev/routes',
+
+  // Electrical Systems Module
+  POWER_GRID_SIMULATOR: '/electrical-systems/power-grid-simulator',
+  SMART_COMPLIANCE_ENGINE: '/electrical-systems/smart-compliance-engine',
+  ENERGY_EFFICIENCY_AUDITOR: '/electrical-systems/energy-efficiency-auditor',
+
+  // ACMV-HVAC Module
+  HVAC_DESIGN_CALCULATOR: '/acmv-hvac/hvac-design-calculator',
+  PERFORMANCE_DIAGNOSTICS: '/acmv-hvac/performance-diagnostics',
+  INDOOR_AIR_QUALITY_DASHBOARD: '/acmv-hvac/indoor-air-quality-dashboard',
+
+  // Sewerage-Drainage Module
+  STORMWATER_DESIGNER: '/sewerage-drainage/stormwater-designer',
+  FLOOD_RISK_ANALYZER: '/sewerage-drainage/flood-risk-analyzer',
+
   // 404 route is handled by the catch-all route in App.jsx
 };
 

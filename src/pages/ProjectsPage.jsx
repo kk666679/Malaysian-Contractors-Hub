@@ -1,112 +1,67 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowLeft, Search, Filter, MapPin, Calendar, DollarSign, Users, Building2, ChevronDown, Plus } from 'lucide-react'
+import { ArrowLeft, Search, Filter, MapPin, Calendar, DollarSign, Users, Building2, ChevronDown, Plus, Loader2 } from 'lucide-react'
 import { Button } from '../components/ui/button.jsx'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card.jsx'
 import { Badge } from '../components/ui/badge.jsx'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs.jsx'
 import PageTransition from '../components/features/PageTransition.jsx'
 import { Link } from 'react-router-dom'
+import projectService from '../lib/projectService'
+import { useAuth } from '../contexts/AuthContext'
+import ProjectCreateForm from '../components/projects/ProjectCreateForm'
 
 const ProjectsPage = () => {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedType, setSelectedType] = useState('all')
   const [selectedLocation, setSelectedLocation] = useState('all')
   const [showFilters, setShowFilters] = useState(false)
+  const [projects, setProjects] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [showCreateForm, setShowCreateForm] = useState(false)
 
-  // Mock data for projects
-  const projects = [
-    {
-      id: 1,
-      title: 'KL Tower Renovation',
-      type: 'Commercial',
-      location: 'Kuala Lumpur',
-      budget: 2500000,
-      duration: '12 months',
-      status: 'In Progress',
-      client: 'KL Tower Management',
-      description: 'Complete renovation of KL Tower including facade upgrades and interior modernization.',
-      startDate: '2024-01-15',
-      completionDate: '2025-01-15',
-      team: ['Ahmad Rizal', 'Siti Aminah', 'Rajesh Kumar'],
-      progress: 35
-    },
-    {
-      id: 2,
-      title: 'Penang Bridge Maintenance',
-      type: 'Infrastructure',
-      location: 'Penang',
-      budget: 1800000,
-      duration: '8 months',
-      status: 'Planning',
-      client: 'Penang State Government',
-      description: 'Structural maintenance and painting of Penang Bridge infrastructure.',
-      startDate: '2024-03-01',
-      completionDate: '2024-11-01',
-      team: ['Lim Wei Ming', 'Tan Mei Ling'],
-      progress: 10
-    },
-    {
-      id: 3,
-      title: 'Johor Bahru Shopping Mall',
-      type: 'Commercial',
-      location: 'Johor',
-      budget: 4500000,
-      duration: '18 months',
-      status: 'Completed',
-      client: 'Johor Development Corp',
-      description: 'Construction of modern shopping mall with retail spaces and entertainment facilities.',
-      startDate: '2022-06-01',
-      completionDate: '2023-12-01',
-      team: ['Ahmad Ismail', 'Sarah Tan', 'Rajesh Kumar', 'Lim Mei Ling'],
-      progress: 100
-    },
-    {
-      id: 4,
-      title: 'Cyberjaya Data Center',
-      type: 'Industrial',
-      location: 'Selangor',
-      budget: 3200000,
-      duration: '15 months',
-      status: 'In Progress',
-      client: 'TechCorp Malaysia',
-      description: 'Construction of high-security data center with redundant power systems.',
-      startDate: '2023-09-01',
-      completionDate: '2024-12-01',
-      team: ['Tan Wei Ming', 'Ahmad Rizal', 'Siti Aminah'],
-      progress: 65
-    },
-    {
-      id: 5,
-      title: 'Kuala Lumpur Hospital Extension',
-      type: 'Healthcare',
-      location: 'Kuala Lumpur',
-      budget: 5800000,
-      duration: '24 months',
-      status: 'Planning',
-      client: 'Ministry of Health',
-      description: 'Hospital wing extension with specialized medical facilities and patient wards.',
-      startDate: '2024-06-01',
-      completionDate: '2026-06-01',
-      team: ['Dr. Lim Chen', 'Ahmad Rizal', 'Sarah Tan'],
-      progress: 5
+  const { isAuthenticated } = useAuth()
+
+  // Fetch projects on component mount
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchProjects()
     }
-  ]
+  }, [isAuthenticated])
+
+  const fetchProjects = async () => {
+    try {
+      setLoading(true)
+      setError(null)
+      const response = await projectService.getAllProjects()
+      if (response.success) {
+        setProjects(response.data.projects || [])
+      } else {
+        setError('Failed to load projects')
+      }
+    } catch (err) {
+      console.error('Error fetching projects:', err)
+      setError('Failed to load projects. Please try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   // Filter projects based on search query and filters
   const filteredProjects = projects.filter(project => {
-    const matchesSearch = project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         project.client.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         project.description.toLowerCase().includes(searchQuery.toLowerCase())
+    const matchesSearch = (project.name || project.title)?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         project.client?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         project.description?.toLowerCase().includes(searchQuery.toLowerCase())
 
-    const matchesType = selectedType === 'all' || project.type.toLowerCase() === selectedType.toLowerCase()
+    const matchesType = selectedType === 'all' || project.category?.toLowerCase() === selectedType.toLowerCase()
     const matchesLocation = selectedLocation === 'all' || project.location === selectedLocation
 
     return matchesSearch && matchesType && matchesLocation
   })
 
   // Get unique locations for filter
-  const locations = [...new Set(projects.map(p => p.location))]
+  const locations = [...new Set(projects.map(p => p.location).filter(Boolean))]
 
   // Project types
   const projectTypes = [
@@ -189,7 +144,7 @@ const ProjectsPage = () => {
                 <ChevronDown className={`h-4 w-4 transition-transform ${showFilters ? 'rotate-180' : ''}`} />
               </Button>
 
-              <Button className="flex items-center gap-2">
+              <Button className="flex items-center gap-2" onClick={() => setShowCreateForm(true)}>
                 <Plus className="h-4 w-4" />
                 New Project
               </Button>
@@ -238,13 +193,33 @@ const ProjectsPage = () => {
             )}
           </div>
 
-          <Tabs defaultValue="all" className="mb-8">
-            <TabsList className="grid grid-cols-4 mb-8">
-              <TabsTrigger value="all">All Projects ({projects.length})</TabsTrigger>
-              <TabsTrigger value="active">Active ({projects.filter(p => p.status === 'In Progress').length})</TabsTrigger>
-              <TabsTrigger value="planning">Planning ({projects.filter(p => p.status === 'Planning').length})</TabsTrigger>
-              <TabsTrigger value="completed">Completed ({projects.filter(p => p.status === 'Completed').length})</TabsTrigger>
-            </TabsList>
+          {/* Loading State */}
+          {loading && (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin mr-2" />
+              <span>Loading projects...</span>
+            </div>
+          )}
+
+          {/* Error State */}
+          {error && (
+            <div className="text-center py-12">
+              <div className="text-red-500 mb-4">{error}</div>
+              <Button onClick={fetchProjects} variant="outline">
+                Try Again
+              </Button>
+            </div>
+          )}
+
+          {/* Projects Content */}
+          {!loading && !error && (
+            <Tabs defaultValue="all" className="mb-8">
+              <TabsList className="grid grid-cols-4 mb-8">
+                <TabsTrigger value="all">All Projects ({projects.length})</TabsTrigger>
+                <TabsTrigger value="active">Active ({projects.filter(p => p.status === 'IN_PROGRESS' || p.status === 'In Progress').length})</TabsTrigger>
+                <TabsTrigger value="planning">Planning ({projects.filter(p => p.status === 'PLANNING' || p.status === 'Planning').length})</TabsTrigger>
+                <TabsTrigger value="completed">Completed ({projects.filter(p => p.status === 'COMPLETED' || p.status === 'Completed').length})</TabsTrigger>
+              </TabsList>
 
             <TabsContent value="all">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -253,7 +228,7 @@ const ProjectsPage = () => {
                     <CardHeader>
                       <div className="flex justify-between items-start">
                         <div>
-                          <CardTitle className="text-lg">{project.title}</CardTitle>
+                          <CardTitle className="text-lg">{project.name || project.title}</CardTitle>
                           <CardDescription>{project.client}</CardDescription>
                         </div>
                         {getStatusBadge(project.status)}
@@ -263,7 +238,7 @@ const ProjectsPage = () => {
                       <div className="flex items-center gap-4 text-sm text-text-muted">
                         <div className="flex items-center gap-1">
                           <Building2 className="h-4 w-4" />
-                          <span>{project.type}</span>
+                          <span>{project.category || project.type}</span>
                         </div>
                         <div className="flex items-center gap-1">
                           <MapPin className="h-4 w-4" />
@@ -278,23 +253,23 @@ const ProjectsPage = () => {
                       <div className="grid grid-cols-2 gap-4 text-sm">
                         <div>
                           <div className="text-text-muted">Budget</div>
-                          <div className="font-semibold">{formatCurrency(project.budget)}</div>
+                          <div className="font-semibold">{formatCurrency(project.budget || 0)}</div>
                         </div>
                         <div>
                           <div className="text-text-muted">Duration</div>
-                          <div className="font-semibold">{project.duration}</div>
+                          <div className="font-semibold">{project.duration || 'N/A'}</div>
                         </div>
                       </div>
 
                       <div className="space-y-2">
                         <div className="flex justify-between text-sm">
                           <span>Progress</span>
-                          <span>{project.progress}%</span>
+                          <span>{project.progress || 0}%</span>
                         </div>
                         <div className="h-2 bg-background-secondary rounded-full">
                           <div
                             className="h-2 bg-primary rounded-full transition-all"
-                            style={{ width: `${project.progress}%` }}
+                            style={{ width: `${project.progress || 0}%` }}
                           ></div>
                         </div>
                       </div>
@@ -302,7 +277,7 @@ const ProjectsPage = () => {
                       <div className="flex items-center justify-between pt-2">
                         <div className="flex items-center gap-1 text-sm text-text-muted">
                           <Users className="h-4 w-4" />
-                          <span>{project.team.length} team members</span>
+                          <span>{project.teamMembers?.length || 0} team members</span>
                         </div>
                         <Button as={Link} to={`/dashboard/projects/${project.id}`} size="sm">
                           View Details
@@ -316,12 +291,12 @@ const ProjectsPage = () => {
 
             <TabsContent value="active">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredProjects.filter(p => p.status === 'In Progress').map((project) => (
+                {filteredProjects.filter(p => p.status === 'IN_PROGRESS' || p.status === 'In Progress').map((project) => (
                   <Card key={project.id} className="hover:shadow-lg transition-shadow">
                     <CardHeader>
                       <div className="flex justify-between items-start">
                         <div>
-                          <CardTitle className="text-lg">{project.title}</CardTitle>
+                          <CardTitle className="text-lg">{project.name || project.title}</CardTitle>
                           <CardDescription>{project.client}</CardDescription>
                         </div>
                         {getStatusBadge(project.status)}
@@ -331,7 +306,7 @@ const ProjectsPage = () => {
                       <div className="flex items-center gap-4 text-sm text-text-muted">
                         <div className="flex items-center gap-1">
                           <Building2 className="h-4 w-4" />
-                          <span>{project.type}</span>
+                          <span>{project.category || project.type}</span>
                         </div>
                         <div className="flex items-center gap-1">
                           <MapPin className="h-4 w-4" />
@@ -346,23 +321,23 @@ const ProjectsPage = () => {
                       <div className="grid grid-cols-2 gap-4 text-sm">
                         <div>
                           <div className="text-text-muted">Budget</div>
-                          <div className="font-semibold">{formatCurrency(project.budget)}</div>
+                          <div className="font-semibold">{formatCurrency(project.budget || 0)}</div>
                         </div>
                         <div>
                           <div className="text-text-muted">Duration</div>
-                          <div className="font-semibold">{project.duration}</div>
+                          <div className="font-semibold">{project.duration || 'N/A'}</div>
                         </div>
                       </div>
 
                       <div className="space-y-2">
                         <div className="flex justify-between text-sm">
                           <span>Progress</span>
-                          <span>{project.progress}%</span>
+                          <span>{project.progress || 0}%</span>
                         </div>
                         <div className="h-2 bg-background-secondary rounded-full">
                           <div
                             className="h-2 bg-primary rounded-full transition-all"
-                            style={{ width: `${project.progress}%` }}
+                            style={{ width: `${project.progress || 0}%` }}
                           ></div>
                         </div>
                       </div>
@@ -370,7 +345,7 @@ const ProjectsPage = () => {
                       <div className="flex items-center justify-between pt-2">
                         <div className="flex items-center gap-1 text-sm text-text-muted">
                           <Users className="h-4 w-4" />
-                          <span>{project.team.length} team members</span>
+                          <span>{project.teamMembers?.length || 0} team members</span>
                         </div>
                         <Button as={Link} to={`/dashboard/projects/${project.id}`} size="sm">
                           View Details
@@ -384,12 +359,12 @@ const ProjectsPage = () => {
 
             <TabsContent value="planning">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredProjects.filter(p => p.status === 'Planning').map((project) => (
+                {filteredProjects.filter(p => p.status === 'PLANNING' || p.status === 'Planning').map((project) => (
                   <Card key={project.id} className="hover:shadow-lg transition-shadow">
                     <CardHeader>
                       <div className="flex justify-between items-start">
                         <div>
-                          <CardTitle className="text-lg">{project.title}</CardTitle>
+                          <CardTitle className="text-lg">{project.name || project.title}</CardTitle>
                           <CardDescription>{project.client}</CardDescription>
                         </div>
                         {getStatusBadge(project.status)}
@@ -399,7 +374,7 @@ const ProjectsPage = () => {
                       <div className="flex items-center gap-4 text-sm text-text-muted">
                         <div className="flex items-center gap-1">
                           <Building2 className="h-4 w-4" />
-                          <span>{project.type}</span>
+                          <span>{project.category || project.type}</span>
                         </div>
                         <div className="flex items-center gap-1">
                           <MapPin className="h-4 w-4" />
@@ -414,23 +389,23 @@ const ProjectsPage = () => {
                       <div className="grid grid-cols-2 gap-4 text-sm">
                         <div>
                           <div className="text-text-muted">Budget</div>
-                          <div className="font-semibold">{formatCurrency(project.budget)}</div>
+                          <div className="font-semibold">{formatCurrency(project.budget || 0)}</div>
                         </div>
                         <div>
                           <div className="text-text-muted">Duration</div>
-                          <div className="font-semibold">{project.duration}</div>
+                          <div className="font-semibold">{project.duration || 'N/A'}</div>
                         </div>
                       </div>
 
                       <div className="space-y-2">
                         <div className="flex justify-between text-sm">
                           <span>Progress</span>
-                          <span>{project.progress}%</span>
+                          <span>{project.progress || 0}%</span>
                         </div>
                         <div className="h-2 bg-background-secondary rounded-full">
                           <div
                             className="h-2 bg-primary rounded-full transition-all"
-                            style={{ width: `${project.progress}%` }}
+                            style={{ width: `${project.progress || 0}%` }}
                           ></div>
                         </div>
                       </div>
@@ -438,7 +413,7 @@ const ProjectsPage = () => {
                       <div className="flex items-center justify-between pt-2">
                         <div className="flex items-center gap-1 text-sm text-text-muted">
                           <Users className="h-4 w-4" />
-                          <span>{project.team.length} team members</span>
+                          <span>{project.teamMembers?.length || 0} team members</span>
                         </div>
                         <Button as={Link} to={`/dashboard/projects/${project.id}`} size="sm">
                           View Details
@@ -452,12 +427,12 @@ const ProjectsPage = () => {
 
             <TabsContent value="completed">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredProjects.filter(p => p.status === 'Completed').map((project) => (
+                {filteredProjects.filter(p => p.status === 'COMPLETED' || p.status === 'Completed').map((project) => (
                   <Card key={project.id} className="hover:shadow-lg transition-shadow">
                     <CardHeader>
                       <div className="flex justify-between items-start">
                         <div>
-                          <CardTitle className="text-lg">{project.title}</CardTitle>
+                          <CardTitle className="text-lg">{project.name || project.title}</CardTitle>
                           <CardDescription>{project.client}</CardDescription>
                         </div>
                         {getStatusBadge(project.status)}
@@ -467,7 +442,7 @@ const ProjectsPage = () => {
                       <div className="flex items-center gap-4 text-sm text-text-muted">
                         <div className="flex items-center gap-1">
                           <Building2 className="h-4 w-4" />
-                          <span>{project.type}</span>
+                          <span>{project.category || project.type}</span>
                         </div>
                         <div className="flex items-center gap-1">
                           <MapPin className="h-4 w-4" />
@@ -482,23 +457,23 @@ const ProjectsPage = () => {
                       <div className="grid grid-cols-2 gap-4 text-sm">
                         <div>
                           <div className="text-text-muted">Budget</div>
-                          <div className="font-semibold">{formatCurrency(project.budget)}</div>
+                          <div className="font-semibold">{formatCurrency(project.budget || 0)}</div>
                         </div>
                         <div>
                           <div className="text-text-muted">Duration</div>
-                          <div className="font-semibold">{project.duration}</div>
+                          <div className="font-semibold">{project.duration || 'N/A'}</div>
                         </div>
                       </div>
 
                       <div className="space-y-2">
                         <div className="flex justify-between text-sm">
                           <span>Progress</span>
-                          <span>{project.progress}%</span>
+                          <span>{project.progress || 0}%</span>
                         </div>
                         <div className="h-2 bg-background-secondary rounded-full">
                           <div
                             className="h-2 bg-primary rounded-full transition-all"
-                            style={{ width: `${project.progress}%` }}
+                            style={{ width: `${project.progress || 0}%` }}
                           ></div>
                         </div>
                       </div>
@@ -506,7 +481,7 @@ const ProjectsPage = () => {
                       <div className="flex items-center justify-between pt-2">
                         <div className="flex items-center gap-1 text-sm text-text-muted">
                           <Users className="h-4 w-4" />
-                          <span>{project.team.length} team members</span>
+                          <span>{project.teamMembers?.length || 0} team members</span>
                         </div>
                         <Button as={Link} to={`/dashboard/projects/${project.id}`} size="sm">
                           View Details
@@ -518,8 +493,9 @@ const ProjectsPage = () => {
               </div>
             </TabsContent>
           </Tabs>
+          )}
 
-          {filteredProjects.length === 0 && (
+          {!loading && !error && filteredProjects.length === 0 && (
             <div className="text-center py-12 bg-background-secondary rounded-lg">
               <Building2 className="h-12 w-12 mx-auto mb-4 text-text-muted opacity-40" />
               <h4 className="text-lg font-medium mb-2">No projects found</h4>
@@ -527,6 +503,16 @@ const ProjectsPage = () => {
             </div>
           )}
         </div>
+
+        {showCreateForm && (
+          <ProjectCreateForm
+            onClose={() => setShowCreateForm(false)}
+            onSuccess={(newProject) => {
+              setProjects(prev => [newProject, ...prev]);
+              setShowCreateForm(false);
+            }}
+          />
+        )}
       </section>
     </PageTransition>
   )
