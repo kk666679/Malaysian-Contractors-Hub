@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../co
 import { Badge } from '../components/ui/badge.jsx'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs.jsx'
 import { Progress } from '../components/ui/progress.jsx'
-import PageTransition from '../components/PageTransition.jsx'
+import PageTransition from '../components/features/PageTransition.jsx'
 
 const SiteManagement = () => {
   const [activeTab, setActiveTab] = useState('overview')

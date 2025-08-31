@@ -1,6 +1,6 @@
 import { Button } from '../components/ui/button.jsx'
 import { ArrowLeft, Building2 } from 'lucide-react'
-import PageTransition from '../components/PageTransition.jsx'
+import PageTransition from '../components/features/PageTransition.jsx'
 
 const BuildingAutomation = () => {
   return (

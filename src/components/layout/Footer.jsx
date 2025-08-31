@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram } from 'lucide-react'
-import logoMep from '../assets/images/logo-meppo.svg'
-import { ROUTES } from '../lib/routeConfig'
+import logoMep from '../../assets/images/mchub-logo.svg'
+import { ROUTES } from '../../lib/routeConfig'
 
 const Footer = () => {
   return (
@@ -11,7 +11,7 @@ const Footer = () => {
           {/* Company Info */}
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
-              <img src={logoMep} alt="MEP Logo" className="h-10 w-10" />
+              <img src={logoMep} alt="MCHub Logo" className="h-10 w-10" />
               <span className="text-xl font-bold">Malaysian Contractors Hub</span>
             </div>
             <p className="text-gray-300 text-sm">

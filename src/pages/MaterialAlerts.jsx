@@ -5,7 +5,7 @@ import { Button } from '../components/ui/button.jsx'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card.jsx'
 import { Badge } from '../components/ui/badge.jsx'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs.jsx'
-import PageTransition from '../components/PageTransition.jsx'
+import PageTransition from '../components/features/PageTransition.jsx'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts'
 import materialAlertsService from '../lib/materialAlertsService.js'
 

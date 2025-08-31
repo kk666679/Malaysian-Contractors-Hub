@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { hoverScale } from '../lib/animations';
-import { Button } from './ui/button.jsx';
-import { ThemeToggle } from './ui/theme-toggle.jsx';
-import { DropdownMenu, DropdownItem, DropdownSeparator } from './ui/dropdown-menu.jsx';
+import { hoverScale } from '../../lib/animations';
+import { Button } from '../ui/button.jsx';
+import { ThemeToggle } from '../ui/theme-toggle.jsx';
+import { DropdownMenu, DropdownItem, DropdownSeparator } from '../ui/dropdown-menu.jsx';
 import NotificationSystem from './NotificationSystem.jsx';
 import SearchDialog from '../forms/SearchDialog.jsx';
-import { 
-  Menu, X, ChevronDown, Home, Briefcase, 
+import mchubLogo from '../../assets/images/mchub-logo.svg';
+import {
+  Menu, X, ChevronDown, Home, Briefcase,
   Shield, Users, BarChart2, Cloud, Wrench, Settings, LogOut, User
 } from 'lucide-react';
 
@@ -95,14 +96,14 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
-            <motion.img 
-              src="/logo-mep.svg" 
-              alt="MEP Logo" 
+            <motion.img
+              src={mchubLogo}
+              alt="MCHub Logo"
               className="h-9 w-9"
               whileHover={{ rotate: 5 }}
               whileTap={{ scale: 0.95 }}
             />
-            <motion.span 
+            <motion.span
               className="text-lg font-bold bg-gradient-to-r from-primary to-blue-500 bg-clip-text text-transparent hidden sm:block"
               initial={{ opacity: 0, x: -10 }}
               animate={{ opacity: 1, x: 0 }}

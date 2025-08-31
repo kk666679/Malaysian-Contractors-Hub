@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card.jsx'
 import { Button } from '../components/ui/button.jsx'
 import { Badge } from '../components/ui/badge.jsx'
-import PageTransition from '../components/PageTransition.jsx'
+import PageTransition from '../components/features/PageTransition.jsx'
 import { motion } from 'framer-motion'
 import monsoonRiskService from '../lib/monsoonRiskService.js'
 import { 

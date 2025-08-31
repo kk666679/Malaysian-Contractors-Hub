@@ -1,19 +1,19 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import styled from 'styled-components';
-import { 
-  GlassCard, 
-  NeonButton, 
-  GradientText, 
-  Web3Heading, 
-  GlowingIcon, 
+import {
+  GlassCard,
+  NeonButton,
+  GradientText,
+  Web3Heading,
+  GlowingIcon,
   Web3Grid,
   fadeIn,
   slideUp,
   staggerContainer,
   glowPulse
-} from './ui/web3-elements';
-import { darkTheme } from '../styles/theme';
+} from '../ui/web3-elements';
+import { darkTheme } from '../../styles/theme';
 
 // Icons (replace with your preferred icon library)
 const ChartIcon = () => <span>📊</span>;

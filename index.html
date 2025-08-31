@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MC-Hub: Malaysian Contractors Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        
+        .animate-blob {
+            animation: blob 7s infinite;
+        }
+        
+        .animation-delay-2000 {
+            animation-delay: 2s;
+        }
+        
+        .animation-delay-4000 {
+            animation-delay: 4s;
+        }
+        
+        @keyframes blob {
+            0% {
+                transform: translate(0px, 0px) scale(1);
+            }
+            33% {
+                transform: translate(30px, -50px) scale(1.1);
+            }
+            66% {
+                transform: translate(-20px, 20px) scale(0.9);
+            }
+            100% {
+                transform: translate(0px, 0px) scale(1);
+            }
+        }
+        
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .feature-icon {
+            transition: transform 0.3s ease;
+        }
+        
+        .card-hover:hover .feature-icon {
+            transform: scale(1.1);
+        }
+        
+        .btn-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .btn-hover:hover {
+            transform: translateY(-2px);
+        }
+        
+        .nav-link {
+            position: relative;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: #2563eb;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .industry-card {
+            transition: all 0.3s ease;
+        }
+        
+        .industry-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .testimonial-card {
+            transition: all 0.3s ease;
+        }
+        
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .page-section {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .page-section.active {
+            display: block;
+            opacity: 1;
+        }
+        
+        .counter {
+            transition: all 0.5s ease;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-white">
+    <!-- Navigation -->
+    <nav class="flex justify-between items-center px-6 py-4 bg-white dark:bg-gray-900 shadow-sm sticky top-0 z-50">
+        <div class="flex items-center space-x-2">
+            <div class="bg-blue-600 p-2 rounded-lg">
+                <i data-lucide="building-2" class="text-white w-6 h-6"></i>
+            </div>
+            <span class="text-xl font-bold">MC-Hub</span>
+        </div>
+        
+        <div class="hidden md:flex space-x-8">
+            <a href="#home" class="nav-link font-medium hover:text-blue-600 transition-colors" data-section="home">Home</a>
+            <a href="#features" class="nav-link font-medium hover:text-blue-600 transition-colors" data-section="features">Features</a>
+            <a href="#industries" class="nav-link font-medium hover:text-blue-600 transition-colors" data-section="industries">Industries</a>
+            <a href="#testimonials" class="nav-link font-medium hover:text-blue-600 transition-colors" data-section="testimonials">Testimonials</a>
+            <a href="#pricing" class="nav-link font-medium hover:text-blue-600 transition-colors" data-section="pricing">Pricing</a>
+        </div>
+        
+        <div class="flex space-x-4">
+            <button class="px-4 py-2 rounded-lg border border-gray-300 hover:border-gray-400 transition-colors" onclick="showSection('login')">Login</button>
+            <button class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors" onclick="showSection('signup')">Sign Up</button>
+        </div>
+    </nav>
+
+    <!-- Home Section -->
+    <section id="home" class="page-section active">
+        <!-- Hero Section -->
+        <div class="relative flex flex-col items-center justify-center text-center py-24 px-6 bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-900 dark:to-gray-800">
+            <div class="absolute inset-0 overflow-hidden">
+                <div class="absolute top-0 right-0 w-72 h-72 bg-blue-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob"></div>
+                <div class="absolute top-0 left-0 w-72 h-72 bg-indigo-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-2000"></div>
+                <div class="absolute bottom-0 right-0 w-72 h-72 bg-purple-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-blob animation-delay-4000"></div>
+            </div>
+            
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+                <span class="text-blue-600">MC-Hub</span>: Malaysian Contractors Hub
+            </h1>
+
+            <p class="max-w-2xl text-lg md:text-xl mb-8 text-gray-600 dark:text-gray-300">
+                Streamline project management and contractor-client interactions across civil, electrical, ELV, HVAC, and sewerage systems.
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-4 items-center">
+                <button class="btn-hover px-8 py-4 rounded-xl bg-blue-600 text-white text-lg font-medium hover:bg-blue-700 transition-colors shadow-lg" onclick="showSection('signup')">
+                    Get Started Free
+                </button>
+                <button class="btn-hover px-8 py-4 rounded-xl border border-gray-300 text-lg font-medium hover:border-gray-400 transition-colors flex items-center" onclick="showSection('demo')">
+                    <span>Watch Demo</span>
+                    <i data-lucide="play" class="w-5 h-5 ml-2"></i>
+                </button>
+            </div>
+            
+            <div class="mt-12 bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-4 max-w-4xl mx-auto">
+                <div class="aspect-video bg-gradient-to-r from-blue-100 to-indigo-100 dark:from-gray-700 dark:to-gray-600 rounded-lg flex items-center justify-center">
+                    <div class="text-center p-8">
+                        <div class="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i data-lucide="building-2" class="text-blue-600 dark:text-blue-400 w-8 h-8"></i>
+                        </div>
+                        <p class="text-gray-500 dark:text-gray-400">Platform dashboard preview</p>
+                        <button class="mt-4 text-blue-600 hover:text-blue-700 font-medium" onclick="showSection('features')">
+                            Explore Features <i data-lucide="arrow-right" class="w-4 h-4 inline-block ml-1"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="py-16 px-6 bg-white dark:bg-gray-900">
+            <div class="max-w-6xl mx-auto">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-blue-600 counter" data-target="500">0</div>
+                        <div class="text-gray-600 dark:text-gray-300 mt-2">Active Contractors</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-blue-600 counter" data-target="1200">0</div>
+                        <div class="text-gray-600 dark:text-gray-300 mt-2">Projects Completed</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-blue-600 counter" data-target="350">0</div>
+                        <div class="text-gray-600 dark:text-gray-300 mt-2">Project Value (RM M)</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-blue-600 counter" data-target="98">0</div>
+                        <div class="text-gray-600 dark:text-gray-300 mt-2">Client Satisfaction</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="page-section py-16 px-6 bg-gray-50 dark:bg-gray-800">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-semibold mb-4">Powerful Features for Malaysian Contractors</h2>
+                <p class="max-w-2xl mx-auto text-gray-600 dark:text-gray-300">
+                    Designed specifically for Malaysia's construction industry with local regulations and requirements in mind.
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="card-hover rounded-2xl shadow-md bg-white dark:bg-gray-900 p-6 flex flex-col items-start text-left space-y-4">
+                    <div class="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-xl text-blue-600 dark:text-blue-400">
+                        <i data-lucide="file-spreadsheet" class="feature-icon w-10 h-10"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold">Custom Bids</h3>
+                    <p class="text-gray-600 dark:text-gray-300">Generate bids with real-time project data and Malaysian cost databases.</p>
+                    <button class="text-blue-600 hover:text-blue-700 mt-2 flex items-center" onclick="showSection('pricing')">
+                        Learn more <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i>
+                    </button>
+                </div>
+                
+                <div class="card-hover rounded-2xl shadow-md bg-white dark:bg-gray-900 p-6 flex flex-col items-start text-left space-y-4">
+                    <div class="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-xl text-blue-600 dark:text-blue-400">
+                        <i data-lucide="hard-hat" class="feature-icon w-10 h-10"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold">Compliance</h3>
+                    <p class="text-gray-600 dark:text-gray-300">Monitor safety & building regulation adherence with JKR and CIDB standards.</p>
+                    <button class="text-blue-600 hover:text-blue-700 mt-2 flex items-center" onclick="showSection('pricing')">
+                        Learn more <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i>
+                    </button>
+                </div>
+                
+                <div class="card-hover rounded-2xl shadow-md bg-white dark:bg-gray-900 p-6 flex flex-col items-start text-left space-y-4">
+                    <div class="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-xl text-blue-600 dark:text-blue-400">
+                        <i data-lucide="building-2" class="feature-icon w-10 h-10"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold">Project Tools</h3>
+                    <p class="text-gray-600 dark:text-gray-300">Design, simulate & manage complex projects with integrated workflows.</p>
+                    <button class="text-blue-600 hover:text-blue-700 mt-2 flex items-center" onclick="showSection('pricing')">
+                        Learn more <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i>
+                    </button>
+                </div>
+                
+                <div class="card-hover rounded-2xl shadow-md bg-white dark:bg-gray-900 p-6 flex flex-col items-start text-left space-y-4">
+                    <div class="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-xl text-blue-600 dark:text-blue-400">
+                        <i data-lucide="bar-chart-3" class="feature-icon w-10 h-10"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold">Tracking</h3>
+                    <p class="text-gray-600 dark:text-gray-300">Track budgets, resources, and project milestones with real-time dashboards.</p>
+                    <button class="text-blue-600 hover:text-blue-700 mt-2 flex items-center" onclick="showSection('pricing')">
+                        Learn more <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i>
+                    </button>
+                </div>
+                
+                <div class="card-hover rounded-2xl shadow-md bg-white dark:bg-gray-900 p-6 flex flex-col items-start text-left space-y-4">
+                    <div class="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-xl text-blue-600 dark:text-blue-400">
+                        <i data-lucide="settings" class="feature-icon w-10 h-10"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold">Automation</h3>
+                    <p class="text-gray-600 dark:text-gray-300">Simplify workflows with AI-driven tools for documentation and reporting.</p>
+                    <button class="text-blue-600 hover:text-blue-700 mt-2 flex items-center" onclick="showSection('pricing')">
+                        Learn more <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i>
+                    </button>
+                </div>
+                
+                <div class="card-hover rounded-2xl shadow-md bg-white dark:bg-gray-900 p-6 flex flex-col items-start text-left space-y-4">
+                    <div class="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-xl text-blue-600 dark:text-blue-400">
+                        <i data-lucide="users" class="feature-icon w-10 h-10"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold">Collaboration</h3>
+                    <p class="text-gray-600 dark:text-gray-300">Seamless communication between contractors, clients, and authorities.</p>
+                    <button class="text-blue-600 hover:text-blue-700 mt-2 flex items-center" onclick="showSection('pricing')">
+                        Learn more <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <button class="btn-hover px-6 py-3 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors" onclick="showSection('pricing')">
+                    View All Features & Pricing
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Industries Section -->
+    <section id="industries" class="page-section py-16 px-6 bg-white dark:bg-gray-900">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-semibold mb-4">Specialized for Malaysian Contracting Industries</h2>
+                <p class="max-w-2xl mx-auto text-gray-600 dark:text-gray-300">
+                    Tailored solutions for each sector of Malaysia's construction industry
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="industry-card p-6 rounded-2xl text-white bg-gradient-to-r from-orange-500 to-orange-600">
+                    <h3 class="text-xl font-semibold mb-2">Civil Engineering</h3>
+                    <p class="opacity-90">Specialized tools and templates for civil engineering projects in Malaysia.</p>
+                    <button class="mt-4 text-white hover:bg-white/20 p-2 rounded-lg flex items-center" onclick="showSection('signup')">
+                        Explore <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i>
+                    </button>
+                </div>
+                
+                <div class="industry-card p-6 rounded-2xl text-white bg-gradient-to-r from-yellow-500 to-yellow-600">
+                    <h3 class="text-xl font-semibold mb-2">Electrical Systems</h3>
+                    <p class="opacity-90">Comprehensive solutions for electrical contracting projects.</p>
+                    <button class="mt-4 text-white hover:bg-white/20 p-2 rounded-lg flex items-center" onclick="showSection('signup')">
+                        Explore <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i>
+                    </button>
+                </div>
+                
+                <div class="industry-card p-6 rounded-2xl text-white bg-gradient-to-r from-green-500 to-green-600">
+                    <h3 class="text-xl font-semibold mb-2">ELV Systems</h3>
+                    <p class="opacity-90">Tools for Extra Low Voltage systems integration and management.</p>
+                    <button class="mt-4 text-white hover:bg-white/20 p-2 rounded-lg flex items-center" onclick="showSection('signup')">
+                        Explore <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i>
+                    </button>
+                </div>
+                
+                <div class="industry-card p-6 rounded-2xl text-white bg-gradient-to-r from-blue-500 to-blue-600">
+                    <h3 class="text-xl font-semibold mb-2">HVAC</h3>
+                    <p class="opacity-90">Heating, ventilation, and air conditioning project management tools.</p>
+                    <button class="mt-4 text-white hover:bg-white/20 p-2 rounded-lg flex items-center" onclick="showSection('signup')">
+                        Explore <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i>
+                    </button>
+                </div>
+                
+                <div class="industry-card p-6 rounded-2xl text-white bg-gradient-to-r from-indigo-500 to-indigo-600">
+                    <h3 class="text-xl font-semibold mb-2">Sewerage & Plumbing</h3>
+                    <p class="opacity-90">Specialized solutions for plumbing and sewerage projects.</p>
+                    <button class="mt-4 text-white hover:bg-white/20 p-2 rounded-lg flex items-center" onclick="showSection('signup')">
+                        Explore <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i>
+                    </button>
+                </div>
+                
+                <div class="industry-card p-6 rounded-2xl text-white bg-gradient-to-r from-purple-500 to-purple-600">
+                    <h3 class="text-xl font-semibold mb-2">General Contracting</h3>
+                    <p class="opacity-90">Comprehensive tools for general contracting businesses.</p>
+                    <button class="mt-4 text-white hover:bg-white/20 p-2 rounded-lg flex items-center" onclick="showSection('signup')">
+                        Explore <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <button class="btn-hover px-6 py-3 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors" onclick="showSection('signup')">
+                    Get Started with Your Industry
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials" class="page-section py-16 px-6 bg-gray-50 dark:bg-gray-800">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-semibold mb-4">Trusted by Malaysian Contractors</h2>
+                <p class="max-w-2xl mx-auto text-gray-600 dark:text-gray-300">
+                    Hear from contractors who have transformed their businesses with MC-Hub
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="testimonial-card bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-md">
+                    <div class="flex mb-4">
+                        <i data-lucide="star" class="text-yellow-400 fill-current w-5 h-5"></i>
+                        <i data-lucide="star" class="text-yellow-400 fill-current w-5 h-5"></i>
+                        <i data-lucide="star" class="text-yellow-400 fill-current w-5 h-5"></i>
+                        <i data-lucide="star" class="text-yellow-400 fill-current w-5 h-5"></i>
+                        <i data-lucide="star" class="text-yellow-400 fill-current w-5 h-5"></i>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4">"MC-Hub streamlined our bidding process and helped us win 40% more projects in the last year."</p>
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mr-4">
+                            <span class="font-semibold text-blue-600 dark:text-blue-400">AF</span>
+                        </div>
+                        <div>
+                            <div class="font-semibold">Ahmad Firdaus</div>
+                            <div class="text-sm text-gray-500 dark:text-gray-400">Firdaus Construction Sdn Bhd</div>
+                            <div class="text-sm text-gray-500 dark:text-gray-400 flex items-center">
+                                <i data-lucide="map-pin" class="w-3 h-3 mr-1"></i> Kuala Lumpur
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-md">
+                    <div class="flex mb-4">
+                        <i data-lucide="star" class="text-yellow-400 fill-current w-5 h-5"></i>
+                        <i data-lucide="star" class="text-yellow-400 fill-current w-5 h-5"></i>
+                        <i data-lucide="star" class="text-yellow-400 fill-current w-5 h-5"></i>
+                        <i data-lucide="star" class="text-yellow-400 fill-current w-5 h-5"></i>
+                        <i data-lucide="star" class="text-yellow-400 fill-current w-5 h-5"></i>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4">"The compliance features saved us countless hours dealing with JKR and CIDB requirements."</p>
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mr-4">
+                            <span class="font-semibold text-blue-600 dark:text-blue-400">SL</span>
+                        </div>
+                        <div>
+                            <div class="font-semibold">Sarah Lim</div>
+                            <div class="text-sm text-gray-500 dark:text-gray-400">Lim Engineering</div>
+                            <div class="text-sm text-gray-500 dark:text-gray-400 flex items-center">
+                                <i data-lucide="map-pin" class="w-3 h-3 mr-1"></i> Penang
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial-card bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-md">
+                    <div class="flex mb-4">
+                        <i data-lucide="star" class="text-yellow-400 fill-current w-5 h-5"></i>
+                        <i data-lucide="star" class="text-yellow-400 fill-current w-5 h-5"></i>
+                        <i data-lucide="star" class="text-yellow-400 fill-current w-5 h-5"></i>
+                        <i data-lucide="star" class="text-yellow-400 fill-current w-5 h-5"></i>
+                        <i data-lucide="star" class="text-yellow-400 fill-current w-5 h-5"></i>
+                    </div>
+                    <p class="text-gray-600 dark:text-gray-300 mb-4">"Finally a platform that understands the unique needs of Malaysian contractors across different sectors."</p>
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mr-4">
+                            <span class="font-semibold text-blue-600 dark:text-blue-400">RK</span>
+                        </div>
+                        <div>
+                            <div class="font-semibold">Rajesh Kumar</div>
+                            <div class="text-sm text-gray-500 dark:text-gray-400">RK Electrical Solutions</div>
+                            <div class="text-sm text-gray-500 dark:text-gray-400 flex items-center">
+                                <i data-lucide="map-pin" class="w-3 h-3 mr-1"></i> Johor Bahru
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <button class="btn-hover px-6 py-3 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors" onclick="showSection('signup')">
+                    Join Our Community
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="page-section py-16 px-6 bg-white dark:bg-gray-900">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-semibold mb-4">Simple, Transparent Pricing</h2>
+                <p class="max-w-2xl mx-auto text-gray-600 dark:text-gray-300">
+                    Choose the plan that works best for your contracting business
+                </p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="card-hover bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-md border border-gray-200 dark:border-gray-700">
+                    <h3 class="text-xl font-semibold mb-4">Starter</h3>
+                    <div class="text-3xl font-bold text-blue-600 mb-4">RM 99<span class="text-sm font-normal text-gray-500">/month</span></div>
+                    <p class="text-gray-600 dark:text-gray-300 mb-6">Perfect for small contractors and individual professionals</p>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center">
+                            <i data-lucide="check" class="w-5 h-5 text-green-500 mr-2"></i>
+                            <span>Up to 5 projects</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i data-lucide="check" class="w-5 h-5 text-green-500 mr-2"></i>
+                            <span>Basic bidding tools</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i data-lucide="check" class="w-5 h-5 text-green-500 mr-2"></i>
+                            <span>Standard compliance checks</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i data-lucide="check" class="w-5 h-5 text-green-500 mr-2"></i>
+                            <span>Email support</span>
+                        </li>
+                    </ul>
+                    <button class="btn-hover w-full py-3 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors" onclick="showSection('signup')">
+                        Get Started
+                    </button>
+                </div>
+                
+                <div class="card-hover bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-lg border-2 border-blue-500 relative">
+                    <div class="absolute top-0 right-0 bg-blue-500 text-white text-xs font-semibold px-3 py-1 rounded-bl-lg rounded-tr-lg">
+                        MOST POPULAR
+                    </div>
+                    <h3 class="text-xl font-semibold mb-4">Professional</h3>
+                    <div class="text-3xl font-bold text-blue-600 mb-4">RM 249<span class="text-sm font-normal text-gray-500">/month</span></div>
+                    <p class="text-gray-600 dark:text-gray-300 mb-6">Ideal for growing contracting businesses</p>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center">
+                            <i data-lucide="check" class="w-5 h-5 text-green-500 mr-2"></i>
+                            <span>Unlimited projects</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i data-lucide="check" class="w-5 h-5 text-green-500 mr-2"></i>
+                            <span>Advanced bidding tools</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i data-lucide="check" class="w-5 h-5 text-green-500 mr-2"></i>
+                            <span>Full compliance suite</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i data-lucide="check" class="w-5 h-5 text-green-500 mr-2"></i>
+                            <span>Priority support</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i data-lucide="check" class="w-5 h-5 text-green-500 mr-2"></i>
+                            <span>Team collaboration</span>
+                        </li>
+                    </ul>
+                    <button class="btn-hover w-full py-3 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors" onclick="showSection('signup')">
+                        Get Started
+                    </button>
+                </div>
+                
+                <div class="card-hover bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-md border border-gray-200 dark:border-gray-700">
+                    <h3 class="text-xl font-semibold mb-4">Enterprise</h3>
+                    <div class="text-3xl font-bold text-blue-600 mb-4">Custom<span class="text-sm font-normal text-gray-500"> pricing</span></div>
+                    <p class="text-gray-600 dark:text-gray-300 mb-6">For large contracting firms with complex needs</p>
+                    <ul class="space-y-3 mb-8">
+                        <li class="flex items-center">
+                            <i data-lucide="check" class="w-5 h-5 text-green-500 mr-2"></i>
+                            <span>Everything in Professional</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i data-lucide="check" class="w-5 h-5 text-green-500 mr-2"></i>
+                            <span>Custom workflows</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i data-lucide="check" class="w-5 h-5 text-green-500 mr-2"></i>
+                            <span>Dedicated account manager</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i data-lucide="check" class="w-5 h-5 text-green-500 mr-2"></i>
+                            <span>API access</span>
+                        </li>
+                        <li class="flex items-center">
+                            <i data-lucide="check" class="w-5 h-5 text-green-500 mr-2"></i>
+                            <span>Onboarding & training</span>
+                        </li>
+                    </ul>
+                    <button class="btn-hover w-full py-3 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 font-medium hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors" onclick="showSection('signup')">
+                        Contact Sales
+                    </button>
+                </div>
+            </div>
+            
+            <div class="text-center mt-12">
+                <p class="text-gray-600 dark:text-gray-300">Have questions about pricing? <button class="text-blue-600 hover:text-blue-700 font-medium" onclick="showSection('contact')">Contact our team</button></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section id="demo" class="page-section py-16 px-6 bg-gray-50 dark:bg-gray-800">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-3xl font-semibold mb-6">See MC-Hub in Action</h2>
+            <p class="text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
+                Watch our product demo to see how MC-Hub can transform your contracting business
+            </p>
+            
+            <div class="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-2 mb-8">
+                <div class="aspect-video bg-gray-200 dark:bg-gray-700 rounded-lg flex items-center justify-center">
+                    <div class="text-center p-8">
+                        <div class="w-16 h-16 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i data-lucide="play" class="text-blue-600 dark:text-blue-400 w-8 h-8"></i>
+                        </div>
+                        <p class="text-gray-500 dark:text-gray-400">Product demo video</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button class="btn-hover px-6 py-3 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors" onclick="showSection('signup')">
+                    Start Free Trial
+                </button>
+                <button class="btn-hover px-6 py-3 rounded-xl border border-gray-300 font-medium hover:border-gray-400 transition-colors" onclick="showSection('home')">
+                    Back to Home
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sign Up Section -->
+    <section id="signup" class="page-section py-16 px-6 bg-white dark:bg-gray-900">
+        <div class="max-w-md mx-auto">
+            <h2 class="text-3xl font-semibold mb-6 text-center">Create Your Account</h2>
+            <p class="text-gray-600 dark:text-gray-300 mb-8 text-center">
+                Join hundreds of Malaysian contractors using MC-Hub
+            </p>
+            
+            <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-md">
+                <form id="signup-form">
+                    <div class="mb-6">
+                        <label class="block text-gray-700 dark:text-gray-300 mb-2" for="name">Full Name</label>
+                        <input type="text" id="name" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900" required>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-gray-700 dark:text-gray-300 mb-2" for="email">Email Address</label>
+                        <input type="email" id="email" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900" required>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-gray-700 dark:text-gray-300 mb-2" for="password">Password</label>
+                        <input type="password" id="password" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900" required minlength="8">
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-gray-700 dark:text-gray-300 mb-2" for="company">Company Name</label>
+                        <input type="text" id="company" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900" required>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-gray-700 dark:text-gray-300 mb-2" for="industry">Primary Industry</label>
+                        <select id="industry" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900" required>
+                            <option value="">Select your industry</option>
+                            <option value="civil">Civil Engineering</option>
+                            <option value="electrical">Electrical Systems</option>
+                            <option value="elv">ELV Systems</option>
+                            <option value="hvac">HVAC</option>
+                            <option value="plumbing">Sewerage & Plumbing</option>
+                            <option value="general">General Contracting</option>
+                        </select>
+                    </div>
+                    
+                    <button type="submit" class="btn-hover w-full py-3 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors mb-4">
+                        Create Account
+                    </button>
+                    
+                    <p class="text-center text-gray-600 dark:text-gray-300">
+                        Already have an account? <button type="button" class="text-blue-600 hover:text-blue-700 font-medium" onclick="showSection('login')">Log in</button>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login Section -->
+    <section id="login" class="page-section py-16 px-6 bg-gray-50 dark:bg-gray-800">
+        <div class="max-w-md mx-auto">
+            <h2 class="text-3xl font-semibold mb-6 text-center">Welcome Back</h2>
+            <p class="text-gray-600 dark:text-gray-300 mb-8 text-center">
+                Log in to your MC-Hub account
+            </p>
+            
+            <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-md">
+                <form id="login-form">
+                    <div class="mb-6">
+                        <label class="block text-gray-700 dark:text-gray-300 mb-2" for="login-email">Email Address</label>
+                        <input type="email" id="login-email" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900" required>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <label class="block text-gray-700 dark:text-gray-300 mb-2" for="login-password">Password</label>
+                        <input type="password" id="login-password" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900" required>
+                    </div>
+                    
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center">
+                            <input type="checkbox" id="remember" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                            <label for="remember" class="ml-2 text-sm text-gray-700 dark:text-gray-300">Remember me</label>
+                        </div>
+                        
+                        <button type="button" class="text-sm text-blue-600 hover:text-blue-700">Forgot password?</button>
+                    </div>
+                    
+                    <button type="submit" class="btn-hover w-full py-3 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors mb-4">
+                        Log In
+                    </button>
+                    
+                    <p class="text-center text-gray-600 dark:text-gray-300">
+                        Don't have an account? <button type="button" class="text-blue-600 hover:text-blue-700 font-medium" onclick="showSection('signup')">Sign up</button>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="page-section py-16 px-6 bg-white dark:bg-gray-900">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-3xl font-semibold mb-6 text-center">Contact Us</h2>
+            <p class="text-gray-600 dark:text-gray-300 mb-8 text-center max-w-2xl mx-auto">
+                Have questions about MC-Hub? Our team is here to help you get the most out of our platform.
+            </p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-2xl">
+                    <h3 class="text-xl font-semibold mb-4">Get in Touch</h3>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <div class="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-lg mr-4">
+                                <i data-lucide="mail" class="text-blue-600 dark:text-blue-400 w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium">Email</div>
+                                <div class="text-gray-600 dark:text-gray-300">support@mchub.com</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-lg mr-4">
+                                <i data-lucide="phone" class="text-blue-600 dark:text-blue-400 w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium">Phone</div>
+                                <div class="text-gray-600 dark:text-gray-300">+60 3 1234 5678</div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-start">
+                            <div class="bg-blue-100 dark:bg-blue-900/30 p-2 rounded-lg mr-4">
+                                <i data-lucide="map-pin" class="text-blue-600 dark:text-blue-400 w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <div class="font-medium">Address</div>
+                                <div class="text-gray-600 dark:text-gray-300">Kuala Lumpur City Centre, 50088 Kuala Lumpur, Malaysia</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md">
+                    <form id="contact-form">
+                        <div class="mb-6">
+                            <label class="block text-gray-700 dark:text-gray-300 mb-2" for="contact-name">Full Name</label>
+                            <input type="text" id="contact-name" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900" required>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label class="block text-gray-700 dark:text-gray-300 mb-2" for="contact-email">Email Address</label>
+                            <input type="email" id="contact-email" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900" required>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label class="block text-gray-700 dark:text-gray-300 mb-2" for="contact-subject">Subject</label>
+                            <input type="text" id="contact-subject" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900" required>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <label class="block text-gray-700 dark:text-gray-300 mb-2" for="contact-message">Message</label>
+                            <textarea id="contact-message" rows="4" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900" required></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn-hover w-full py-3 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors">
+                            Send Message
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="py-20 px-6 text-center bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
+        <div class="max-w-3xl mx-auto">
+            <h2 class="text-3xl font-bold mb-6">Ready to Transform Your Contracting Business?</h2>
+            <p class="mb-8 text-blue-100 max-w-2xl mx-auto">
+                Join hundreds of Malaysian contractors who are already streamlining their operations with MC-Hub.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button class="btn-hover px-8 py-4 rounded-xl bg-white text-blue-600 text-lg font-medium hover:bg-gray-100 transition-colors shadow-lg" onclick="showSection('signup')">
+                    Start Free Trial
+                </button>
+                <button class="btn-hover px-8 py-4 rounded-xl border border-white text-lg font-medium text-white hover:bg-white/10 transition-colors" onclick="showSection('demo')">
+                    Schedule a Demo
+                </button>
+            </div>
+            <p class="mt-6 text-sm text-blue-200">
+                No credit card required • 14-day free trial • Cancel anytime
+            </p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-300 py-12 px-6">
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div>
+                <div class="flex items-center space-x-2 mb-4">
+                    <div class="bg-blue-600 p-2 rounded-lg">
+                        <i data-lucide="building-2" class="text-white w-6 h-6"></i>
+                    </div>
+                    <span class="text-xl font-bold text-white">MC-Hub</span>
+                </div>
+                <p class="mb-4">The leading platform for Malaysian contractors to manage projects, bids, and compliance.</p>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i data-lucide="twitter" class="w-5 h-5"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i data-lucide="facebook" class="w-5 h-5"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i data-lucide="linkedin" class="w-5 h-5"></i>
+                    </a>
+                    <a href="#" class="text-gray-400 hover:text-white transition-colors">
+                        <i data-lucide="instagram" class="w-5 h-5"></i>
+                    </a>
+                </div>
+            </div>
+            
+            <div>
+                <h3 class="text-white font-semibold mb-4">Product</h3>
+                <ul class="space-y-2">
+                    <li><a href="#features" class="hover:text-white transition-colors" onclick="showSection('features')">Features</a></li>
+                    <li><a href="#industries" class="hover:text-white transition-colors" onclick="showSection('industries')">Industries</a></li>
+                    <li><a href="#pricing" class="hover:text-white transition-colors" onclick="showSection('pricing')">Pricing</a></li>
+                    <li><a href="#testimonials" class="hover:text-white transition-colors" onclick="showSection('testimonials')">Case Studies</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">API</a></li>
+                </ul>
+            </div>
+            
+            <div>
+                <h3 class="text-white font-semibold mb-4">Resources</h3>
+                <ul class="space-y-2">
+                    <li><a href="#" class="hover:text-white transition-colors">Blog</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Guides</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Webinars</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Community</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Help Center</a></li>
+                </ul>
+            </div>
+            
+            <div>
+                <h3 class="text-white font-semibold mb-4">Company</h3>
+                <ul class="space-y-2">
+                    <li><a href="#" class="hover:text-white transition-colors">About</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Careers</a></li>
+                    <li><a href="#contact" class="hover:text-white transition-colors" onclick="showSection('contact')">Contact</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Partners</a></li>
+                    <li><a href="#" class="hover:text-white transition-colors">Press</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="max-w-6xl mx-auto mt-12 pt-8 border-t border-gray-800 text-sm text-gray-400 flex flex-col md:flex-row justify-between items-center">
+            <div>© 2025 MC-Hub. All rights reserved.</div>
+            <div class="flex space-x-6 mt-4 md:mt-0">
+                <a href="#" class="hover:text-white transition-colors">Terms</a>
+                <a href="#" class="hover:text-white transition-colors">Privacy</a>
+                <a href="#" class="hover:text-white transition-colors">Cookies</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+        
+        // Section navigation
+        function showSection(sectionId) {
+            // Hide all sections
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show the selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Update URL hash
+            window.location.hash = sectionId;
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+        
+        // Handle nav link clicks
+        document.querySelectorAll('a[data-section]').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                showSection(link.getAttribute('data-section'));
+            });
+        });
+        
+        // Handle URL hash changes
+        window.addEventListener('hashchange', function() {
+            const sectionId = window.location.hash.substring(1);
+            if (sectionId) {
+                showSection(sectionId);
+            }
+        });
+        
+        // Check for initial hash
+        if (window.location.hash) {
+            showSection(window.location.hash.substring(1));
+        }
+        
+        // Counter animation
+        function animateCounter(element, target) {
+            let count = 0;
+            let duration = 2000; // 2 seconds
+            let increment = target / (duration / 16); // 16ms per frame
+            
+            let timer = setInterval(() => {
+                count += increment;
+                if (count >= target) {
+                    count = target;
+                    clearInterval(timer);
+                }
+                element.textContent = Math.floor(count) + (element.getAttribute('data-target') === '98' ? '%' : '+');
+            }, 16);
+        }
+        
+        // Initialize counters when they come into view
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const counters = document.querySelectorAll('.counter');
+                    counters.forEach(counter => {
+                        const target = parseInt(counter.getAttribute('data-target'));
+                        animateCounter(counter, target);
+                    });
+                    observer.disconnect();
+                }
+            });
+        }, { threshold: 0.5 });
+        
+        observer.observe(document.querySelector('.counter'));
+        
+        // Form validation
+        document.getElementById('signup-form')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for signing up! You will be redirected shortly.');
+            // In a real application, you would handle form submission here
+        });
+        
+        document.getElementById('login-form')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Login successful! Redirecting to your dashboard.');
+            // In a real application, you would handle form submission here
+        });
+        
+        document.getElementById('contact-form')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Thank you for your message! We will get back to you soon.');
+            // In a real application, you would handle form submission here
+        });
+    </script>
+</body>
+</html>

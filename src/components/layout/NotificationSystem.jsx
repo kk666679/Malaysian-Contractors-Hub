@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Bell, X, CheckCircle, AlertCircle, Info } from 'lucide-react'
-import { Button } from './ui/button'
-import { Badge } from './ui/badge'
-import { hoverScale } from '../lib/animations'
+import { Button } from '../ui/button'
+import { Badge } from '../ui/badge'
+import { hoverScale } from '../../lib/animations'
 
 const MOCK_NOTIFICATIONS = [
   {

@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Calculator, Building, Users, Cloud, Package, Building2 } from 'lucide-react'
-import PageTransition from '../components/PageTransition.jsx'
+import PageTransition from '../components/features/PageTransition.jsx'
 
 const FeatureCard = ({ icon, title, description, link, color }) => {
   return (

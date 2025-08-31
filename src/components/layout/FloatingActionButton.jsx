@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Plus, X, FileEdit, Calculator, Calendar, Users, MessageSquare } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { hoverScale } from '../lib/animations'
+import { hoverScale } from '../../lib/animations'
 
 export default function FloatingActionButton() {
   const [isOpen, setIsOpen] = useState(false)

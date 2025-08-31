@@ -2,13 +2,16 @@ import { BrowserRouter, Routes, Route, useLocation, Outlet } from 'react-router-
 import { AnimatePresence, motion } from 'framer-motion'
 import { ThemeProvider } from 'styled-components'
 import { Suspense, lazy, useState, useEffect } from 'react'
+import { QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import Navbar from './components/layout/Navbar'
 import Footer from './components/layout/Footer'
 import FloatingActionButton from './components/layout/FloatingActionButton'
-import HomePage from './pages/HomePage'
+import LandingPage from './pages/LandingPage'
 import GlobalStyles from './styles/GlobalStyles'
 import { darkTheme, lightTheme, fonts } from './styles/theme'
 import ErrorBoundary from './components/features/ErrorBoundary'
+import { queryClient } from './lib/queryClient'
 
 // Lazy load components for better performance
 const ServicesPage = lazy(() => import('./pages/ServicesPage'))
@@ -25,6 +28,7 @@ import BuildingAutomation from './pages/BuildingAutomation.jsx'
 const PlaceholderPage = lazy(() => import('./components/features/PlaceholderPage'))
 const Web3Dashboard = lazy(() => import('./components/features/Web3Dashboard'))
 const Web3DemoPage = lazy(() => import('./pages/Web3DemoPage'))
+const DatabaseTestPage = lazy(() => import('./pages/DatabaseTestPage'))
 
 // Service pages
 const CivilEngineeringPage = lazy(() => import('./pages/services/CivilEngineeringPage'))
@@ -43,7 +47,7 @@ const LoadingFallback = () => (
 // Layout component with AnimatePresence
 const Layout = () => {
   const location = useLocation()
-  
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -75,7 +79,7 @@ const AppRoutes = () => (
     <Route path="/" element={<Layout />}>
       <Route index element={
         <ErrorBoundary>
-          <HomePage />
+          <LandingPage />
         </ErrorBoundary>
       } />
       <Route path="services" element={<ServicesPage />} />
@@ -110,15 +114,15 @@ const AppRoutes = () => (
 
 function App() {
   const [theme, setTheme] = useState('dark')
-  
+
   // Check user's preferred theme
   useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') || 
+    const savedTheme = localStorage.getItem('theme') ||
       (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
     setTheme(savedTheme)
     document.documentElement.classList.toggle('dark', savedTheme === 'dark')
   }, [])
-  
+
   // Theme toggle function
   const toggleTheme = () => {
     const newTheme = theme === 'dark' ? 'light' : 'dark'
@@ -126,14 +130,17 @@ function App() {
     localStorage.setItem('theme', newTheme)
     document.documentElement.classList.toggle('dark', newTheme === 'dark')
   }
-  
+
   return (
-    <ThemeProvider theme={{ ...(theme === 'dark' ? darkTheme : lightTheme), fonts, toggleTheme }}>
-      <GlobalStyles />
-      <BrowserRouter>
-        <AppRoutes />
-      </BrowserRouter>
-    </ThemeProvider>
+    <QueryClientProvider client={queryClient}>
+      {process.env.NODE_ENV === 'development' && <ReactQueryDevtools />}
+      <ThemeProvider theme={{ ...(theme === 'dark' ? darkTheme : lightTheme), fonts, toggleTheme }}>
+        <GlobalStyles />
+        <BrowserRouter>
+          <AppRoutes />
+        </BrowserRouter>
+      </ThemeProvider>
+    </QueryClientProvider>
   )
 }
 

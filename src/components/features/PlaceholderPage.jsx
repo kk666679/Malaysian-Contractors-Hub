@@ -1,5 +1,5 @@
-import { Button } from '../components/ui/button'
-import PageTransition from '../components/PageTransition'
+import { Button } from '../ui/button'
+import PageTransition from './PageTransition.jsx'
 import { ArrowLeft, Construction } from 'lucide-react'
 
 const PlaceholderPage = ({ title, returnPath = '/' }) => {
