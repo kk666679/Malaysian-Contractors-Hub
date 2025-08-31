@@ -4,6 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MC-Hub: Malaysian Contractors Hub</title>
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'GA_MEASUREMENT_ID');
+    </script>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
@@ -602,30 +612,30 @@
             </p>
             
             <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-md">
-                <form id="signup-form">
+                <form>
                     <div class="mb-6">
                         <label class="block text-gray-700 dark:text-gray-300 mb-2" for="name">Full Name</label>
-                        <input type="text" id="name" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900" required>
+                        <input type="text" id="name" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900">
                     </div>
                     
                     <div class="mb-6">
                         <label class="block text-gray-700 dark:text-gray-300 mb-2" for="email">Email Address</label>
-                        <input type="email" id="email" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900" required>
+                        <input type="email" id="email" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900">
                     </div>
                     
                     <div class="mb-6">
                         <label class="block text-gray-700 dark:text-gray-300 mb-2" for="password">Password</label>
-                        <input type="password" id="password" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900" required minlength="8">
+                        <input type="password" id="password" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900">
                     </div>
                     
                     <div class="mb-6">
                         <label class="block text-gray-700 dark:text-gray-300 mb-2" for="company">Company Name</label>
-                        <input type="text" id="company" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900" required>
+                        <input type="text" id="company" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900">
                     </div>
                     
                     <div class="mb-6">
                         <label class="block text-gray-700 dark:text-gray-300 mb-2" for="industry">Primary Industry</label>
-                        <select id="industry" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900" required>
+                        <select id="industry" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900">
                             <option value="">Select your industry</option>
                             <option value="civil">Civil Engineering</option>
                             <option value="electrical">Electrical Systems</option>
@@ -636,12 +646,12 @@
                         </select>
                     </div>
                     
-                    <button type="submit" class="btn-hover w-full py-3 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors mb-4">
+                    <button type="button" class="btn-hover w-full py-3 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors mb-4">
                         Create Account
                     </button>
                     
                     <p class="text-center text-gray-600 dark:text-gray-300">
-                        Already have an account? <button type="button" class="text-blue-600 hover:text-blue-700 font-medium" onclick="showSection('login')">Log in</button>
+                        Already have an account? <button class="text-blue-600 hover:text-blue-700 font-medium" onclick="showSection('login')">Log in</button>
                     </p>
                 </form>
             </div>
@@ -657,15 +667,15 @@
             </p>
             
             <div class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-md">
-                <form id="login-form">
+                <form>
                     <div class="mb-6">
                         <label class="block text-gray-700 dark:text-gray-300 mb-2" for="login-email">Email Address</label>
-                        <input type="email" id="login-email" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900" required>
+                        <input type="email" id="login-email" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900">
                     </div>
                     
                     <div class="mb-6">
                         <label class="block text-gray-700 dark:text-gray-300 mb-2" for="login-password">Password</label>
-                        <input type="password" id="login-password" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900" required>
+                        <input type="password" id="login-password" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900">
                     </div>
                     
                     <div class="flex items-center justify-between mb-6">
@@ -674,15 +684,15 @@
                             <label for="remember" class="ml-2 text-sm text-gray-700 dark:text-gray-300">Remember me</label>
                         </div>
                         
-                        <button type="button" class="text-sm text-blue-600 hover:text-blue-700">Forgot password?</button>
+                        <a href="#" class="text-sm text-blue-600 hover:text-blue-700">Forgot password?</a>
                     </div>
                     
-                    <button type="submit" class="btn-hover w-full py-3 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors mb-4">
+                    <button type="button" class="btn-hover w-full py-3 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors mb-4">
                         Log In
                     </button>
                     
                     <p class="text-center text-gray-600 dark:text-gray-300">
-                        Don't have an account? <button type="button" class="text-blue-600 hover:text-blue-700 font-medium" onclick="showSection('signup')">Sign up</button>
+                        Don't have an account? <button class="text-blue-600 hover:text-blue-700 font-medium" onclick="showSection('signup')">Sign up</button>
                     </p>
                 </form>
             </div>
@@ -735,28 +745,28 @@
                 </div>
                 
                 <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-md">
-                    <form id="contact-form">
+                    <form>
                         <div class="mb-6">
                             <label class="block text-gray-700 dark:text-gray-300 mb-2" for="contact-name">Full Name</label>
-                            <input type="text" id="contact-name" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900" required>
+                            <input type="text" id="contact-name" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900">
                         </div>
                         
                         <div class="mb-6">
                             <label class="block text-gray-700 dark:text-gray-300 mb-2" for="contact-email">Email Address</label>
-                            <input type="email" id="contact-email" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900" required>
+                            <input type="email" id="contact-email" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900">
                         </div>
                         
                         <div class="mb-6">
                             <label class="block text-gray-700 dark:text-gray-300 mb-2" for="contact-subject">Subject</label>
-                            <input type="text" id="contact-subject" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900" required>
+                            <input type="text" id="contact-subject" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900">
                         </div>
                         
                         <div class="mb-6">
                             <label class="block text-gray-700 dark:text-gray-300 mb-2" for="contact-message">Message</label>
-                            <textarea id="contact-message" rows="4" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900" required></textarea>
+                            <textarea id="contact-message" rows="4" class="w-full px-4 py-3 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900"></textarea>
                         </div>
                         
-                        <button type="submit" class="btn-hover w-full py-3 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors">
+                        <button type="button" class="btn-hover w-full py-3 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors">
                             Send Message
                         </button>
                     </form>
@@ -863,17 +873,20 @@
         
         // Section navigation
         function showSection(sectionId) {
+            // Track section navigation
+            gtag('event', 'page_view', {
+                page_title: sectionId,
+                page_location: window.location.href + '#' + sectionId
+            });
+
             // Hide all sections
             document.querySelectorAll('.page-section').forEach(section => {
                 section.classList.remove('active');
             });
-            
+
             // Show the selected section
             document.getElementById(sectionId).classList.add('active');
-            
-            // Update URL hash
-            window.location.hash = sectionId;
-            
+
             // Scroll to top
             window.scrollTo(0, 0);
         }
@@ -882,22 +895,65 @@
         document.querySelectorAll('a[data-section]').forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
-                showSection(link.getAttribute('data-section'));
+                const section = link.getAttribute('data-section');
+                gtag('event', 'click', {
+                    event_category: 'navigation',
+                    event_label: 'nav_link_' + section
+                });
+                showSection(section);
             });
         });
-        
-        // Handle URL hash changes
-        window.addEventListener('hashchange', function() {
-            const sectionId = window.location.hash.substring(1);
-            if (sectionId) {
-                showSection(sectionId);
-            }
+
+        // Track button clicks
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const buttonText = button.textContent.trim();
+                let eventLabel = 'button_click';
+
+                // Categorize button clicks
+                if (buttonText.includes('Sign Up') || buttonText.includes('Get Started')) {
+                    eventLabel = 'signup_click';
+                } else if (buttonText.includes('Login') || buttonText.includes('Log in')) {
+                    eventLabel = 'login_click';
+                } else if (buttonText.includes('Watch Demo') || buttonText.includes('Schedule a Demo')) {
+                    eventLabel = 'demo_click';
+                } else if (buttonText.includes('pricing') || buttonText.includes('Pricing')) {
+                    eventLabel = 'pricing_click';
+                } else if (buttonText.includes('Create Account')) {
+                    eventLabel = 'signup_form_submit';
+                } else if (buttonText.includes('Log In')) {
+                    eventLabel = 'login_form_submit';
+                } else if (buttonText.includes('Send Message')) {
+                    eventLabel = 'contact_form_submit';
+                }
+
+                gtag('event', 'click', {
+                    event_category: 'engagement',
+                    event_label: eventLabel
+                });
+            });
         });
-        
-        // Check for initial hash
-        if (window.location.hash) {
-            showSection(window.location.hash.substring(1));
-        }
+
+        // Track form submissions
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', (e) => {
+                let formType = 'form_submit';
+
+                // Identify form type
+                if (form.closest('#signup')) {
+                    formType = 'signup_form';
+                } else if (form.closest('#login')) {
+                    formType = 'login_form';
+                } else if (form.closest('#contact')) {
+                    formType = 'contact_form';
+                }
+
+                gtag('event', 'form_submit', {
+                    event_category: 'conversion',
+                    event_label: formType
+                });
+            });
+        });
         
         // Counter animation
         function animateCounter(element, target) {
@@ -931,23 +987,51 @@
         
         observer.observe(document.querySelector('.counter'));
         
-        // Form validation
-        document.getElementById('signup-form')?.addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('Thank you for signing up! You will be redirected shortly.');
-            // In a real application, you would handle form submission here
+        // Simple animation for elements when they come into view
+        document.addEventListener('DOMContentLoaded', function() {
+            const sectionObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-fade-in');
+
+                        // Track section visibility
+                        const sectionId = entry.target.id;
+                        if (sectionId && !entry.target.dataset.tracked) {
+                            entry.target.dataset.tracked = 'true';
+                            gtag('event', 'section_view', {
+                                event_category: 'engagement',
+                                event_label: sectionId,
+                                custom_parameter_1: 'section_visible'
+                            });
+                        }
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('section').forEach(section => {
+                sectionObserver.observe(section);
+            });
         });
-        
-        document.getElementById('login-form')?.addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('Login successful! Redirecting to your dashboard.');
-            // In a real application, you would handle form submission here
-        });
-        
-        document.getElementById('contact-form')?.addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('Thank you for your message! We will get back to you soon.');
-            // In a real application, you would handle form submission here
+
+        // Track scroll depth
+        let maxScrollDepth = 0;
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = Math.round((scrollTop / docHeight) * 100);
+
+            // Track milestones
+            const milestones = [25, 50, 75, 90, 100];
+            milestones.forEach(milestone => {
+                if (scrollPercent >= milestone && maxScrollDepth < milestone) {
+                    maxScrollDepth = milestone;
+                    gtag('event', 'scroll_depth', {
+                        event_category: 'engagement',
+                        event_label: milestone + '%',
+                        value: milestone
+                    });
+                }
+            });
         });
     </script>
 </body>
