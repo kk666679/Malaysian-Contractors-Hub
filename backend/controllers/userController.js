@@ -1,4 +1,5 @@
-import { PrismaClient } from '/workspaces/Malaysian-Contractors-Hub/app/generated/prisma-client/index.js';
+import pkg from '@prisma/client';
+const { PrismaClient } = pkg;
 
 const prisma = new PrismaClient();
 

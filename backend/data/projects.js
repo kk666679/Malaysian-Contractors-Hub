@@ -1,4 +1,4 @@
-export default = [
+export default [
   {
     id: 'PRJ001',
     title: 'Office Building ACMV Installation',

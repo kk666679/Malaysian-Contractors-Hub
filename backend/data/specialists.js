@@ -1,4 +1,4 @@
-export default = [
+export default [
   {
     id: 'SP001',
     name: 'Ahmad Bin Hassan',

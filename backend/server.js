@@ -10,8 +10,11 @@ import marketplaceRoutes from './routes/marketplace.js';
 import complianceRoutes from './routes/compliance.js';
 import userRoutes from './routes/user.js';
 import weatherRoutes from './routes/weather.js';
+
 import civilEngineeringRoutes from './routes/civilEngineering.js';
+import electricalSystemsRoutes from './routes/electricalSystems.js';
 import redisRoutes from './routes/redis.js';
+import projectRoutes from './routes/project.js';
 
 // Create Express app
 const app = express();
@@ -29,7 +32,9 @@ app.use('/api/compliance', complianceRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/weather', weatherRoutes);
 app.use('/api/civil-engineering', civilEngineeringRoutes);
+app.use('/api/electrical-systems', electricalSystemsRoutes);
 app.use('/api/redis', redisRoutes);
+app.use('/api/projects', projectRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

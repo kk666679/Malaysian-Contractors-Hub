@@ -1,4 +1,4 @@
-export default = [
+export default [
   {
     id: 'SUP001',
     name: 'MalayMEP Supplies',
