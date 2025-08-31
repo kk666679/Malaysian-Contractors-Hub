@@ -90,6 +90,7 @@ const AppRoutes = () => (
       <Route path="services/acmv-systems" element={<ACMVSystemsPage />} />
       <Route path="features" element={<FeaturesPage />} />
       <Route path="compliance" element={<CompliancePage />} />
+      <Route path="projects" element={<ProjectsPage />} />
       <Route path="marketplace" element={<MarketplacePage />} />
       <Route path="monsoon-planner" element={<MonsoonRiskPlanner />} />
       <Route path="about" element={<PlaceholderPage title="About Page" />} />

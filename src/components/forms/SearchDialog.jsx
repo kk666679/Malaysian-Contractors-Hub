@@ -17,7 +17,7 @@ const SEARCH_RESULTS = {
   documents: [
     { id: 1, title: 'CIDB Compliance Guide', category: 'Compliance' },
     { id: 2, title: 'JKR Building Standards', category: 'Standards' },
-    { id: 3, title: 'Malaysian MEP Best Practices', category: 'Guidelines' }
+    { id: 3, title: 'Malaysian MC HUB Best Practices', category: 'Guidelines' }
   ]
 }
 
@@ -81,13 +81,13 @@ export default function SearchDialog() {
     // In a real app, this would navigate to the item
     switch (type) {
       case 'projects':
-        navigate(`/projects/${item.id}`)
+        navigate(`/projects`)
         break
       case 'specialists':
-        navigate(`/marketplace/specialists/${item.id}`)
+        navigate(`/marketplace`)
         break
       case 'documents':
-        navigate(`/compliance/documents/${item.id}`)
+        navigate(`/compliance`)
         break
       default:
         break

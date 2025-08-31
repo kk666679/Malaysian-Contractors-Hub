@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Calculator, Building, Users, Cloud, Package, Building2 } from 'lucide-react'
+import { Calculator, Building, Users, Cloud, Package, Building2, Search } from 'lucide-react'
 import PageTransition from '../components/features/PageTransition.jsx'
+import { useState } from 'react'
 
 const FeatureCard = ({ icon, title, description, link, color }) => {
   return (
@@ -30,6 +31,8 @@ const FeatureCard = ({ icon, title, description, link, color }) => {
 }
 
 const FeaturesPage = () => {
+  const [searchQuery, setSearchQuery] = useState('')
+
   const features = [
     {
       icon: <Calculator className="h-6 w-6 text-blue-600" />,
@@ -74,7 +77,13 @@ const FeaturesPage = () => {
       color: "border-rose-500"
     }
   ]
-  
+
+  // Filter features based on search query
+  const filteredFeatures = features.filter(feature =>
+    feature.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    feature.description.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+
   return (
     <PageTransition>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -84,9 +93,23 @@ const FeaturesPage = () => {
             Discover the tools designed to streamline your contracting business in Malaysia
           </p>
         </div>
-        
+
+        {/* Search Input */}
+        <div className="mb-8 max-w-md mx-auto">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-text-muted h-5 w-5" />
+            <input
+              type="text"
+              placeholder="Search features..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full pl-10 pr-4 py-3 border border-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+            />
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {features.map((feature, index) => (
+          {filteredFeatures.map((feature, index) => (
             <FeatureCard 
               key={index}
               icon={feature.icon}
@@ -97,6 +120,14 @@ const FeaturesPage = () => {
             />
           ))}
         </div>
+
+        {filteredFeatures.length === 0 && searchQuery && (
+          <div className="text-center py-12 bg-background-secondary rounded-lg">
+            <Search className="h-12 w-12 mx-auto mb-4 text-text-muted opacity-40" />
+            <h4 className="text-lg font-medium mb-2">No features found</h4>
+            <p className="text-text-muted">Try adjusting your search query</p>
+          </div>
+        )}
       </div>
     </PageTransition>
   )
