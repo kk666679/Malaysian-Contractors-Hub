@@ -5,6 +5,35 @@ const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api
 class ProjectService {
   constructor() {
     this.baseURL = API_BASE_URL;
+    this.offlineProjects = this.getOfflineProjects();
+  }
+
+  // Offline storage helpers
+  getOfflineProjects() {
+    try {
+      return JSON.parse(localStorage.getItem('offlineProjects') || '[]');
+    } catch {
+      return [];
+    }
+  }
+
+  saveOfflineProjects(projects) {
+    localStorage.setItem('offlineProjects', JSON.stringify(projects));
+  }
+
+  addPendingProject(project) {
+    const pending = JSON.parse(localStorage.getItem('pendingProjects') || '[]');
+    pending.push({ ...project, tempId: this.generateId() });
+    localStorage.setItem('pendingProjects', JSON.stringify(pending));
+  }
+
+  generateId() {
+    return Math.random().toString(36).substring(2, 15);
+  }
+
+  // Network status check
+  isOnline() {
+    return navigator.onLine;
   }
 
   // Get authorization headers
@@ -19,6 +48,14 @@ class ProjectService {
   // Get all projects
   async getAllProjects() {
     try {
+      if (!this.isOnline()) {
+        return {
+          success: true,
+          data: { projects: this.offlineProjects },
+          offline: true
+        };
+      }
+
       const response = await fetch(`${this.baseURL}/projects`, {
         method: 'GET',
         headers: this.getAuthHeaders(),
@@ -29,9 +66,26 @@ class ProjectService {
       }
 
       const data = await response.json();
+      
+      // Cache projects for offline use
+      if (data?.projects) {
+        this.offlineProjects = data.projects;
+        this.saveOfflineProjects(this.offlineProjects);
+      }
+      
       return data;
     } catch (error) {
       console.error('Error fetching projects:', error);
+      
+      // Return offline data if available
+      if (this.offlineProjects.length > 0) {
+        return {
+          success: true,
+          data: { projects: this.offlineProjects },
+          offline: true
+        };
+      }
+      
       throw error;
     }
   }
@@ -59,6 +113,28 @@ class ProjectService {
   // Create new project
   async createProject(projectData) {
     try {
+      if (!this.isOnline()) {
+        // Store for later sync
+        const tempProject = {
+          ...projectData,
+          id: this.generateId(),
+          tempId: this.generateId(),
+          status: 'PLANNING',
+          createdAt: new Date().toISOString(),
+          offline: true
+        };
+        
+        this.offlineProjects.unshift(tempProject);
+        this.saveOfflineProjects(this.offlineProjects);
+        this.addPendingProject(projectData);
+        
+        return {
+          success: true,
+          data: { project: tempProject },
+          offline: true
+        };
+      }
+
       const response = await fetch(`${this.baseURL}/projects`, {
         method: 'POST',
         headers: this.getAuthHeaders(),
@@ -70,6 +146,13 @@ class ProjectService {
       }
 
       const data = await response.json();
+      
+      // Update offline cache
+      if (data?.project) {
+        this.offlineProjects.unshift(data.project);
+        this.saveOfflineProjects(this.offlineProjects);
+      }
+      
       return data;
     } catch (error) {
       console.error('Error creating project:', error);

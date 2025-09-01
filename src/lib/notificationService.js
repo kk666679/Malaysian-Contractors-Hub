@@ -1,148 +1,340 @@
-// API Base URL
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+// Enhanced notification service for Malaysian Contractors Hub
+import { useState, useEffect } from 'react';
 
-// Notification Service for API calls
 class NotificationService {
   constructor() {
-    this.baseURL = API_BASE_URL;
+    this.notifications = [];
+    this.listeners = [];
+    this.maxNotifications = 5;
   }
 
-  // Get authorization headers
-  getAuthHeaders() {
-    const token = localStorage.getItem('authToken');
-    return {
-      'Content-Type': 'application/json',
-      'Authorization': token ? `Bearer ${token}` : '',
+  // Add a new notification
+  add(notification) {
+    const id = this.generateId();
+    const newNotification = {
+      id,
+      timestamp: Date.now(),
+      type: 'info',
+      duration: 5000,
+      dismissible: true,
+      ...notification
+    };
+
+    this.notifications.unshift(newNotification);
+
+    // Limit number of notifications
+    if (this.notifications.length > this.maxNotifications) {
+      this.notifications = this.notifications.slice(0, this.maxNotifications);
+    }
+
+    this.notifyListeners();
+
+    // Auto-dismiss if duration is set
+    if (newNotification.duration > 0) {
+      setTimeout(() => {
+        this.remove(id);
+      }, newNotification.duration);
+    }
+
+    return id;
+  }
+
+  // Remove a notification
+  remove(id) {
+    this.notifications = this.notifications.filter(n => n.id !== id);
+    this.notifyListeners();
+  }
+
+  // Clear all notifications
+  clear() {
+    this.notifications = [];
+    this.notifyListeners();
+  }
+
+  // Get all notifications
+  getAll() {
+    return this.notifications;
+  }
+
+  // Subscribe to notification changes
+  subscribe(callback) {
+    this.listeners.push(callback);
+    return () => {
+      this.listeners = this.listeners.filter(l => l !== callback);
     };
   }
 
-  // Get user notifications
-  async getNotifications(page = 1, limit = 20, unreadOnly = false) {
-    try {
-      const params = new URLSearchParams({
-        page: page.toString(),
-        limit: limit.toString(),
-        unreadOnly: unreadOnly.toString()
+  // Notify all listeners
+  notifyListeners() {
+    this.listeners.forEach(callback => callback(this.notifications));
+  }
+
+  // Generate unique ID
+  generateId() {
+    return Math.random().toString(36).substring(2, 15);
+  }
+
+  // Convenience methods for different notification types
+  success(message, options = {}) {
+    return this.add({
+      type: 'success',
+      title: 'Success',
+      message,
+      ...options
+    });
+  }
+
+  error(message, options = {}) {
+    return this.add({
+      type: 'error',
+      title: 'Error',
+      message,
+      duration: 0, // Don't auto-dismiss errors
+      ...options
+    });
+  }
+
+  warning(message, options = {}) {
+    return this.add({
+      type: 'warning',
+      title: 'Warning',
+      message,
+      duration: 7000,
+      ...options
+    });
+  }
+
+  info(message, options = {}) {
+    return this.add({
+      type: 'info',
+      title: 'Information',
+      message,
+      ...options
+    });
+  }
+
+  // Project-specific notifications
+  projectCreated(projectName) {
+    return this.success(`Project "${projectName}" has been created successfully.`, {
+      title: 'Project Created',
+      actions: [
+        {
+          label: 'View Project',
+          action: () => window.location.href = '/projects'
+        }
+      ]
+    });
+  }
+
+  projectUpdated(projectName) {
+    return this.success(`Project "${projectName}" has been updated.`, {
+      title: 'Project Updated'
+    });
+  }
+
+  calculationCompleted(calculationType) {
+    return this.success(`${calculationType} calculation completed successfully.`, {
+      title: 'Calculation Complete',
+      duration: 3000
+    });
+  }
+
+  calculationError(calculationType, error) {
+    return this.error(`Failed to complete ${calculationType} calculation: ${error}`, {
+      title: 'Calculation Error'
+    });
+  }
+
+  // Network status notifications
+  networkOnline() {
+    return this.success('Connection restored. All features are now available.', {
+      title: 'Back Online',
+      duration: 3000
+    });
+  }
+
+  networkOffline() {
+    return this.warning('You are currently offline. Some features may be limited.', {
+      title: 'Offline Mode',
+      duration: 0
+    });
+  }
+
+  // Authentication notifications
+  loginSuccess(userName) {
+    return this.success(`Welcome back, ${userName}!`, {
+      title: 'Login Successful',
+      duration: 3000
+    });
+  }
+
+  loginError(error) {
+    return this.error(`Login failed: ${error}`, {
+      title: 'Login Error'
+    });
+  }
+
+  sessionExpired() {
+    return this.warning('Your session has expired. Please log in again.', {
+      title: 'Session Expired',
+      duration: 0,
+      actions: [
+        {
+          label: 'Login',
+          action: () => window.location.href = '/login'
+        }
+      ]
+    });
+  }
+
+  // Compliance notifications
+  complianceCheck(status, standards) {
+    if (status === 'passed') {
+      return this.success(`Design complies with ${standards.join(', ')}.`, {
+        title: 'Compliance Check Passed'
       });
-
-      const response = await fetch(`${this.baseURL}/notifications?${params}`, {
-        method: 'GET',
-        headers: this.getAuthHeaders(),
+    } else {
+      return this.warning(`Design may not comply with ${standards.join(', ')}. Please review.`, {
+        title: 'Compliance Warning',
+        duration: 0
       });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error('Error fetching notifications:', error);
-      throw error;
     }
   }
 
-  // Get notification statistics
-  async getNotificationStats() {
-    try {
-      const response = await fetch(`${this.baseURL}/notifications/stats`, {
-        method: 'GET',
-        headers: this.getAuthHeaders(),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error('Error fetching notification stats:', error);
-      throw error;
-    }
+  // File upload notifications
+  fileUploadStart(fileName) {
+    return this.info(`Uploading "${fileName}"...`, {
+      title: 'File Upload',
+      duration: 0,
+      dismissible: false
+    });
   }
 
-  // Mark notification as read
-  async markAsRead(notificationId) {
-    try {
-      const response = await fetch(`${this.baseURL}/notifications/${notificationId}/read`, {
-        method: 'PUT',
-        headers: this.getAuthHeaders(),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error('Error marking notification as read:', error);
-      throw error;
-    }
+  fileUploadSuccess(fileName) {
+    return this.success(`"${fileName}" uploaded successfully.`, {
+      title: 'Upload Complete'
+    });
   }
 
-  // Mark all notifications as read
-  async markAllAsRead() {
-    try {
-      const response = await fetch(`${this.baseURL}/notifications/read-all`, {
-        method: 'PUT',
-        headers: this.getAuthHeaders(),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error('Error marking all notifications as read:', error);
-      throw error;
-    }
+  fileUploadError(fileName, error) {
+    return this.error(`Failed to upload "${fileName}": ${error}`, {
+      title: 'Upload Failed'
+    });
   }
 
-  // Delete notification
-  async deleteNotification(notificationId) {
-    try {
-      const response = await fetch(`${this.baseURL}/notifications/${notificationId}`, {
-        method: 'DELETE',
-        headers: this.getAuthHeaders(),
-      });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      return { success: true };
-    } catch (error) {
-      console.error('Error deleting notification:', error);
-      throw error;
-    }
+  // PWA notifications
+  pwaUpdateAvailable() {
+    return this.info('A new version of the app is available.', {
+      title: 'Update Available',
+      duration: 0,
+      actions: [
+        {
+          label: 'Update Now',
+          action: () => window.location.reload()
+        },
+        {
+          label: 'Later',
+          action: (id) => this.remove(id)
+        }
+      ]
+    });
   }
 
-  // Create notification (for system use)
-  async createNotification(notificationData) {
-    try {
-      const response = await fetch(`${this.baseURL}/notifications`, {
-        method: 'POST',
-        headers: this.getAuthHeaders(),
-        body: JSON.stringify(notificationData),
-      });
+  pwaInstallPrompt() {
+    return this.info('Install Malaysian Contractors Hub for a better experience.', {
+      title: 'Install App',
+      duration: 10000,
+      actions: [
+        {
+          label: 'Install',
+          action: () => {
+            // This would trigger the install prompt
+            window.dispatchEvent(new CustomEvent('pwa-install-prompt'));
+          }
+        }
+      ]
+    });
+  }
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+  // Sync notifications
+  syncInProgress() {
+    return this.info('Syncing your data...', {
+      title: 'Syncing',
+      duration: 0,
+      dismissible: false
+    });
+  }
 
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error('Error creating notification:', error);
-      throw error;
-    }
+  syncComplete() {
+    return this.success('All data has been synced successfully.', {
+      title: 'Sync Complete',
+      duration: 3000
+    });
+  }
+
+  syncError(error) {
+    return this.error(`Sync failed: ${error}`, {
+      title: 'Sync Error'
+    });
+  }
+
+  // Validation notifications
+  formValidationError(errors) {
+    const errorCount = Object.keys(errors).length;
+    return this.error(`Please fix ${errorCount} validation error${errorCount > 1 ? 's' : ''} before submitting.`, {
+      title: 'Form Validation',
+      duration: 5000
+    });
+  }
+
+  // Malaysian-specific notifications
+  monsoonAlert(region, riskLevel) {
+    const riskColors = {
+      low: 'info',
+      medium: 'warning',
+      high: 'error'
+    };
+
+    return this.add({
+      type: riskColors[riskLevel] || 'warning',
+      title: 'Monsoon Alert',
+      message: `${riskLevel.toUpperCase()} monsoon risk detected in ${region}. Consider adjusting project schedules.`,
+      duration: 0
+    });
+  }
+
+  complianceStandardUpdate(standard) {
+    return this.info(`Malaysian standard ${standard} has been updated. Please review your designs.`, {
+      title: 'Standard Update',
+      duration: 0
+    });
   }
 }
 
-// Export singleton instance
+// Create singleton instance
 const notificationService = new NotificationService();
+
+// React hook for using notifications
+export const useNotifications = () => {
+  const [notifications, setNotifications] = useState([]);
+
+  useEffect(() => {
+    setNotifications(notificationService.getAll());
+    
+    const unsubscribe = notificationService.subscribe(setNotifications);
+    return unsubscribe;
+  }, []);
+
+  return {
+    notifications,
+    add: notificationService.add.bind(notificationService),
+    remove: notificationService.remove.bind(notificationService),
+    clear: notificationService.clear.bind(notificationService),
+    success: notificationService.success.bind(notificationService),
+    error: notificationService.error.bind(notificationService),
+    warning: notificationService.warning.bind(notificationService),
+    info: notificationService.info.bind(notificationService)
+  };
+};
+
 export default notificationService;

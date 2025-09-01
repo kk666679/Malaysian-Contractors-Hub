@@ -18,6 +18,9 @@ import ErrorBoundary from './components/features/ErrorBoundary'
 import { queryClient } from './lib/queryClient'
 import { AuthProvider } from './contexts/AuthContext'
 import ProtectedRoute from './components/auth/ProtectedRoute'
+import { ThemeProvider as CustomThemeProvider } from './hooks/useTheme'
+import pwaService from './lib/pwaService'
+import NotificationContainer from './components/ui/notification'
 
 // Lazy load components for better performance
 const ServicesPage = lazy(() => import('./pages/ServicesPage'))
@@ -153,6 +156,7 @@ const AppRoutes = () => (
 
 function App() {
   const [theme, setTheme] = useState('dark')
+  const [pwaUpdateAvailable, setPwaUpdateAvailable] = useState(false)
 
   // Check user's preferred theme
   useEffect(() => {
@@ -160,6 +164,23 @@ function App() {
       (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
     setTheme(savedTheme)
     document.documentElement.classList.toggle('dark', savedTheme === 'dark')
+  }, [])
+
+  // Initialize PWA service
+  useEffect(() => {
+    // Register service worker
+    pwaService.register()
+
+    // Listen for PWA update available
+    const handlePWAUpdate = () => {
+      setPwaUpdateAvailable(true)
+    }
+
+    window.addEventListener('pwa-update-available', handlePWAUpdate)
+
+    return () => {
+      window.removeEventListener('pwa-update-available', handlePWAUpdate)
+    }
   }, [])
 
   // Theme toggle function
@@ -170,17 +191,46 @@ function App() {
     document.documentElement.classList.toggle('dark', newTheme === 'dark')
   }
 
+  // Handle PWA update
+  const handlePWAUpdate = async () => {
+    await pwaService.skipWaiting()
+    window.location.reload()
+  }
+
   return (
     <QueryClientProvider client={queryClient}>
       {process.env.NODE_ENV === 'development' && <ReactQueryDevtools />}
-      <ThemeProvider theme={{ ...(theme === 'dark' ? darkTheme : lightTheme), fonts, toggleTheme }}>
-        <GlobalStyles />
-        <AuthProvider>
-          <BrowserRouter>
-            <AppRoutes />
-          </BrowserRouter>
-        </AuthProvider>
-      </ThemeProvider>
+      <CustomThemeProvider>
+        <ThemeProvider theme={{ ...(theme === 'dark' ? darkTheme : lightTheme), fonts, toggleTheme }}>
+          <GlobalStyles />
+          <AuthProvider>
+            <BrowserRouter>
+              <AppRoutes />
+              <NotificationContainer />
+              {/* PWA Update Notification */}
+              {pwaUpdateAvailable && (
+                <div className="fixed bottom-4 right-4 bg-blue-600 text-white p-4 rounded-lg shadow-lg z-50">
+                  <p className="mb-2">App update available!</p>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={handlePWAUpdate}
+                      className="bg-white text-blue-600 px-3 py-1 rounded text-sm font-medium"
+                    >
+                      Update
+                    </button>
+                    <button
+                      onClick={() => setPwaUpdateAvailable(false)}
+                      className="bg-blue-700 text-white px-3 py-1 rounded text-sm"
+                    >
+                      Later
+                    </button>
+                  </div>
+                </div>
+              )}
+            </BrowserRouter>
+          </AuthProvider>
+        </ThemeProvider>
+      </CustomThemeProvider>
     </QueryClientProvider>
   )
 }
