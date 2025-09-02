@@ -12,12 +12,7 @@
     "test": "vitest run",
     "lint": "eslint .",
     "preview": "vite preview",
-    "postinstall": "npm install --no-save --legacy-peer-deps",
-    "setup": "./setup.sh",
-    "release": "./release.sh",
-    "deploy": "./deploy.sh",
-    "server-setup": "./server-setup.sh",
-    "deploy-to-chemmara": "./deploy-to-chemmara.sh"
+    "vercel-build": "npm install --legacy-peer-deps && vite build"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.10",
