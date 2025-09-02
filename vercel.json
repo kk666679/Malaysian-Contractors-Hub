@@ -1,32 +1,27 @@
 {
   "version": 2,
-  "builds": [
+  "buildCommand": "npm run vercel-build",
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "rewrites": [
     {
-      "src": "package.json",
-      "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ],
-  "routes": [
+  "headers": [
     {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
     }
   ],
   "env": {
-    "NODE_ENV": "production"
-  },
-  "domains": [
-    "mc-hub.site",
-    "www.mc-hub.site"
-  ],
-  "redirects": [
-    {
-      "source": "https://www.mc-hub.site/(.*)",
-      "destination": "https://mc-hub.site/$1",
-      "permanent": true
-    }
-  ]
+    "NODE_ENV": "production",
+    "VITE_API_URL": "https://api.mc-hub.site/api"
+  }
 }

@@ -1,7 +1,7 @@
 {
   "name": "malaysian-contractors-app",
   "private": true,
-  "version": "0.4.0",
+  "version": "0.5.0",
   "engines": {
     "node": ">=20.x"
   },
@@ -17,6 +17,7 @@
     "deploy:staging": "node scripts/deploy.js deploy staging",
     "deploy:production": "node scripts/deploy.js deploy production",
     "health-check": "node scripts/health-check.js",
+    "check-deployment": "node scripts/check-deployment.js",
     "docker:build": "docker build -t mchub:latest .",
     "docker:run": "docker run -p 5000:5000 mchub:latest"
   },
