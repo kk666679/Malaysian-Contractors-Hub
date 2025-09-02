@@ -1,10 +1,25 @@
 const BASE_URL = 'http://localhost:5000/api';
 
-// Test configuration
+// Test configuration - Use environment variables in production
 const testUsers = {
-  admin: { email: 'admin@contractorshub.com', name: 'Admin User', password: 'admin123', role: 'ADMIN' },
-  contractor: { email: 'contractor@contractorshub.com', name: 'Contractor User', password: 'contractor123', role: 'CONTRACTOR' },
-  client: { email: 'client@contractorshub.com', name: 'Client User', password: 'client123', role: 'CLIENT' }
+  admin: { 
+    email: process.env.TEST_ADMIN_EMAIL || 'admin@contractorshub.com', 
+    name: 'Admin User', 
+    password: process.env.TEST_ADMIN_PASSWORD || 'admin123', 
+    role: 'ADMIN' 
+  },
+  contractor: { 
+    email: process.env.TEST_CONTRACTOR_EMAIL || 'contractor@contractorshub.com', 
+    name: 'Contractor User', 
+    password: process.env.TEST_CONTRACTOR_PASSWORD || 'contractor123', 
+    role: 'CONTRACTOR' 
+  },
+  client: { 
+    email: process.env.TEST_CLIENT_EMAIL || 'client@contractorshub.com', 
+    name: 'Client User', 
+    password: process.env.TEST_CLIENT_PASSWORD || 'client123', 
+    role: 'CLIENT' 
+  }
 };
 
 let tokens = {};
@@ -69,7 +84,7 @@ class APITester {
                 tokens[key] = loginResponse.data.data.token;
                 userIds[key] = loginResponse.data.data.user.id;
               } else {
-                console.log(`❌ ${key.toUpperCase()} Login failed:`, loginResponse.data.message);
+                console.log(`❌ ${key.toUpperCase()} Login failed:`, JSON.stringify(loginResponse.data.message));
               }
             } else {
               console.log(`❌ ${key.toUpperCase()} Registration failed:`, response.data.message);

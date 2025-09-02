@@ -243,7 +243,7 @@ class SocketService {
 
       // Handle disconnection
       socket.on('disconnect', () => {
-        console.log(`User ${socket.user.name} disconnected`);
+        console.log(`User ${encodeURIComponent(socket.user.name)} disconnected`);
 
         // Remove from active users
         activeUsers.delete(socket.user.id);

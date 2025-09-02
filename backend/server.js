@@ -5,6 +5,9 @@ import morgan from 'morgan';
 import { createServer } from 'http';
 import redisService from './services/redisService.js';
 import socketService from './services/socketService.js';
+import { errorHandler, notFound } from './middleware/errorHandler.js';
+import { securityHeaders, sanitizeInput, requestLogger } from './middleware/security.js';
+import { apiLimiter } from './middleware/rateLimiter.js';
 
 // Import route modules
 import authRoutes from './routes/auth.js';
@@ -12,22 +15,53 @@ import marketplaceRoutes from './routes/marketplace.js';
 import complianceRoutes from './routes/compliance.js';
 import userRoutes from './routes/user.js';
 import weatherRoutes from './routes/weather.js';
-
 import civilEngineeringRoutes from './routes/civilEngineering.js';
 import electricalSystemsRoutes from './routes/electricalSystems.js';
 import redisRoutes from './routes/redis.js';
 import projectRoutes from './routes/project.js';
 import notificationRoutes from './routes/notification.js';
+import teamRoutes from './routes/team.js';
+import documentRoutes from './routes/document.js';
+import taskRoutes from './routes/task.js';
+import hvacRoutes from './routes/hvac.js';
+import sewerageRoutes from './routes/sewerage.js';
+import elvRoutes from './routes/elv.js';
+import adminRoutes from './routes/admin.js';
+import bidRoutes from './routes/bid.js';
+import healthRoutes from './routes/health.js';
 
 // Create Express app
 const app = express();
 const server = createServer(app);
 const PORT = process.env.PORT || 5000;
 
-// Middleware
-app.use(cors());
-app.use(bodyParser.json());
+// Security middleware
+app.use(securityHeaders);
+app.use(sanitizeInput);
+app.use(requestLogger);
+
+// CORS configuration
+app.use(cors({
+  origin: process.env.NODE_ENV === 'production' 
+    ? ['https://your-domain.com'] 
+    : ['http://localhost:3000', 'http://localhost:5173'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
+
+// Body parsing middleware
+app.use(bodyParser.json({ limit: '10mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
+
+// Logging middleware
 app.use(morgan('dev'));
+
+// Rate limiting
+app.use('/api/', apiLimiter);
+
+// Health check routes (no rate limiting)
+app.use('/health', healthRoutes);
 
 // API Routes
 app.use('/api/auth', authRoutes);
@@ -40,16 +74,20 @@ app.use('/api/electrical-systems', electricalSystemsRoutes);
 app.use('/api/redis', redisRoutes);
 app.use('/api/projects', projectRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/team', teamRoutes);
+app.use('/api/documents', documentRoutes);
+app.use('/api/tasks', taskRoutes);
+app.use('/api/hvac', hvacRoutes);
+app.use('/api/sewerage', sewerageRoutes);
+app.use('/api/elv', elvRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/bid', bidRoutes);
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({
-    success: false,
-    message: 'Internal Server Error',
-    error: process.env.NODE_ENV === 'development' ? err.message : undefined
-  });
-});
+// 404 handler
+app.use(notFound);
+
+// Global error handler
+app.use(errorHandler);
 
 // Initialize Redis connection and start server
 async function startServer() {

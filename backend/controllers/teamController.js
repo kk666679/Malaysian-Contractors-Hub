@@ -3,91 +3,24 @@ const { PrismaClient } = pkg;
 
 const prisma = new PrismaClient();
 
-// Get team members for a project
-export const getProjectTeam = async (req, res) => {
-  try {
-    const { projectId } = req.params;
-    const userId = req.user.id;
-
-    // Verify project ownership or membership
-    const project = await prisma.project.findFirst({
-      where: {
-        id: projectId,
-        OR: [
-          { userId },
-          {
-            projectTeams: {
-              some: { userId }
-            }
-          }
-        ]
-      }
-    });
-
-    if (!project) {
-      return res.status(403).json({
-        success: false,
-        message: 'You do not have access to this project'
-      });
-    }
-
-    const teamMembers = await prisma.projectTeam.findMany({
-      where: { projectId },
-      include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-            email: true
-          }
-        }
-      }
-    });
-
-    res.json({
-      success: true,
-      data: { teamMembers }
-    });
-  } catch (error) {
-    console.error('Get project team error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to get project team',
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined
-    });
-  }
-};
-
 // Add team member to project
 export const addTeamMember = async (req, res) => {
   try {
-    const { projectId } = req.params;
-    const { userId, role } = req.body;
-    const ownerId = req.user.id;
-
-    if (!userId) {
-      return res.status(400).json({
-        success: false,
-        message: 'User ID is required'
-      });
-    }
+    const { projectId, userId, role = 'MEMBER' } = req.body;
+    const currentUserId = req.user.id;
 
     // Verify project ownership
-    const project = await prisma.project.findUnique({
-      where: { id: projectId }
+    const project = await prisma.project.findFirst({
+      where: {
+        id: projectId,
+        userId: currentUserId
+      }
     });
 
     if (!project) {
-      return res.status(404).json({
-        success: false,
-        message: 'Project not found'
-      });
-    }
-
-    if (project.userId !== ownerId) {
       return res.status(403).json({
         success: false,
-        message: 'Only project owner can manage team members'
+        message: 'You do not have permission to manage this project team'
       });
     }
 
@@ -120,18 +53,20 @@ export const addTeamMember = async (req, res) => {
       });
     }
 
+    // Add team member
     const teamMember = await prisma.projectTeam.create({
       data: {
         projectId,
         userId,
-        role: role || 'MEMBER'
+        role
       },
       include: {
         user: {
           select: {
             id: true,
             name: true,
-            email: true
+            email: true,
+            role: true
           }
         }
       }
@@ -152,29 +87,82 @@ export const addTeamMember = async (req, res) => {
   }
 };
 
-// Update team member role
-export const updateTeamMember = async (req, res) => {
+// Get project team members
+export const getProjectTeam = async (req, res) => {
   try {
-    const { projectId, userId } = req.params;
-    const { role } = req.body;
-    const ownerId = req.user.id;
+    const { projectId } = req.params;
+    const userId = req.user.id;
 
-    // Verify project ownership
-    const project = await prisma.project.findUnique({
-      where: { id: projectId }
+    // Verify access to project
+    const hasAccess = await prisma.project.findFirst({
+      where: {
+        id: projectId,
+        OR: [
+          { userId },
+          {
+            projectTeams: {
+              some: { userId }
+            }
+          }
+        ]
+      }
     });
 
-    if (!project) {
-      return res.status(404).json({
+    if (!hasAccess) {
+      return res.status(403).json({
         success: false,
-        message: 'Project not found'
+        message: 'You do not have access to this project'
       });
     }
 
-    if (project.userId !== ownerId) {
+    const teamMembers = await prisma.projectTeam.findMany({
+      where: { projectId },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true
+          }
+        }
+      },
+      orderBy: { joinedAt: 'asc' }
+    });
+
+    res.json({
+      success: true,
+      data: { teamMembers }
+    });
+  } catch (error) {
+    console.error('Get project team error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to get project team',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+};
+
+// Update team member role
+export const updateTeamMemberRole = async (req, res) => {
+  try {
+    const { projectId, userId } = req.params;
+    const { role } = req.body;
+    const currentUserId = req.user.id;
+
+    // Verify project ownership
+    const project = await prisma.project.findFirst({
+      where: {
+        id: projectId,
+        userId: currentUserId
+      }
+    });
+
+    if (!project) {
       return res.status(403).json({
         success: false,
-        message: 'Only project owner can manage team members'
+        message: 'You do not have permission to manage this project team'
       });
     }
 
@@ -191,7 +179,8 @@ export const updateTeamMember = async (req, res) => {
           select: {
             id: true,
             name: true,
-            email: true
+            email: true,
+            role: true
           }
         }
       }
@@ -203,45 +192,33 @@ export const updateTeamMember = async (req, res) => {
       data: { teamMember: updatedMember }
     });
   } catch (error) {
-    console.error('Update team member error:', error);
+    console.error('Update team member role error:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to update team member',
+      message: 'Failed to update team member role',
       error: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
   }
 };
 
-// Remove team member from project
+// Remove team member
 export const removeTeamMember = async (req, res) => {
   try {
     const { projectId, userId } = req.params;
-    const ownerId = req.user.id;
+    const currentUserId = req.user.id;
 
     // Verify project ownership
-    const project = await prisma.project.findUnique({
-      where: { id: projectId }
+    const project = await prisma.project.findFirst({
+      where: {
+        id: projectId,
+        userId: currentUserId
+      }
     });
 
     if (!project) {
-      return res.status(404).json({
-        success: false,
-        message: 'Project not found'
-      });
-    }
-
-    if (project.userId !== ownerId) {
       return res.status(403).json({
         success: false,
-        message: 'Only project owner can manage team members'
-      });
-    }
-
-    // Prevent removing yourself
-    if (userId === ownerId) {
-      return res.status(400).json({
-        success: false,
-        message: 'Cannot remove yourself from the project'
+        message: 'You do not have permission to manage this project team'
       });
     }
 
@@ -269,8 +246,8 @@ export const removeTeamMember = async (req, res) => {
 };
 
 export default {
-  getProjectTeam,
   addTeamMember,
-  updateTeamMember,
+  getProjectTeam,
+  updateTeamMemberRole,
   removeTeamMember
 };

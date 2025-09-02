@@ -1,10 +1,11 @@
 import express from 'express';
 import redisService from '../services/redisService.js';
+import { authenticateToken } from '../middleware/auth.js';
 
 const router = express.Router();
 
 // Test Redis connection
-router.get('/test', async (req, res) => {
+router.get('/test', authenticateToken, async (req, res) => {
   try {
     const ping = await redisService.ping();
     res.json({
@@ -474,7 +475,7 @@ router.get('/info', async (req, res) => {
 });
 
 // Flush all data (use with caution)
-router.post('/flushall', async (req, res) => {
+router.post('/flushall', authenticateToken, async (req, res) => {
   try {
     const result = await redisService.flushall();
     res.json({

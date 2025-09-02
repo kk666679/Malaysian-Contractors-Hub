@@ -1,0 +1,1239 @@
+// General Contracting Management System (GCMS) - Database Schema
+// This extends the existing Malaysian Contractors Hub schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// CORE ENTITIES
+// ============================================================================
+
+model Company {
+  id                String   @id @default(cuid())
+  name              String
+  registrationNumber String  @unique
+  address           String
+  phone             String
+  email             String
+  website           String?
+  logo              String?
+  industry          String
+  size              CompanySize
+  status            CompanyStatus @default(ACTIVE)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  // Relationships
+  users             User[]
+  projects          Project[]
+  contracts         Contract[]
+  vendors           Vendor[]
+  subcontractors    Subcontractor[]
+  invoices          Invoice[]
+  expenses          Expense[]
+  
+  @@map("companies")
+}
+
+enum CompanySize {
+  SMALL     // 1-50 employees
+  MEDIUM    // 51-500 employees
+  LARGE     // 500+ employees
+}
+
+enum CompanyStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+// ============================================================================
+// PROJECT MANAGEMENT MODULE
+// ============================================================================
+
+model Project {
+  id              String        @id @default(cuid())
+  name            String
+  description     String?
+  code            String        @unique
+  type            ProjectType
+  status          ProjectStatus @default(PLANNING)
+  priority        Priority      @default(MEDIUM)
+  
+  // Financial
+  budget          Decimal       @db.Decimal(15,2)
+  actualCost      Decimal       @default(0) @db.Decimal(15,2)
+  
+  // Timeline
+  startDate       DateTime
+  endDate         DateTime
+  actualStartDate DateTime?
+  actualEndDate   DateTime?
+  
+  // Location
+  address         String
+  city            String
+  state           String
+  country         String        @default("Malaysia")
+  coordinates     String?       // GPS coordinates
+  
+  // Progress
+  progressPercent Int           @default(0)
+  
+  // Relationships
+  companyId       String
+  company         Company       @relation(fields: [companyId], references: [id])
+  managerId       String
+  manager         User          @relation("ProjectManager", fields: [managerId], references: [id])
+  
+  tasks           Task[]
+  contracts       Contract[]
+  documents       Document[]
+  expenses        Expense[]
+  timesheets      Timesheet[]
+  riskAssessments RiskAssessment[]
+  changeOrders    ChangeOrder[]
+  milestones      Milestone[]
+  resources       ResourceAllocation[]
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  
+  @@map("projects")
+}
+
+enum ProjectType {
+  RESIDENTIAL
+  COMMERCIAL
+  INDUSTRIAL
+  INFRASTRUCTURE
+  RENOVATION
+}
+
+enum ProjectStatus {
+  PLANNING
+  DESIGN
+  BIDDING
+  CONSTRUCTION
+  TESTING
+  COMPLETED
+  CANCELLED
+  ON_HOLD
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+model Task {
+  id              String      @id @default(cuid())
+  name            String
+  description     String?
+  status          TaskStatus  @default(NOT_STARTED)
+  priority        Priority    @default(MEDIUM)
+  
+  // Timeline
+  startDate       DateTime
+  endDate         DateTime
+  actualStartDate DateTime?
+  actualEndDate   DateTime?
+  duration        Int         // in hours
+  
+  // Progress
+  progressPercent Int         @default(0)
+  
+  // Dependencies
+  dependencies    TaskDependency[] @relation("ParentTask")
+  dependents      TaskDependency[] @relation("DependentTask")
+  
+  // Relationships
+  projectId       String
+  project         Project     @relation(fields: [projectId], references: [id])
+  assigneeId      String?
+  assignee        User?       @relation(fields: [assigneeId], references: [id])
+  
+  subtasks        Task[]      @relation("ParentSubtask")
+  parentTaskId    String?
+  parentTask      Task?       @relation("ParentSubtask", fields: [parentTaskId], references: [id])
+  
+  timesheets      Timesheet[]
+  documents       Document[]
+  
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  
+  @@map("tasks")
+}
+
+enum TaskStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  ON_HOLD
+  COMPLETED
+  CANCELLED
+}
+
+model TaskDependency {
+  id              String @id @default(cuid())
+  parentTaskId    String
+  dependentTaskId String
+  type            DependencyType @default(FINISH_TO_START)
+  
+  parentTask      Task   @relation("ParentTask", fields: [parentTaskId], references: [id])
+  dependentTask   Task   @relation("DependentTask", fields: [dependentTaskId], references: [id])
+  
+  @@unique([parentTaskId, dependentTaskId])
+  @@map("task_dependencies")
+}
+
+enum DependencyType {
+  FINISH_TO_START
+  START_TO_START
+  FINISH_TO_FINISH
+  START_TO_FINISH
+}
+
+model Milestone {
+  id          String          @id @default(cuid())
+  name        String
+  description String?
+  dueDate     DateTime
+  status      MilestoneStatus @default(PENDING)
+  
+  projectId   String
+  project     Project         @relation(fields: [projectId], references: [id])
+  
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  
+  @@map("milestones")
+}
+
+enum MilestoneStatus {
+  PENDING
+  COMPLETED
+  OVERDUE
+}
+
+// ============================================================================
+// CONTRACT & DOCUMENT MANAGEMENT MODULE
+// ============================================================================
+
+model Contract {
+  id              String         @id @default(cuid())
+  title           String
+  type            ContractType
+  status          ContractStatus @default(DRAFT)
+  
+  // Financial
+  value           Decimal        @db.Decimal(15,2)
+  currency        String         @default("MYR")
+  
+  // Timeline
+  startDate       DateTime
+  endDate         DateTime
+  signedDate      DateTime?
+  
+  // Parties
+  clientName      String
+  clientEmail     String
+  clientAddress   String
+  
+  // Terms
+  paymentTerms    String
+  deliverables    String
+  penalties       String?
+  
+  // Relationships
+  projectId       String?
+  project         Project?       @relation(fields: [projectId], references: [id])
+  companyId       String
+  company         Company        @relation(fields: [companyId], references: [id])
+  
+  documents       Document[]
+  changeOrders    ChangeOrder[]
+  invoices        Invoice[]
+  
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  
+  @@map("contracts")
+}
+
+enum ContractType {
+  MAIN_CONTRACT
+  SUBCONTRACT
+  SUPPLY_CONTRACT
+  SERVICE_CONTRACT
+  MAINTENANCE_CONTRACT
+}
+
+enum ContractStatus {
+  DRAFT
+  UNDER_REVIEW
+  PENDING_SIGNATURE
+  ACTIVE
+  COMPLETED
+  TERMINATED
+  EXPIRED
+}
+
+model Document {
+  id          String       @id @default(cuid())
+  name        String
+  type        DocumentType
+  category    String
+  description String?
+  fileName    String
+  filePath    String
+  fileSize    Int
+  mimeType    String
+  version     Int          @default(1)
+  
+  // Relationships
+  projectId   String?
+  project     Project?     @relation(fields: [projectId], references: [id])
+  contractId  String?
+  contract    Contract?    @relation(fields: [contractId], references: [id])
+  taskId      String?
+  task        Task?        @relation(fields: [taskId], references: [id])
+  uploadedById String
+  uploadedBy  User         @relation(fields: [uploadedById], references: [id])
+  
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  
+  @@map("documents")
+}
+
+enum DocumentType {
+  CONTRACT
+  DRAWING
+  SPECIFICATION
+  PERMIT
+  CERTIFICATE
+  INVOICE
+  REPORT
+  PHOTO
+  OTHER
+}
+
+// ============================================================================
+// BIDDING & ESTIMATION MODULE
+// ============================================================================
+
+model Bid {
+  id              String     @id @default(cuid())
+  title           String
+  description     String
+  type            BidType
+  status          BidStatus  @default(DRAFT)
+  
+  // Financial
+  estimatedValue  Decimal    @db.Decimal(15,2)
+  finalAmount     Decimal?   @db.Decimal(15,2)
+  
+  // Timeline
+  submissionDate  DateTime
+  validUntil      DateTime
+  
+  // Client Information
+  clientName      String
+  clientEmail     String
+  clientPhone     String?
+  
+  // Relationships
+  companyId       String
+  company         Company    @relation(fields: [companyId], references: [id])
+  
+  bidItems        BidItem[]
+  documents       Document[]
+  
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  
+  @@map("bids")
+}
+
+enum BidType {
+  PUBLIC_TENDER
+  PRIVATE_INVITATION
+  QUOTATION
+  PROPOSAL
+}
+
+enum BidStatus {
+  DRAFT
+  SUBMITTED
+  UNDER_REVIEW
+  SHORTLISTED
+  WON
+  LOST
+  CANCELLED
+}
+
+model BidItem {
+  id          String  @id @default(cuid())
+  description String
+  quantity    Decimal @db.Decimal(10,2)
+  unit        String
+  unitPrice   Decimal @db.Decimal(10,2)
+  totalPrice  Decimal @db.Decimal(15,2)
+  
+  bidId       String
+  bid         Bid     @relation(fields: [bidId], references: [id])
+  
+  @@map("bid_items")
+}
+
+// ============================================================================
+// FINANCIAL & INVOICING MODULE
+// ============================================================================
+
+model Invoice {
+  id              String        @id @default(cuid())
+  number          String        @unique
+  type            InvoiceType
+  status          InvoiceStatus @default(DRAFT)
+  
+  // Financial
+  subtotal        Decimal       @db.Decimal(15,2)
+  taxAmount       Decimal       @default(0) @db.Decimal(15,2)
+  totalAmount     Decimal       @db.Decimal(15,2)
+  paidAmount      Decimal       @default(0) @db.Decimal(15,2)
+  currency        String        @default("MYR")
+  
+  // Timeline
+  issueDate       DateTime      @default(now())
+  dueDate         DateTime
+  paidDate        DateTime?
+  
+  // Client Information
+  clientName      String
+  clientEmail     String
+  clientAddress   String
+  
+  // Relationships
+  companyId       String
+  company         Company       @relation(fields: [companyId], references: [id])
+  contractId      String?
+  contract        Contract?     @relation(fields: [contractId], references: [id])
+  
+  invoiceItems    InvoiceItem[]
+  payments        Payment[]
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  
+  @@map("invoices")
+}
+
+enum InvoiceType {
+  STANDARD
+  PROGRESS
+  FINAL
+  CREDIT_NOTE
+}
+
+enum InvoiceStatus {
+  DRAFT
+  SENT
+  VIEWED
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
+model InvoiceItem {
+  id          String  @id @default(cuid())
+  description String
+  quantity    Decimal @db.Decimal(10,2)
+  unit        String
+  unitPrice   Decimal @db.Decimal(10,2)
+  totalPrice  Decimal @db.Decimal(15,2)
+  
+  invoiceId   String
+  invoice     Invoice @relation(fields: [invoiceId], references: [id])
+  
+  @@map("invoice_items")
+}
+
+model Payment {
+  id            String        @id @default(cuid())
+  amount        Decimal       @db.Decimal(15,2)
+  method        PaymentMethod
+  reference     String?
+  notes         String?
+  
+  invoiceId     String
+  invoice       Invoice       @relation(fields: [invoiceId], references: [id])
+  
+  createdAt     DateTime      @default(now())
+  
+  @@map("payments")
+}
+
+enum PaymentMethod {
+  CASH
+  BANK_TRANSFER
+  CHEQUE
+  CREDIT_CARD
+  ONLINE_PAYMENT
+}
+
+model Expense {
+  id          String        @id @default(cuid())
+  description String
+  category    ExpenseCategory
+  amount      Decimal       @db.Decimal(15,2)
+  currency    String        @default("MYR")
+  date        DateTime      @default(now())
+  receipt     String?       // File path to receipt
+  
+  // Relationships
+  projectId   String?
+  project     Project?      @relation(fields: [projectId], references: [id])
+  companyId   String
+  company     Company       @relation(fields: [companyId], references: [id])
+  recordedById String
+  recordedBy  User          @relation(fields: [recordedById], references: [id])
+  
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  
+  @@map("expenses")
+}
+
+enum ExpenseCategory {
+  MATERIALS
+  LABOR
+  EQUIPMENT
+  TRANSPORTATION
+  UTILITIES
+  PERMITS
+  INSURANCE
+  OFFICE
+  MARKETING
+  OTHER
+}
+
+// ============================================================================
+// SUBCONTRACTOR & VENDOR MANAGEMENT MODULE
+// ============================================================================
+
+model Subcontractor {
+  id              String                @id @default(cuid())
+  name            String
+  registrationNumber String?
+  email           String
+  phone           String
+  address         String
+  specialization  String
+  rating          Decimal?              @db.Decimal(3,2) // 0.00 to 5.00
+  status          SubcontractorStatus   @default(ACTIVE)
+  
+  // Insurance & Certifications
+  insuranceExpiry DateTime?
+  certifications  String[]
+  
+  // Relationships
+  companyId       String
+  company         Company               @relation(fields: [companyId], references: [id])
+  
+  assignments     SubcontractorAssignment[]
+  evaluations     SubcontractorEvaluation[]
+  
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  
+  @@map("subcontractors")
+}
+
+enum SubcontractorStatus {
+  ACTIVE
+  INACTIVE
+  BLACKLISTED
+}
+
+model SubcontractorAssignment {
+  id              String        @id @default(cuid())
+  status          AssignmentStatus @default(ASSIGNED)
+  startDate       DateTime
+  endDate         DateTime?
+  rate            Decimal?      @db.Decimal(10,2)
+  
+  subcontractorId String
+  subcontractor   Subcontractor @relation(fields: [subcontractorId], references: [id])
+  projectId       String
+  project         Project       @relation(fields: [projectId], references: [id])
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  
+  @@map("subcontractor_assignments")
+}
+
+enum AssignmentStatus {
+  ASSIGNED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+model SubcontractorEvaluation {
+  id              String        @id @default(cuid())
+  rating          Int           // 1-5 stars
+  qualityScore    Int           // 1-10
+  timelinessScore Int           // 1-10
+  communicationScore Int        // 1-10
+  comments        String?
+  
+  subcontractorId String
+  subcontractor   Subcontractor @relation(fields: [subcontractorId], references: [id])
+  evaluatedById   String
+  evaluatedBy     User          @relation(fields: [evaluatedById], references: [id])
+  
+  createdAt       DateTime      @default(now())
+  
+  @@map("subcontractor_evaluations")
+}
+
+model Vendor {
+  id              String       @id @default(cuid())
+  name            String
+  type            VendorType
+  email           String
+  phone           String
+  address         String
+  rating          Decimal?     @db.Decimal(3,2)
+  status          VendorStatus @default(ACTIVE)
+  
+  // Payment Terms
+  paymentTerms    String?
+  creditLimit     Decimal?     @db.Decimal(15,2)
+  
+  // Relationships
+  companyId       String
+  company         Company      @relation(fields: [companyId], references: [id])
+  
+  materials       Material[]
+  purchaseOrders  PurchaseOrder[]
+  
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  
+  @@map("vendors")
+}
+
+enum VendorType {
+  MATERIAL_SUPPLIER
+  EQUIPMENT_RENTAL
+  SERVICE_PROVIDER
+  CONSULTANT
+}
+
+enum VendorStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+// ============================================================================
+// INVENTORY & MATERIALS MANAGEMENT MODULE
+// ============================================================================
+
+model Material {
+  id              String            @id @default(cuid())
+  name            String
+  description     String?
+  category        MaterialCategory
+  unit            String
+  currentStock    Decimal           @default(0) @db.Decimal(10,2)
+  minimumStock    Decimal           @default(0) @db.Decimal(10,2)
+  unitCost        Decimal           @db.Decimal(10,2)
+  
+  // Relationships
+  vendorId        String?
+  vendor          Vendor?           @relation(fields: [vendorId], references: [id])
+  
+  stockMovements  StockMovement[]
+  purchaseOrderItems PurchaseOrderItem[]
+  
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  
+  @@map("materials")
+}
+
+enum MaterialCategory {
+  CONCRETE
+  STEEL
+  TIMBER
+  ELECTRICAL
+  PLUMBING
+  FINISHING
+  TOOLS
+  EQUIPMENT
+  OTHER
+}
+
+model StockMovement {
+  id          String           @id @default(cuid())
+  type        MovementType
+  quantity    Decimal          @db.Decimal(10,2)
+  unitCost    Decimal?         @db.Decimal(10,2)
+  reference   String?          // PO number, project code, etc.
+  notes       String?
+  
+  materialId  String
+  material    Material         @relation(fields: [materialId], references: [id])
+  recordedById String
+  recordedBy  User             @relation(fields: [recordedById], references: [id])
+  
+  createdAt   DateTime         @default(now())
+  
+  @@map("stock_movements")
+}
+
+enum MovementType {
+  PURCHASE
+  USAGE
+  RETURN
+  ADJUSTMENT
+  TRANSFER
+}
+
+model PurchaseOrder {
+  id              String              @id @default(cuid())
+  number          String              @unique
+  status          PurchaseOrderStatus @default(DRAFT)
+  totalAmount     Decimal             @db.Decimal(15,2)
+  
+  // Timeline
+  orderDate       DateTime            @default(now())
+  expectedDate    DateTime
+  receivedDate    DateTime?
+  
+  // Relationships
+  vendorId        String
+  vendor          Vendor              @relation(fields: [vendorId], references: [id])
+  requestedById   String
+  requestedBy     User                @relation(fields: [requestedById], references: [id])
+  
+  items           PurchaseOrderItem[]
+  
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  
+  @@map("purchase_orders")
+}
+
+enum PurchaseOrderStatus {
+  DRAFT
+  PENDING_APPROVAL
+  APPROVED
+  SENT
+  PARTIALLY_RECEIVED
+  RECEIVED
+  CANCELLED
+}
+
+model PurchaseOrderItem {
+  id              String        @id @default(cuid())
+  quantity        Decimal       @db.Decimal(10,2)
+  unitPrice       Decimal       @db.Decimal(10,2)
+  totalPrice      Decimal       @db.Decimal(15,2)
+  receivedQuantity Decimal      @default(0) @db.Decimal(10,2)
+  
+  purchaseOrderId String
+  purchaseOrder   PurchaseOrder @relation(fields: [purchaseOrderId], references: [id])
+  materialId      String
+  material        Material      @relation(fields: [materialId], references: [id])
+  
+  @@map("purchase_order_items")
+}
+
+// ============================================================================
+// WORKFORCE & TIMESHEET MANAGEMENT MODULE
+// ============================================================================
+
+model Employee {
+  id              String         @id @default(cuid())
+  employeeNumber  String         @unique
+  firstName       String
+  lastName        String
+  email           String         @unique
+  phone           String
+  position        String
+  department      String
+  hourlyRate      Decimal?       @db.Decimal(8,2)
+  status          EmployeeStatus @default(ACTIVE)
+  
+  // Employment Details
+  hireDate        DateTime
+  terminationDate DateTime?
+  
+  // Relationships
+  companyId       String
+  company         Company        @relation(fields: [companyId], references: [id])
+  userId          String?        @unique
+  user            User?          @relation(fields: [userId], references: [id])
+  
+  timesheets      Timesheet[]
+  schedules       WorkSchedule[]
+  
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  
+  @@map("employees")
+}
+
+enum EmployeeStatus {
+  ACTIVE
+  INACTIVE
+  TERMINATED
+}
+
+model Timesheet {
+  id          String         @id @default(cuid())
+  date        DateTime
+  clockIn     DateTime?
+  clockOut    DateTime?
+  breakTime   Int            @default(0) // minutes
+  regularHours Decimal       @default(0) @db.Decimal(4,2)
+  overtimeHours Decimal      @default(0) @db.Decimal(4,2)
+  status      TimesheetStatus @default(DRAFT)
+  notes       String?
+  
+  // Relationships
+  employeeId  String
+  employee    Employee       @relation(fields: [employeeId], references: [id])
+  projectId   String?
+  project     Project?       @relation(fields: [projectId], references: [id])
+  taskId      String?
+  task        Task?          @relation(fields: [taskId], references: [id])
+  
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  
+  @@map("timesheets")
+}
+
+enum TimesheetStatus {
+  DRAFT
+  SUBMITTED
+  APPROVED
+  REJECTED
+}
+
+model WorkSchedule {
+  id          String    @id @default(cuid())
+  date        DateTime
+  startTime   DateTime
+  endTime     DateTime
+  type        ScheduleType @default(REGULAR)
+  
+  employeeId  String
+  employee    Employee  @relation(fields: [employeeId], references: [id])
+  projectId   String?
+  project     Project?  @relation(fields: [projectId], references: [id])
+  
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  @@map("work_schedules")
+}
+
+enum ScheduleType {
+  REGULAR
+  OVERTIME
+  HOLIDAY
+  SICK_LEAVE
+  VACATION
+}
+
+// ============================================================================
+// COMPLIANCE & SAFETY MODULE
+// ============================================================================
+
+model SafetyChecklist {
+  id          String              @id @default(cuid())
+  name        String
+  description String?
+  category    SafetyCategory
+  items       SafetyChecklistItem[]
+  
+  projectId   String?
+  project     Project?            @relation(fields: [projectId], references: [id])
+  
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  
+  @@map("safety_checklists")
+}
+
+enum SafetyCategory {
+  GENERAL_SAFETY
+  ELECTRICAL_SAFETY
+  FIRE_SAFETY
+  STRUCTURAL_SAFETY
+  ENVIRONMENTAL
+  PPE
+}
+
+model SafetyChecklistItem {
+  id          String          @id @default(cuid())
+  description String
+  isRequired  Boolean         @default(true)
+  order       Int
+  
+  checklistId String
+  checklist   SafetyChecklist @relation(fields: [checklistId], references: [id])
+  
+  inspections SafetyInspection[]
+  
+  @@map("safety_checklist_items")
+}
+
+model SafetyInspection {
+  id          String                @id @default(cuid())
+  date        DateTime              @default(now())
+  status      InspectionStatus
+  notes       String?
+  photos      String[]              // Array of photo URLs
+  
+  // Relationships
+  itemId      String
+  item        SafetyChecklistItem   @relation(fields: [itemId], references: [id])
+  inspectorId String
+  inspector   User                  @relation(fields: [inspectorId], references: [id])
+  projectId   String
+  project     Project               @relation(fields: [projectId], references: [id])
+  
+  createdAt   DateTime              @default(now())
+  
+  @@map("safety_inspections")
+}
+
+enum InspectionStatus {
+  PASS
+  FAIL
+  NOT_APPLICABLE
+  NEEDS_ATTENTION
+}
+
+model Incident {
+  id              String         @id @default(cuid())
+  title           String
+  description     String
+  type            IncidentType
+  severity        IncidentSeverity
+  status          IncidentStatus @default(REPORTED)
+  
+  // Location & Time
+  location        String
+  dateOccurred    DateTime
+  
+  // People Involved
+  injuredParty    String?
+  witnesses       String[]
+  
+  // Actions
+  immediateAction String?
+  correctiveAction String?
+  
+  // Relationships
+  projectId       String
+  project         Project        @relation(fields: [projectId], references: [id])
+  reportedById    String
+  reportedBy      User           @relation(fields: [reportedById], references: [id])
+  
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  
+  @@map("incidents")
+}
+
+enum IncidentType {
+  INJURY
+  NEAR_MISS
+  PROPERTY_DAMAGE
+  ENVIRONMENTAL
+  SECURITY
+}
+
+enum IncidentSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum IncidentStatus {
+  REPORTED
+  UNDER_INVESTIGATION
+  RESOLVED
+  CLOSED
+}
+
+// ============================================================================
+// RISK MANAGEMENT MODULE
+// ============================================================================
+
+model RiskAssessment {
+  id              String       @id @default(cuid())
+  title           String
+  description     String
+  category        RiskCategory
+  probability     Int          // 1-5 scale
+  impact          Int          // 1-5 scale
+  riskScore       Int          // probability * impact
+  status          RiskStatus   @default(IDENTIFIED)
+  
+  // Mitigation
+  mitigationPlan  String?
+  contingencyPlan String?
+  
+  // Relationships
+  projectId       String
+  project         Project      @relation(fields: [projectId], references: [id])
+  assessedById    String
+  assessedBy      User         @relation(fields: [assessedById], references: [id])
+  
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+  
+  @@map("risk_assessments")
+}
+
+enum RiskCategory {
+  TECHNICAL
+  FINANCIAL
+  SCHEDULE
+  RESOURCE
+  EXTERNAL
+  SAFETY
+  REGULATORY
+}
+
+enum RiskStatus {
+  IDENTIFIED
+  ASSESSED
+  MITIGATED
+  MONITORED
+  CLOSED
+}
+
+// ============================================================================
+// CHANGE MANAGEMENT MODULE
+// ============================================================================
+
+model ChangeOrder {
+  id              String            @id @default(cuid())
+  number          String            @unique
+  title           String
+  description     String
+  reason          String
+  type            ChangeOrderType
+  status          ChangeOrderStatus @default(PENDING)
+  
+  // Financial Impact
+  costImpact      Decimal           @db.Decimal(15,2)
+  
+  // Schedule Impact
+  scheduleImpact  Int               // days
+  
+  // Relationships
+  projectId       String
+  project         Project           @relation(fields: [projectId], references: [id])
+  contractId      String?
+  contract        Contract?         @relation(fields: [contractId], references: [id])
+  requestedById   String
+  requestedBy     User              @relation(fields: [requestedById], references: [id])
+  
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  
+  @@map("change_orders")
+}
+
+enum ChangeOrderType {
+  SCOPE_CHANGE
+  DESIGN_CHANGE
+  MATERIAL_CHANGE
+  SCHEDULE_CHANGE
+  COST_ADJUSTMENT
+}
+
+enum ChangeOrderStatus {
+  PENDING
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  IMPLEMENTED
+}
+
+// ============================================================================
+// RESOURCE ALLOCATION MODULE
+// ============================================================================
+
+model ResourceAllocation {
+  id          String       @id @default(cuid())
+  type        ResourceType
+  quantity    Decimal      @db.Decimal(10,2)
+  unit        String
+  startDate   DateTime
+  endDate     DateTime
+  cost        Decimal?     @db.Decimal(15,2)
+  
+  // Relationships
+  projectId   String
+  project     Project      @relation(fields: [projectId], references: [id])
+  allocatedById String
+  allocatedBy User         @relation(fields: [allocatedById], references: [id])
+  
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  
+  @@map("resource_allocations")
+}
+
+enum ResourceType {
+  LABOR
+  EQUIPMENT
+  MATERIAL
+  VEHICLE
+  FACILITY
+}
+
+// ============================================================================
+// EXTENDED USER MODEL
+// ============================================================================
+
+model User {
+  id              String     @id @default(cuid())
+  email           String     @unique
+  name            String
+  password        String
+  role            UserRole   @default(USER)
+  status          UserStatus @default(ACTIVE)
+  avatar          String?
+  phone           String?
+  
+  // Company Association
+  companyId       String?
+  company         Company?   @relation(fields: [companyId], references: [id])
+  
+  // Relationships
+  managedProjects Project[]  @relation("ProjectManager")
+  tasks           Task[]
+  documents       Document[]
+  expenses        Expense[]
+  stockMovements  StockMovement[]
+  purchaseOrders  PurchaseOrder[]
+  employee        Employee?
+  
+  // Safety & Compliance
+  safetyInspections SafetyInspection[]
+  incidents         Incident[]
+  riskAssessments   RiskAssessment[]
+  changeOrders      ChangeOrder[]
+  resourceAllocations ResourceAllocation[]
+  subcontractorEvaluations SubcontractorEvaluation[]
+  
+  // Authentication
+  refreshTokens   RefreshToken[]
+  
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  
+  @@map("users")
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  COMPANY_ADMIN
+  PROJECT_MANAGER
+  CONTRACTOR
+  SUBCONTRACTOR
+  CLIENT
+  ACCOUNTANT
+  SAFETY_OFFICER
+  USER
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  
+  @@map("refresh_tokens")
+}
+
+// ============================================================================
+// NOTIFICATION SYSTEM
+// ============================================================================
+
+model Notification {
+  id        String           @id @default(cuid())
+  title     String
+  message   String
+  type      NotificationType
+  priority  Priority         @default(MEDIUM)
+  isRead    Boolean          @default(false)
+  
+  // Relationships
+  userId    String
+  user      User             @relation(fields: [userId], references: [id])
+  
+  createdAt DateTime         @default(now())
+  
+  @@map("notifications")
+}
+
+enum NotificationType {
+  PROJECT_UPDATE
+  TASK_ASSIGNMENT
+  DEADLINE_REMINDER
+  PAYMENT_DUE
+  SAFETY_ALERT
+  SYSTEM_NOTIFICATION
+}
+
+// ============================================================================
+// AUDIT TRAIL
+// ============================================================================
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  action    String
+  entity    String
+  entityId  String
+  oldValues Json?
+  newValues Json?
+  
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id])
+  
+  createdAt DateTime @default(now())
+  
+  @@map("audit_logs")
+}

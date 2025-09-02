@@ -19,6 +19,12 @@ import { execSync } from 'child_process';
 const TODO_PATH = path.resolve(process.cwd(), 'TODO.md');
 const SRC_DIR = path.resolve(process.cwd(), 'src/modules');
 
+// Validate paths are within project directory
+const PROJECT_ROOT = process.cwd();
+if (!TODO_PATH.startsWith(PROJECT_ROOT) || !SRC_DIR.startsWith(PROJECT_ROOT)) {
+  throw new Error('Invalid path detected - paths must be within project directory');
+}
+
 const TASK_REGEX = /^- \[( |x)\] (.+)$/;
 const PRIORITY_REGEX = /Priority: (High|Medium|Low)/i;
 

@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, useLocation, Outlet } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ThemeProvider } from 'styled-components'
+import { ThemeProvider as StyledThemeProvider } from 'styled-components'
 import { Suspense, lazy, useState, useEffect } from 'react'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
@@ -21,6 +21,8 @@ import ProtectedRoute from './components/auth/ProtectedRoute'
 import { ThemeProvider as CustomThemeProvider } from './hooks/useTheme'
 import pwaService from './lib/pwaService'
 import NotificationContainer from './components/ui/notification'
+import PWAInstaller from './components/pwa/PWAInstaller'
+import { ThemeProvider } from './components/ui/theme-provider'
 
 // Lazy load components for better performance
 const ServicesPage = lazy(() => import('./pages/ServicesPage'))
@@ -200,13 +202,15 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       {process.env.NODE_ENV === 'development' && <ReactQueryDevtools />}
-      <CustomThemeProvider>
-        <ThemeProvider theme={{ ...(theme === 'dark' ? darkTheme : lightTheme), fonts, toggleTheme }}>
+      <ThemeProvider>
+        <CustomThemeProvider>
+          <StyledThemeProvider theme={{ ...(theme === 'dark' ? darkTheme : lightTheme), fonts, toggleTheme }}>
           <GlobalStyles />
           <AuthProvider>
             <BrowserRouter>
               <AppRoutes />
               <NotificationContainer />
+              <PWAInstaller />
               {/* PWA Update Notification */}
               {pwaUpdateAvailable && (
                 <div className="fixed bottom-4 right-4 bg-blue-600 text-white p-4 rounded-lg shadow-lg z-50">
@@ -229,9 +233,9 @@ function App() {
               )}
             </BrowserRouter>
           </AuthProvider>
-        </ThemeProvider>
+        </StyledThemeProvider>
       </CustomThemeProvider>
-    </QueryClientProvider>
+    </ThemeProvider>
   )
 }
 

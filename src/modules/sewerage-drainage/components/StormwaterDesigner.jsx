@@ -36,51 +36,37 @@ const StormwaterDesigner = () => {
   const calculateStormwater = async () => {
     setIsDesigning(true);
 
-    // Simulate design calculation
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    try {
+      const token = localStorage.getItem('authToken');
+      const response = await fetch('/api/sewerage/stormwater-design', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          catchmentArea: parseFloat(designData.catchmentArea),
+          rainfallIntensity: parseFloat(designData.rainfallIntensity),
+          runoffCoefficient: Math.max(
+            soilTypes.find(s => s.value === designData.soilType).runoffCoeff,
+            landUses.find(l => l.value === designData.landUse).runoffCoeff
+          ),
+          timeOfConcentration: parseFloat(designData.timeOfConcentration)
+        })
+      });
 
-    const area = parseFloat(designData.catchmentArea);
-    const intensity = parseFloat(designData.rainfallIntensity);
-    const timeConc = parseFloat(designData.timeOfConcentration);
+      if (response.ok) {
+        const data = await response.json();
+        setDesignResults(data.data);
+      }
+    } catch (error) {
+      console.error('Stormwater design error:', error);
+    } finally {
+      setIsDesigning(false);
+    }
+  };
 
-    // Rational method: Q = C * I * A
-    const soilCoeff = soilTypes.find(s => s.value === designData.soilType).runoffCoeff;
-    const landCoeff = landUses.find(l => l.value === designData.landUse).runoffCoeff;
-    const runoffCoeff = Math.max(soilCoeff, landCoeff);
 
-    const peakFlow = (runoffCoeff * intensity * area) / 96.23; // Convert to m³/s
-
-    // Detention basin sizing
-    const storageVolume = peakFlow * 3600 * 0.5; // 30-minute detention
-    const basinArea = storageVolume / 2; // 2m depth assumption
-
-    // Pipe sizing using Manning's equation
-    const slope = parseFloat(designData.slope) / 100; // Convert to decimal
-    const roughness = 0.013; // Concrete pipe
-    const flowVelocity = Math.sqrt((peakFlow * roughness) / (Math.sqrt(slope) * Math.PI * Math.pow(0.5, 8/3)));
-    const pipeDiameter = Math.sqrt((4 * peakFlow) / (Math.PI * flowVelocity));
-
-    const results = {
-      hydrology: {
-        runoffCoefficient: runoffCoeff.toFixed(2),
-        peakFlow: peakFlow.toFixed(2),
-        timeOfConcentration: timeConc
-      },
-      detention: {
-        storageVolume: storageVolume.toFixed(0),
-        basinArea: basinArea.toFixed(0),
-        detentionTime: '30 minutes'
-      },
-      drainage: {
-        pipeDiameter: (pipeDiameter * 1000).toFixed(0), // Convert to mm
-        flowVelocity: flowVelocity.toFixed(2),
-        slope: (slope * 100).toFixed(1)
-      },
-      recommendations: generateRecommendations(peakFlow, designData)
-    };
-
-    setDesignResults(results);
-    setIsDesigning(false);
   };
 
   const generateRecommendations = (flow, data) => {
