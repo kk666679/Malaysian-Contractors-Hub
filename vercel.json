@@ -1,7 +1,5 @@
 {
   "version": 2,
-  "name": "malaysian-contractors-hub",
-  "alias": ["mc-hub.site", "www.mc-hub.site"],
   "builds": [
     {
       "src": "package.json",
@@ -24,24 +22,9 @@
   "env": {
     "NODE_ENV": "production"
   },
-  "build": {
-    "env": {
-      "NODE_ENV": "production"
-    }
-  },
   "functions": {
-    "app/api/**/*.js": {
+    "backend/server.js": {
       "runtime": "nodejs18.x"
     }
-  },
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/api/$1"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
-  ]
+  }
 }
