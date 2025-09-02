@@ -84,6 +84,11 @@ const Navbar = () => {
       name: 'Marketplace', 
       href: '/marketplace', 
       icon: <Users size={18} /> 
+    },
+    { 
+      name: 'Contact', 
+      href: '/contact', 
+      icon: <Users size={18} /> 
     }
   ];
 

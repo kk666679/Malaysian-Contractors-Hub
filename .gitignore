@@ -57,3 +57,4 @@ gpg-gen-key.batch
 # Documentation about deployment process
 DEPLOYMENT-SUMMARY.md
 PRE-COMMIT-CHECK.md
+.vercel

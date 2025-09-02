@@ -50,6 +50,8 @@ const ContentPolicy = lazy(() => import('./pages/resources/ContentPolicy'))
 const CommunityGuidelines = lazy(() => import('./pages/community/CommunityGuidelines'))
 const HelpCenterPolicy = lazy(() => import('./pages/support/HelpCenterPolicy'))
 
+const ContactPage = lazy(() => import('./pages/ContactPage'))
+
 // Service pages
 const CivilEngineeringPage = lazy(() => import('./pages/services/CivilEngineeringPage'))
 const ElectricalSystemsPage = lazy(() => import('./pages/services/ElectricalSystemsPage'))
@@ -121,7 +123,7 @@ const AppRoutes = () => (
       <Route path="marketplace" element={<MarketplacePage />} />
       <Route path="monsoon-planner" element={<MonsoonRiskPlanner />} />
       <Route path="about" element={<PlaceholderPage title="About Page" />} />
-      <Route path="contact" element={<PlaceholderPage title="Contact Page" />} />
+      <Route path="contact" element={<ContactPage />} />
       <Route path="dashboard" element={<Web3Dashboard />} />
       <Route path="dashboard/:section" element={<DashboardPage />} />
       <Route path="dashboard/projects/:id" element={<ProjectDetailsPage />} />

@@ -102,7 +102,7 @@ const PricingSection = ({ onSectionChange }) => {
                 className={`btn-hover w-full py-3 rounded-xl ${
                   plan.popular ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600'
                 } font-medium transition-colors`}
-                onClick={() => onSectionChange(plan.id === 'enterprise' ? 'contact' : 'signup')}
+                onClick={() => window.location.href = plan.id === 'enterprise' ? '/contact' : '/register'}
               >
                 {plan.id === 'enterprise' ? 'Contact Sales' : 'Get Started'}
               </button>
@@ -113,7 +113,7 @@ const PricingSection = ({ onSectionChange }) => {
         <div className="text-center mt-12">
           <p className="text-gray-600 dark:text-gray-300">
             Have questions about pricing?{' '}
-            <button className="text-blue-600 hover:text-blue-700 font-medium" onClick={() => onSectionChange('contact')}>
+            <button className="text-blue-600 hover:text-blue-700 font-medium" onClick={() => window.location.href = '/contact'}>
               Contact our team
             </button>
           </p>

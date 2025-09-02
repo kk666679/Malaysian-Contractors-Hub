@@ -65,13 +65,13 @@ const HeroSection = ({ onSectionChange }) => {
 
           <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
             <button
-              onClick={() => onSectionChange('signup')}
+              onClick={() => window.location.href = '/register'}
               className="btn-hover px-8 py-4 rounded-xl bg-blue-600 text-white text-lg font-medium hover:bg-blue-700 transition-colors shadow-lg"
             >
               Get Started Free
             </button>
             <button
-              onClick={() => onSectionChange('demo')}
+              onClick={() => window.location.href = '/features'}
               className="btn-hover px-8 py-4 rounded-xl border border-gray-300 text-lg font-medium hover:border-gray-400 transition-colors flex items-center"
             >
               <span>Watch Demo</span>
@@ -87,7 +87,7 @@ const HeroSection = ({ onSectionChange }) => {
                 </div>
                 <p className="text-gray-500 dark:text-gray-400">Platform dashboard preview</p>
                 <button
-                  onClick={() => onSectionChange('features')}
+                  onClick={() => window.location.href = '/features'}
                   className="mt-4 text-blue-600 hover:text-blue-700 font-medium flex items-center mx-auto"
                 >
                   Explore Features

@@ -17,5 +17,16 @@
   ],
   "env": {
     "NODE_ENV": "production"
-  }
+  },
+  "domains": [
+    "mc-hub.site",
+    "www.mc-hub.site"
+  ],
+  "redirects": [
+    {
+      "source": "https://www.mc-hub.site/(.*)",
+      "destination": "https://mc-hub.site/$1",
+      "permanent": true
+    }
+  ]
 }

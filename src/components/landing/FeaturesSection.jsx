@@ -85,7 +85,7 @@ const FeaturesSection = ({ onSectionChange }) => {
               <p className="text-gray-600 dark:text-gray-300">{feature.description}</p>
               <button
                 className="text-blue-600 hover:text-blue-700 mt-2 flex items-center"
-                onClick={() => onSectionChange('pricing')}
+                onClick={() => window.location.href = '/features'}
               >
                 Learn more <span className="ml-1">→</span>
               </button>
@@ -96,7 +96,7 @@ const FeaturesSection = ({ onSectionChange }) => {
         <div className="text-center mt-12">
           <button
             className="btn-hover px-6 py-3 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700 transition-colors"
-            onClick={() => onSectionChange('pricing')}
+            onClick={() => window.location.href = '/features'}
           >
             View All Features & Pricing
           </button>
