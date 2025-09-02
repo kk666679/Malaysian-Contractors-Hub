@@ -5,6 +5,7 @@ import { Building, Calculator, AlertTriangle, CheckCircle, FileText } from 'luci
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
 import { Button } from '../../../components/ui/button';
 import { validateEngineeringForm } from '../../../lib/formValidation';
+import engineeringService from '../../../lib/engineeringService';
 
 const CivilEngineeringCalculator = () => {
   const [activeTab, setActiveTab] = useState('structural');
@@ -74,26 +75,19 @@ const CivilEngineeringCalculator = () => {
 
     setLoading(true);
     try {
-      const response = await fetch('/api/civil-engineering/calculate-capacity', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({
-          concreteGrade: formData.concreteGrade,
-          steelGrade: formData.steelGrade,
-          beamWidth: parseFloat(formData.beamWidth),
-          beamDepth: parseFloat(formData.beamDepth),
-          beamLength: parseFloat(formData.beamLength),
-          reinforcement: parseInt(formData.reinforcement),
-          barDiameter: parseFloat(formData.barDiameter),
-          loadType: formData.loadType,
-          loadValue: parseFloat(formData.loadValue)
-        })
+      // Use new engineering service with fallback to legacy API
+      const data = await engineeringService.calculateStructuralCapacity({
+        concreteGrade: formData.concreteGrade,
+        steelGrade: formData.steelGrade,
+        beamWidth: parseFloat(formData.beamWidth),
+        beamDepth: parseFloat(formData.beamDepth),
+        beamLength: parseFloat(formData.beamLength),
+        reinforcement: parseInt(formData.reinforcement),
+        barDiameter: parseFloat(formData.barDiameter),
+        loadType: formData.loadType,
+        loadValue: parseFloat(formData.loadValue)
       });
 
-      const data = await response.json();
       if (data.success) {
         setResults(data.data);
       } else {
@@ -109,20 +103,17 @@ const CivilEngineeringCalculator = () => {
   const checkCompliance = async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/civil-engineering/check-compliance', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({
-          designType: 'building',
-          location: 'Kuala Lumpur',
-          standards: ['MS 1183:2015', 'UBBL 1984']
-        })
+      // Use new engineering service for compliance check
+      const data = await engineeringService.checkCompliance({
+        designType: 'building',
+        location: 'Kuala Lumpur',
+        standards: ['MS 76:2005', 'UBBL 1984'],
+        beamWidth: parseFloat(formData.beamWidth) || 300,
+        beamDepth: parseFloat(formData.beamDepth) || 600,
+        beamLength: parseFloat(formData.beamLength) || 5000,
+        loadValue: parseFloat(formData.loadValue) || 25
       });
 
-      const data = await response.json();
       if (data.success) {
         setResults(data.data);
       } else {

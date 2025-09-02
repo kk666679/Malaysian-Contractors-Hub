@@ -86,6 +86,11 @@ const Navbar = () => {
       icon: <Users size={18} /> 
     },
     { 
+      name: 'About', 
+      href: '/about', 
+      icon: <Building2 size={18} /> 
+    },
+    { 
       name: 'Contact', 
       href: '/contact', 
       icon: <Users size={18} /> 
@@ -171,10 +176,9 @@ const Navbar = () => {
                     </AnimatePresence>
                   </div>
                 ) : (
-                  <Button
+                  <Link
                     to={item.href}
-                    variant="ghost"
-                    className={`px-3 py-2 rounded-md text-sm font-medium ${
+                    className={`px-3 py-2 rounded-md text-sm font-medium inline-flex items-center ${
                       isActive(item.href)
                         ? 'text-primary bg-primary/10'
                         : 'text-foreground hover:text-primary'
@@ -184,7 +188,7 @@ const Navbar = () => {
                       {item.icon}
                       <span className="ml-1">{item.name}</span>
                     </span>
-                  </Button>
+                  </Link>
                 )}
               </div>
             ))}

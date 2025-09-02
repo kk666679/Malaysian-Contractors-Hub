@@ -31,11 +31,13 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ['react', 'react-dom'],
-          ui: ['@radix-ui/react-avatar', '@radix-ui/react-dialog']
+          vendor: ['react', 'react-dom', 'react-router-dom'],
+          ui: ['framer-motion', 'lucide-react', '@radix-ui/react-avatar'],
+          utils: ['clsx', 'tailwind-merge']
         }
       }
-    }
+    },
+    assetsInlineLimit: 0
   },
   define: {
     'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production')

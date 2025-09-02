@@ -1,6 +1,6 @@
 # MC-Hub: Malaysian Contractors Hub
 
-![Version](https://img.shields.io/badge/version-0.4.0-blue)
+![Version](https://img.shields.io/badge/version-0.5.0-blue)
 ![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
 ![License](https://img.shields.io/badge/license-MIT-green)
 ![Node.js](https://img.shields.io/badge/node-20%2B-green)
@@ -15,19 +15,20 @@ MC-Hub is a comprehensive web platform designed specifically for Malaysian contr
 
 ## 🚀 Current Status
 
-**Version:** 0.4.0  
-**Backend:** ✅ Fully Implemented + GCMS Extension  
-**Frontend:** ✅ 100% Complete - All Modules + GCMS Components  
+**Version:** 0.5.0  
+**Backend:** ✅ Fully Implemented + GCMS Extension + Advanced Engineering Services  
+**Frontend:** ✅ 100% Complete - All Modules + GCMS Components + Engineering Integration  
 **Database:** ✅ Prisma + PostgreSQL (25+ Models + GCMS Schema)  
 **Authentication:** ✅ JWT + Refresh Tokens + Role-Based Access  
 **Testing:** ✅ Comprehensive API Tests + Build Optimization  
 **Documentation:** ✅ Organized in /docs folder  
 **GCMS:** ✅ General Contracting Management System Integrated  
+**Engineering Services:** ✅ Comprehensive Real-World Calculations + Malaysian Standards  
 
 ## 📋 Implementation Status
 
 - ✅ Core Platform: Authentication, Dashboard, Project Management
-- ✅ Engineering Modules: Civil, Electrical, HVAC, Sewerage, ELV systems
+- ✅ Engineering Services: Advanced Civil, Electrical, HVAC, Sewerage, ELV calculations with real-world formulas
 - ✅ GCMS Integration: General Contracting Management System
 - ✅ Project Management (46 API endpoints)
 - ✅ Contract & Document Management
@@ -38,6 +39,9 @@ MC-Hub is a comprehensive web platform designed specifically for Malaysian contr
 - ✅ Advanced Features: Real-time notifications, PWA, marketplace
 - ✅ Modern Stack: React 19, Vite 7, TailwindCSS 4, Node.js 20+
 - ✅ Build Optimization: Vercel deployment with dependency fixes
+- ✅ Engineering Standards: Malaysian (MS), ISO, Safety compliance (OSHA, CIDB, NIOSH, DOSH)
+- ✅ Real-World Calculations: Structural analysis, foundation design, concrete mix, steel design
+- ✅ Multi-User Collaboration: GCMS integration with engineering workflows
 
 ## 📚 Documentation
 
@@ -301,12 +305,14 @@ Malaysian-Contractors-Hub/
 - Rate limiting and CORS protection
 - Session management with Redis
 
-### 🏗️ Core Engineering Modules
-- **Civil Engineering:** Structural calculations, Malaysian standards compliance
-- **Electrical Systems:** Voltage drop calculations, cable sizing
-- **HVAC Systems:** Load calculations, energy efficiency analysis
-- **Sewerage & Drainage:** Pipe sizing, drainage system design
-- **ELV Systems:** Low voltage system design, security systems
+### 🏗️ Advanced Engineering Services
+- **Civil Engineering:** Real structural analysis (beam, column, foundation), concrete mix design, steel design, load combinations
+- **Electrical Systems:** Voltage drop calculations, cable sizing, power distribution, load analysis
+- **HVAC Systems:** Cooling load calculations, duct sizing, energy efficiency, psychrometric analysis
+- **Sewerage & Drainage:** Pipe sizing, rainfall analysis, drainage system design, flow calculations
+- **ELV Systems:** Low voltage design, cable sizing, power budget, security system calculations
+- **Standards Compliance:** Malaysian (MS 76:2005, MS 1462:2009, MS 1553:2002, UBBL 1984), ISO, Safety standards
+- **Engineering Utilities:** Unit conversion, material database, safety checking, load calculations
 
 ### 🏢 GCMS Enterprise Features
 - 46 API Endpoints across 6 modules
@@ -354,11 +360,16 @@ Authorization: Bearer <jwt_token>
 - PUT /api/projects/:id - Update project
 - DELETE /api/projects/:id - Delete project
 
-**Engineering Calculations**
-- POST /api/civil-engineering/calculate-capacity
-- POST /api/electrical-systems/voltage-drop
-- POST /api/hvac/load-calculation
-- POST /api/sewerage/pipe-sizing
+**Advanced Engineering Calculations**
+- POST /api/civil-engineering/structural-analysis - Beam, column, foundation analysis
+- POST /api/civil-engineering/concrete-mix-design - Real concrete mix calculations
+- POST /api/civil-engineering/steel-design - Steel member design and analysis
+- POST /api/civil-engineering/foundation-design - Foundation bearing capacity and design
+- POST /api/electrical-systems/voltage-drop - Voltage drop and cable sizing
+- POST /api/electrical-systems/load-analysis - Power distribution and load calculations
+- POST /api/hvac/cooling-load - Cooling load and duct sizing calculations
+- POST /api/sewerage/pipe-sizing - Pipe sizing and flow analysis
+- POST /api/elv/cable-sizing - Low voltage cable and power budget calculations
 
 ### GCMS API Endpoints (46+)
 **Project Management**
@@ -502,16 +513,18 @@ We welcome contributions to MC-Hub! Please follow these guidelines:
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## 🔄 Latest Updates (v0.4.0)
+## 🔄 Latest Updates (v0.5.0)
 
-✅ **Advanced Intelligence Features:** ML, Edge Computing, Blockchain integration  
-✅ **GCMS Integration:** Complete General Contracting Management System  
-✅ **Build Optimization:** Fixed React 19 compatibility issues  
-✅ **Documentation:** Organized all docs in /docs folder  
-✅ **46 GCMS Endpoints:** Full enterprise contracting features  
-✅ **Modern Stack:** Updated to latest versions (React 19, Vite 7, TailwindCSS 4)  
-✅ **Production Ready:** Optimized for Vercel deployment  
+✅ **Comprehensive Engineering Services:** Complete rebuild with real-world calculations and formulas  
+✅ **Malaysian Standards Compliance:** MS 76:2005, MS 1462:2009, MS 1553:2002, UBBL 1984  
+✅ **Advanced Civil Engineering:** Structural analysis, foundation design, concrete mix, steel design  
+✅ **Multi-Discipline Integration:** Civil, Electrical, HVAC, Sewerage, ELV with GCMS workflows  
+✅ **Engineering Standards:** ISO compliance and safety standards (OSHA, CIDB, NIOSH, DOSH)  
+✅ **Real-World Formulas:** Beam analysis (M=wL²/8), Terzaghi foundation method, concrete calculations  
+✅ **Code Cleanup:** Removed test pages, reorganized components, optimized structure  
+✅ **Backward Compatibility:** Integration adapter maintains existing API endpoints  
+✅ **Enhanced Documentation:** Comprehensive engineering implementation guides  
 
-**Next Release (v0.5.0):** Mobile app, advanced analytics, AI integration
+**Next Release (v0.6.0):** Mobile app, advanced analytics, AI-powered engineering assistance
 
 For detailed implementation guides, API documentation, and deployment instructions, see the `/docs` folder.

@@ -8,7 +8,6 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import Navbar from './components/layout/Navbar'
 import Footer from './components/layout/Footer'
 import FloatingActionButton from './components/layout/FloatingActionButton'
-import LandingPage from './pages/LandingPage'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import ProjectsPage from './pages/ProjectsPage'
@@ -25,39 +24,40 @@ import NotificationContainer from './components/ui/notification'
 import PWAInstaller from './components/pwa/PWAInstaller'
 import { ThemeProvider } from './components/ui/theme-provider'
 
-// Lazy load components for better performance
-const ServicesPage = lazy(() => import('./pages/ServicesPage'))
-const FeaturesPage = lazy(() => import('./pages/FeaturesPage'))
-const CompliancePage = lazy(() => import('./pages/CompliancePage'))
-const MarketplacePage = lazy(() => import('./pages/SpecialistMarketplace'))
-const MonsoonRiskPlanner = lazy(() => import('./pages/MonsoonRiskPlanner'))
-const ProjectBidEngine = lazy(() => import('./pages/ProjectBidEngine'))
-const SiteManagement = lazy(() => import('./pages/SiteManagement'))
-const MaterialAlerts = lazy(() => import('./pages/MaterialAlerts'))
-const DashboardPage = lazy(() => import('./modules/Dashboard'))
-const ProjectDetailsPage = lazy(() => import('./pages/ProjectDetailsPage'))
+// Import core components directly for better bundling
+import ServicesPage from './pages/ServicesPage'
+import FeaturesPage from './pages/FeaturesPage'
+import CompliancePage from './pages/CompliancePage'
+import MarketplacePage from './pages/SpecialistMarketplace'
+import MonsoonRiskPlanner from './pages/MonsoonRiskPlanner'
+import ProjectBidEngine from './pages/ProjectBidEngine'
+import SiteManagement from './pages/SiteManagement'
+import MaterialAlerts from './pages/MaterialAlerts'
+import DashboardPage from './modules/Dashboard'
+import ProjectDetailsPage from './pages/ProjectDetailsPage'
 import BuildingAutomation from './pages/BuildingAutomation.jsx'
-const PlaceholderPage = lazy(() => import('./components/features/PlaceholderPage'))
-const Web3Dashboard = lazy(() => import('./components/features/Web3Dashboard'))
-const Web3DemoPage = lazy(() => import('./pages/Web3DemoPage'))
-const DatabaseTestPage = lazy(() => import('./pages/DatabaseTestPage'))
-// Legal and Policy Pages
-const APITerms = lazy(() => import('./pages/legal/APITerms'))
-const PrivacyPolicy = lazy(() => import('./pages/legal/PrivacyPolicy'))
-const TermsOfService = lazy(() => import('./pages/legal/TermsOfService'))
-const CookiesPolicy = lazy(() => import('./pages/legal/CookiesPolicy'))
-const ContentPolicy = lazy(() => import('./pages/resources/ContentPolicy'))
-const CommunityGuidelines = lazy(() => import('./pages/community/CommunityGuidelines'))
-const HelpCenterPolicy = lazy(() => import('./pages/support/HelpCenterPolicy'))
+import PlaceholderPage from './components/features/PlaceholderPage'
+import Web3Dashboard from './components/features/Web3Dashboard'
+import Web3DemoPage from './pages/Web3DemoPage'
 
-const ContactPage = lazy(() => import('./pages/ContactPage'))
+// Legal and Policy Pages
+import APITerms from './pages/legal/APITerms'
+import PrivacyPolicy from './pages/legal/PrivacyPolicy'
+import TermsOfService from './pages/legal/TermsOfService'
+import CookiesPolicy from './pages/legal/CookiesPolicy'
+import ContentPolicy from './pages/resources/ContentPolicy'
+import CommunityGuidelines from './pages/community/CommunityGuidelines'
+import HelpCenterPolicy from './pages/support/HelpCenterPolicy'
+
+import ContactPage from './pages/ContactPage'
+import AboutPage from './pages/AboutPage'
 
 // Service pages
-const CivilEngineeringPage = lazy(() => import('./pages/services/CivilEngineeringPage'))
-const ElectricalSystemsPage = lazy(() => import('./pages/services/ElectricalSystemsPage'))
-const SewerageDrainagePage = lazy(() => import('./pages/services/SewerageDrainagePage'))
-const ELVSystemsPage = lazy(() => import('./pages/services/ELVSystemsPage'))
-const ACMVSystemsPage = lazy(() => import('./pages/services/ACMVSystemsPage'))
+import CivilEngineeringPage from './pages/services/CivilEngineeringPage'
+import ElectricalSystemsPage from './pages/services/ElectricalSystemsPage'
+import SewerageDrainagePage from './pages/services/SewerageDrainagePage'
+import ELVSystemsPage from './pages/services/ELVSystemsPage'
+import ACMVSystemsPage from './pages/services/ACMVSystemsPage'
 
 // Loading component
 const LoadingFallback = () => (
@@ -75,18 +75,16 @@ const Layout = () => {
       <Navbar />
       <main className="flex-grow pt-16"> {/* Added pt-16 for navbar spacing */}
         <AnimatePresence mode="wait">
-          <Suspense fallback={<LoadingFallback />} key={location.pathname}>
-            <motion.div
-              key={location.pathname}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="w-full"
-            >
-              <Outlet />
-            </motion.div>
-          </Suspense>
+          <motion.div
+            key={location.pathname}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="w-full"
+          >
+            <Outlet />
+          </motion.div>
         </AnimatePresence>
       </main>
       <Footer />
@@ -105,7 +103,7 @@ const AppRoutes = () => (
     <Route path="/" element={<Layout />}>
       <Route index element={
         <ErrorBoundary>
-          <LandingPage />
+          <PlaceholderPage title="Home Page Removed" />
         </ErrorBoundary>
       } />
       <Route path="login" element={<Login />} />
@@ -122,7 +120,7 @@ const AppRoutes = () => (
       <Route path="projects" element={<ProtectedRoute><ProjectsPage /></ProtectedRoute>} />
       <Route path="marketplace" element={<MarketplacePage />} />
       <Route path="monsoon-planner" element={<MonsoonRiskPlanner />} />
-      <Route path="about" element={<PlaceholderPage title="About Page" />} />
+      <Route path="about" element={<AboutPage />} />
       <Route path="contact" element={<ContactPage />} />
       <Route path="dashboard" element={<Web3Dashboard />} />
       <Route path="dashboard/:section" element={<DashboardPage />} />
@@ -136,7 +134,7 @@ const AppRoutes = () => (
       } />
       <Route path="building-automation" element={<BuildingAutomation />} />
       <Route path="web3-demo" element={<Web3DemoPage />} />
-      <Route path="database-test" element={<DatabaseTestPage />} />
+
       {/* Legal and Policy Routes */}
       <Route path="legal/api-terms" element={<APITerms />} />
       <Route path="legal/privacy-policy" element={<PrivacyPolicy />} />
@@ -208,37 +206,37 @@ function App() {
       <ThemeProvider>
         <CustomThemeProvider>
           <StyledThemeProvider theme={{ ...(theme === 'dark' ? darkTheme : lightTheme), fonts, toggleTheme }}>
-          <GlobalStyles />
-          <AuthProvider>
-            <BrowserRouter>
-              <AppRoutes />
-              <NotificationContainer />
-              <PWAInstaller />
-              {/* PWA Update Notification */}
-              {pwaUpdateAvailable && (
-                <div className="fixed bottom-4 right-4 bg-blue-600 text-white p-4 rounded-lg shadow-lg z-50">
-                  <p className="mb-2">App update available!</p>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={handlePWAUpdate}
-                      className="bg-white text-blue-600 px-3 py-1 rounded text-sm font-medium"
-                    >
-                      Update
-                    </button>
-                    <button
-                      onClick={() => setPwaUpdateAvailable(false)}
-                      className="bg-blue-700 text-white px-3 py-1 rounded text-sm"
-                    >
-                      Later
-                    </button>
+            <GlobalStyles />
+            <AuthProvider>
+              <BrowserRouter>
+                <AppRoutes />
+                <NotificationContainer />
+                <PWAInstaller />
+                {/* PWA Update Notification */}
+                {pwaUpdateAvailable && (
+                  <div className="fixed bottom-4 right-4 bg-blue-600 text-white p-4 rounded-lg shadow-lg z-50">
+                    <p className="mb-2">App update available!</p>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={handlePWAUpdate}
+                        className="bg-white text-blue-600 px-3 py-1 rounded text-sm font-medium"
+                      >
+                        Update
+                      </button>
+                      <button
+                        onClick={() => setPwaUpdateAvailable(false)}
+                        className="bg-blue-700 text-white px-3 py-1 rounded text-sm"
+                      >
+                        Later
+                      </button>
+                    </div>
                   </div>
-                </div>
-              )}
-            </BrowserRouter>
-          </AuthProvider>
-        </StyledThemeProvider>
-      </CustomThemeProvider>
-    </ThemeProvider>
+                )}
+              </BrowserRouter>
+            </AuthProvider>
+          </StyledThemeProvider>
+        </CustomThemeProvider>
+      </ThemeProvider>
   )
 }
 
