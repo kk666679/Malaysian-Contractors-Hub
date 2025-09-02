@@ -1,205 +1,193 @@
 # MC-Hub: Malaysian Contractors Hub
 
-MC-Hub is a comprehensive web platform designed specifically for Malaysian contractors, providing integrated tools for managing construction projects across multiple engineering disciplines. The platform combines modern web technologies with industry-specific calculations, compliance checking, and project management features tailored to Malaysian building standards and regulations.
+![Version](https://img.shields.io/badge/version-0.4.0-blue)
+![Build Status](https://img.shields.io/badge/build-passing-brightgreen)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Node.js](https://img.shields.io/badge/node-20%2B-green)
+![React](https://img.shields.io/badge/react-19-blue)
+![Prisma](https://img.shields.io/badge/prisma-latest-brightgreen)
+![PostgreSQL](https://img.shields.io/badge/postgresql-required-blue)
+![Vercel](https://img.shields.io/badge/deployed%20with-Vercel-black)
+![PWA](https://img.shields.io/badge/PWA-enabled-orange)
+![Tests](https://img.shields.io/badge/tests-71%2F71%20passing-brightgreen)
+
+MC-Hub is a comprehensive web platform designed specifically for Malaysian contractors, providing integrated tools for managing construction projects across multiple engineering disciplines.
 
 ## 🚀 Current Status
 
-**Version:** 0.2.1  
+**Version:** 0.4.0  
 **Backend:** ✅ Fully Implemented + GCMS Extension  
 **Frontend:** ✅ 100% Complete - All Modules + GCMS Components  
 **Database:** ✅ Prisma + PostgreSQL (25+ Models + GCMS Schema)  
 **Authentication:** ✅ JWT + Refresh Tokens + Role-Based Access  
 **Testing:** ✅ Comprehensive API Tests + Build Optimization  
-**Documentation:** ✅ Organized in `/docs` folder  
-**GCMS:** ✅ General Contracting Management System Integrated
+**Documentation:** ✅ Organized in /docs folder  
+**GCMS:** ✅ General Contracting Management System Integrated  
 
-### Implementation Status
-- ✅ **Core Platform**: Authentication, Dashboard, Project Management
-- ✅ **Engineering Modules**: Civil, Electrical, HVAC, Sewerage, ELV systems
-- ✅ **GCMS Integration**: General Contracting Management System
-  - ✅ Project Management (46 API endpoints)
-  - ✅ Contract & Document Management
-  - ✅ Financial & Invoicing System
-  - ✅ Compliance & Safety Management
-  - ✅ Subcontractor & Vendor Management
-  - ✅ Bidding & Estimation Engine
-- ✅ **Advanced Features**: Real-time notifications, PWA, marketplace
-- ✅ **Modern Stack**: React 19, Vite 7, TailwindCSS 4, Node.js 20+
-- ✅ **Build Optimization**: Vercel deployment with dependency fixes
+## 📋 Implementation Status
+
+- ✅ Core Platform: Authentication, Dashboard, Project Management
+- ✅ Engineering Modules: Civil, Electrical, HVAC, Sewerage, ELV systems
+- ✅ GCMS Integration: General Contracting Management System
+- ✅ Project Management (46 API endpoints)
+- ✅ Contract & Document Management
+- ✅ Financial & Invoicing System
+- ✅ Compliance & Safety Management
+- ✅ Subcontractor & Vendor Management
+- ✅ Bidding & Estimation Engine
+- ✅ Advanced Features: Real-time notifications, PWA, marketplace
+- ✅ Modern Stack: React 19, Vite 7, TailwindCSS 4, Node.js 20+
+- ✅ Build Optimization: Vercel deployment with dependency fixes
 
 ## 📚 Documentation
 
 Detailed documentation is available in the `/docs` folder:
+- GCMS Implementation Guide - Complete GCMS system documentation
+- Implementation Summary - Project completion overview
+- Deployment Guide - Production deployment instructions
+- Frontend Completion - Frontend implementation details
+- Dependency Analysis - Technology stack analysis
 
-- **[GCMS Implementation Guide](docs/GCMS_IMPLEMENTATION_GUIDE.md)** - Complete GCMS system documentation
-- **[Implementation Summary](docs/IMPLEMENTATION_SUMMARY.md)** - Project completion overview
-- **[Deployment Guide](docs/README-DEPLOYMENT.md)** - Production deployment instructions
-- **[Frontend Completion](docs/FRONTEND_COMPLETION_SUMMARY.md)** - Frontend implementation details
-- **[Dependency Analysis](docs/DEPENDENCY_ANALYSIS.md)** - Technology stack analysis
+## 🏗️ System Architecture
 
-## Table of Contents
+```mermaid
+flowchart LR
+    %% Frontend
+    subgraph Frontend [💻 React Frontend - Vercel Hosted]
+        A[⚛️ React 19]
+        B[⚡ Vite 7]
+        C[🎨 TailwindCSS 4]
+        D[📱 PWA]
+    end
 
-- [Project Overview](#project-overview)
-- [GCMS System](#gcms-system)
-- [Tech Stack](#tech-stack)
-- [Quick Start](#quick-start)
-- [Project Structure](#project-structure)
-- [Features](#features)
-- [API Documentation](#api-documentation)
-- [Testing](#testing)
-- [Deployment](#deployment)
-- [Contributing](#contributing)
+    %% Backend
+    subgraph Backend [⚙️ Node.js Backend]
+        E[🚂 Express.js]
+        F[🛠️ Prisma ORM]
+        G[🔐 JWT Auth]
+        H[🧰 Redis Cache]
+        I[🔌 Socket.io]
+    end
 
-## Project Overview
+    %% Database
+    subgraph Database [🗄️ PostgreSQL Database]
+        J[📦 Core Models]
+        K[🗂️ GCMS Schema]
+        L[🏷️ Multi-tenant Data]
+    end
 
-MC-Hub is a comprehensive digital platform that streamlines construction project management and contractor operations across multiple engineering disciplines. The platform integrates the **General Contracting Management System (GCMS)** for enterprise-level project management.
+    %% Engineering Modules
+    subgraph Modules
+        M[🏛️ Civil Engineering]
+        N[⚡ Electrical Systems]
+        O[❄️ HVAC Systems]
+        P[💧 Sewerage & Drainage]
+        Q[📡 ELV Systems]
+    end
+    EMTitle["🏗️ Engineering Modules"]:::invisible
+    EMTitle --- Modules
+
+    %% GCMS System
+    subgraph GCMS
+        R[📋 Project Management]
+        S[📑 Contract Management]
+        T[💵 Financial System]
+        U[🦺 Compliance & Safety]
+        V[🤝 Subcontractor Mgmt]
+    end
+    GCMSTitle["📊 General Contracting Management System"]:::invisible
+    GCMSTitle --- GCMS
+
+    %% External Services
+    subgraph External [🌍 External Services]
+        W[☁️ Weather API]
+        X[📏 Malaysian Standards]
+        Y[🚀 Vercel Deployment]
+        Z[🔄 Redis Cloud]
+    end
+
+    %% Connections
+    A --> E
+    E --> F
+    F --> J
+    F --> K
+    E --> M & N & O & P & Q
+    E --> R & S & T & U & V
+    E --> W & X
+    E --> H
+    H --> Z
+    A --> Y
+
+    %% Styling
+    classDef invisible fill:none,stroke:none,color:black,font-weight:bold,text-align:left
+    style Frontend fill:#cce5ff,stroke:#004085,stroke-width:2px
+    style Backend fill:#ffe5b4,stroke:#cc7000,stroke-width:2px
+    style Database fill:#b2f0e6,stroke:#00796b,stroke-width:2px
+    style Modules fill:#e0ccff,stroke:#4b0082,stroke-width:2px
+    style GCMS fill:#d4edda,stroke:#155724,stroke-width:2px
+    style External fill:#e2e3e5,stroke:#383d41,stroke-width:2px
+```
+
+## 🧩 Table of Contents
+
+1. [Project Overview](#-project-overview)
+2. [Tech Stack](#-tech-stack)
+3. [Quick Start](#-quick-start)
+4. [Project Structure](#-project-structure)
+5. [Features](#-features)
+6. [API Documentation](#-api-documentation)
+7. [Testing](#-testing)
+8. [Deployment](#-deployment)
+9. [Contributing](#-contributing)
+10. [License](#-license)
+
+## 🎯 Project Overview
+
+MC-Hub is a comprehensive digital platform that streamlines construction project management and contractor operations across multiple engineering disciplines. The platform integrates the General Contracting Management System (GCMS) for enterprise-level project management.
 
 ### Core Capabilities
-- **Multi-Discipline Engineering**: Civil, Electrical, HVAC, Sewerage, ELV systems
-- **GCMS Integration**: Complete contracting lifecycle management
-- **Malaysian Standards**: Compliance with local building codes and regulations
-- **Real-time Collaboration**: Multi-user project coordination
-- **Advanced Analytics**: Project performance and financial insights
-- **Mobile-First Design**: Responsive across all devices
 
-## Tech Stack
+- **Multi-Discipline Engineering:** Civil, Electrical, HVAC, Sewerage, ELV systems
+- **GCMS Integration:** Complete contracting lifecycle management
+- **Malaysian Standards:** Compliance with local building codes and regulations
+- **Real-time Collaboration:** Multi-user project coordination
+- **Advanced Analytics:** Project performance and financial insights
+- **Mobile-First Design:** Responsive across all devices
+
+## 🛠️ Tech Stack
 
 ### Frontend (Latest Stack)
-- **React 19**: Latest React with modern hooks and concurrent features
-- **Vite 7**: Next-generation build tool with optimized production builds
-- **TailwindCSS 4**: Modern utility-first CSS framework
-- **React Router 7**: Advanced routing with data loading capabilities
-- **React Hook Form + Zod**: Type-safe form handling and validation
-- **Radix UI**: Accessible, unstyled UI component primitives
-- **Framer Motion 12**: Advanced animations and micro-interactions
-- **TanStack Query**: Powerful data fetching, caching, and synchronization
-- **Recharts 3**: Modern charting library for data visualization
-- **PWA Support**: Service workers for offline functionality
+- React 19: Latest React with modern hooks and concurrent features
+- Vite 7: Next-generation build tool with optimized production builds
+- TailwindCSS 4: Modern utility-first CSS framework
+- React Router 7: Advanced routing with data loading capabilities
+- React Hook Form + Zod: Type-safe form handling and validation
+- Radix UI: Accessible, unstyled UI component primitives
+- Framer Motion 12: Advanced animations and micro-interactions
+- TanStack Query: Powerful data fetching, caching, and synchronization
+- Recharts 3: Modern charting library for data visualization
+- PWA Support: Service workers for offline functionality
 
 ### Backend (Enterprise-Ready)
-- **Node.js 20+**: Modern JavaScript runtime with ES modules
-- **Express.js**: Fast, minimalist web framework with middleware
-- **Prisma ORM**: Type-safe database access with migrations
-- **PostgreSQL**: Production-ready relational database
-- **Redis**: High-performance caching and session management
-- **JWT + Refresh Tokens**: Secure authentication with token rotation
-- **bcryptjs**: Industry-standard password hashing
-- **Socket.io**: Real-time bidirectional communication
-- **Comprehensive Middleware**: Security, validation, error handling
+- Node.js 20+: Modern JavaScript runtime with ES modules
+- Express.js: Fast, minimalist web framework with middleware
+- Prisma ORM: Type-safe database access with migrations
+- PostgreSQL: Production-ready relational database
+- Redis: High-performance caching and session management
+- JWT + Refresh Tokens: Secure authentication with token rotation
+- bcryptjs: Industry-standard password hashing
+- Socket.io: Real-time bidirectional communication
+- Comprehensive Middleware: Security, validation, error handling
 
 ### Database Architecture
-- **50+ Models**: Core platform + GCMS extension models
-- **GCMS Schema**: Project management, contracts, financial, compliance
-- **Role-Based Access Control**: 8 user roles with granular permissions
-- **Multi-tenant Architecture**: Company-based data isolation
-- **Audit Trail**: Complete change tracking and versioning
-- **Performance Optimized**: Indexed queries and connection pooling
+- 50+ Models: Core platform + GCMS extension models
+- GCMS Schema: Project management, contracts, financial, compliance
+- Role-Based Access Control: 8 user roles with granular permissions
+- Multi-tenant Architecture: Company-based data isolation
+- Audit Trail: Complete change tracking and versioning
+- Performance Optimized: Indexed queries and connection pooling
 
-### Development Tools
-- **ESLint**: Code linting and formatting
-- **Vitest**: Fast unit testing framework
-- **Testing Library**: Component testing utilities
-- **Nodemon**: Auto-restart for development
-- **PostCSS**: CSS processing and optimization
-
-## Project Structure
-
-### 1. Frontend Structure
-
-The frontend codebase is organized as follows:
-
-```bash
-src/
-│
-├── assets/           # Static resources like images, icons, fonts
-├── components/       # Reusable UI components (buttons, cards, inputs)
-│   ├── ui/
-│   ├── layout/
-│   └── features/
-├── forms/            # Form management (React Hook Form with Zod validation)
-├── pages/            # Views (Dashboard, Marketplace, etc.)
-├── hooks/            # Custom hooks for API calls, state management
-├── styles/           # TailwindCSS setup and custom styles
-├── types/            # TypeScript interfaces
-└── utils/            # Helper functions like date formatting, API utils
-```
-
-### 2. Backend Structure
-
-The backend is organized as a modular Express.js application:
-
-```bash
-backend/
-│
-├── controllers/      # Request handlers for each module
-│   ├── authController.js
-│   ├── civilEngineeringController.js
-│   ├── electricalSystemsController.js
-│   ├── projectController.js
-│   ├── weatherController.js
-│   └── userController.js
-│
-├── services/         # Business logic layer
-│   ├── civilEngineeringService.js
-│   ├── electricalSystemsService.js
-│   └── redisService.js
-│
-├── routes/           # API route definitions
-│   ├── auth.js
-│   ├── civilEngineering.js
-│   ├── electricalSystems.js
-│   ├── project.js
-│   ├── weather.js
-│   └── user.js
-│
-├── middleware/       # Custom middleware
-│   └── auth.js       # JWT authentication middleware
-│
-├── prisma/           # Database schema and migrations
-│   ├── schema.prisma
-│   ├── seed.js
-│   └── migrations/
-│
-├── data/             # Static data and seed files
-│   ├── specialists.js
-│   ├── projects.js
-│   ├── suppliers.js
-│   └── categories.js
-│
-├── tests/            # Test files and utilities
-├── utils/            # Helper functions
-├── config/           # Configuration files
-└── server.js         # Main application entry point
-```
-
-### 3. Database Schema Overview
-
-The Prisma schema defines a comprehensive data model with **25+ entities**:
-
-#### Core Entities
-- **Users**: Multi-role system (Admin, Contractor, Consultant, Supplier, Client)
-- **Projects**: Full project lifecycle management with status tracking
-- **Calculations**: Engineering calculations with input/output data storage
-
-#### Engineering Modules
-- **Civil Engineering**: Structural calculations, compliance checking
-- **Electrical Systems**: Voltage drop, cable sizing, transformer calculations
-- **Weather Data**: Regional weather information for monsoon planning
-- **Material Alerts**: Supply chain monitoring and price tracking
-
-#### Supporting Features
-- **Compliance Checks**: Malaysian standards validation
-- **Notifications**: Real-time messaging system
-- **Documents**: File upload and management
-- **Suppliers**: Contractor network and marketplace
-- **Standards**: Malaysian building code references
-
-#### Security & Audit
-- **Refresh Tokens**: Secure token rotation
-- **Audit Trail**: Creation/update timestamps on all entities
-- **Role-Based Access**: Granular permission system
-
-## Quick Start
+## 🚦 Quick Start
 
 ### Prerequisites
 - Node.js 20+ installed
@@ -207,7 +195,6 @@ The Prisma schema defines a comprehensive data model with **25+ entities**:
 - Git for version control
 
 ### 1. Clone & Install
-
 ```bash
 # Clone repository
 git clone https://github.com/kk666679/Malaysian-Contractors-Hub.git
@@ -222,15 +209,14 @@ npm install
 ```
 
 ### 2. Environment Setup
-
 **Frontend (.env)**
-```env
+```
 REACT_APP_API_URL=http://localhost:5000/api
 NODE_ENV=development
 ```
 
 **Backend (.env)**
-```env
+```
 DATABASE_URL="postgresql://username:password@localhost:5432/mchub_db"
 JWT_SECRET="your-super-secret-jwt-key"
 JWT_REFRESH_SECRET="your-refresh-token-secret"
@@ -239,7 +225,6 @@ PORT=5000
 ```
 
 ### 3. Database Setup
-
 ```bash
 cd backend
 npx prisma generate
@@ -248,7 +233,6 @@ npx prisma db seed
 ```
 
 ### 4. Start Development
-
 ```bash
 # Terminal 1: Frontend (port 5173)
 npm run dev
@@ -259,18 +243,16 @@ npm run dev
 ```
 
 ### 5. Access the Application
+- Frontend: http://localhost:5173
+- Backend API: http://localhost:5000/api
+- GCMS Module: http://localhost:5173/gcms
 
-- **Frontend**: http://localhost:5173
-- **Backend API**: http://localhost:5000/api
-- **GCMS Module**: http://localhost:5173/gcms
+### Demo Accounts
+- Admin: admin@mchub.com / admin123
+- Contractor: contractor@mchub.com / contractor123
+- Client: client@mchub.com / client123
 
-#### Demo Accounts
-
-- **Admin**: `admin@mchub.com` / `admin123`
-- **Contractor**: `contractor@mchub.com` / `contractor123`
-- **Client**: `client@mchub.com` / `client123`
-
-## Project Structure
+## 📁 Project Structure
 
 ```
 Malaysian-Contractors-Hub/
@@ -310,7 +292,7 @@ Malaysian-Contractors-Hub/
 └── public/                     # Static assets
 ```
 
-## Features
+## ✨ Features
 
 ### 🔐 Authentication & Security
 - JWT-based authentication with refresh tokens
@@ -320,44 +302,19 @@ Malaysian-Contractors-Hub/
 - Session management with Redis
 
 ### 🏗️ Core Engineering Modules
-
-#### Civil Engineering
-- Structural calculations (beams, columns, slabs)
-- Malaysian standards compliance (MS 1183:2015, UBBL 1984)
-- Load analysis and capacity calculations
-- Material properties and design reports
-
-#### Electrical Systems
-- Voltage drop calculations
-- Cable sizing and transformer calculations
-- Power grid simulation
-- Electrical safety compliance
-
-#### HVAC Systems
-- Load calculations and equipment sizing
-- Energy efficiency analysis
-- Ventilation design
-- Climate control optimization
-
-#### Sewerage & Drainage
-- Pipe sizing and flow calculations
-- Drainage system design
-- Wastewater treatment planning
-- Flood risk assessment
-
-#### ELV Systems
-- Low voltage system design
-- Security and communication systems
-- Fire alarm and detection systems
-- Building automation integration
+- **Civil Engineering:** Structural calculations, Malaysian standards compliance
+- **Electrical Systems:** Voltage drop calculations, cable sizing
+- **HVAC Systems:** Load calculations, energy efficiency analysis
+- **Sewerage & Drainage:** Pipe sizing, drainage system design
+- **ELV Systems:** Low voltage system design, security systems
 
 ### 🏢 GCMS Enterprise Features
-- **46 API Endpoints** across 6 modules
-- **Project Lifecycle Management** from planning to completion
-- **Financial Management** with invoicing and payment tracking
-- **Contract Management** with document control
-- **Compliance Monitoring** with safety checklists
-- **Subcontractor Management** with performance tracking
+- 46 API Endpoints across 6 modules
+- Project Lifecycle Management from planning to completion
+- Financial Management with invoicing and payment tracking
+- Contract Management with document control
+- Compliance Monitoring with safety checklists
+- Subcontractor Management with performance tracking
 
 ### 🌦️ Weather Integration
 - Regional weather data for Malaysian states
@@ -366,157 +323,74 @@ Malaysian-Contractors-Hub/
 - Historical weather pattern analysis
 
 ### 📱 Modern User Experience
-- **Progressive Web App** with offline functionality
-- **Real-time Notifications** via WebSocket
-- **Responsive Design** optimized for mobile/tablet
-- **Dark/Light Theme** with system preference detection
-- **Advanced Charts** with Recharts for data visualization
+- Progressive Web App with offline functionality
+- Real-time Notifications via WebSocket
+- Responsive Design optimized for mobile/tablet
+- Dark/Light Theme with system preference detection
+- Advanced Charts with Recharts for data visualization
 
-## API Documentation
+## 📡 API Documentation
 
 ### Base URLs
-- **Core API**: `http://localhost:5000/api`
-- **GCMS API**: `http://localhost:5000/api/gcms`
+- Core API: http://localhost:5000/api
+- GCMS API: http://localhost:5000/api/gcms
 
 ### Authentication
 All protected endpoints require JWT token:
-```bash
+```
 Authorization: Bearer <jwt_token>
 ```
 
 ### Core API Endpoints (25+)
+**Authentication**
+- POST /api/auth/register - User registration
+- POST /api/auth/login - User login
+- POST /api/auth/refresh-token - Token refresh
+- GET /api/auth/profile - User profile
 
-#### Authentication
-- `POST /api/auth/register` - User registration
-- `POST /api/auth/login` - User login
-- `POST /api/auth/refresh-token` - Token refresh
-- `GET /api/auth/profile` - User profile
+**Project Management**
+- GET /api/projects - List projects
+- POST /api/projects - Create project
+- PUT /api/projects/:id - Update project
+- DELETE /api/projects/:id - Delete project
 
-#### Project Management
-- `GET /api/projects` - List projects
-- `POST /api/projects` - Create project
-- `PUT /api/projects/:id` - Update project
-- `DELETE /api/projects/:id` - Delete project
-
-#### Engineering Calculations
-- `POST /api/civil-engineering/calculate-capacity`
-- `POST /api/electrical-systems/voltage-drop`
-- `POST /api/hvac/load-calculation`
-- `POST /api/sewerage/pipe-sizing`
+**Engineering Calculations**
+- POST /api/civil-engineering/calculate-capacity
+- POST /api/electrical-systems/voltage-drop
+- POST /api/hvac/load-calculation
+- POST /api/sewerage/pipe-sizing
 
 ### GCMS API Endpoints (46+)
+**Project Management**
+- GET /api/gcms/projects/dashboard - Project dashboard
+- POST /api/gcms/projects - Create GCMS project
+- GET /api/gcms/projects/:id/tasks - Project tasks
 
-#### Project Management
-- `GET /api/gcms/projects/dashboard` - Project dashboard
-- `POST /api/gcms/projects` - Create GCMS project
-- `GET /api/gcms/projects/:id/tasks` - Project tasks
+**Contract Management**
+- POST /api/gcms/contracts - Create contract
+- POST /api/gcms/contracts/documents - Upload document
+- GET /api/gcms/contracts/:id/change-orders - Change orders
 
-#### Contract Management
-- `POST /api/gcms/contracts` - Create contract
-- `POST /api/gcms/contracts/documents` - Upload document
-- `GET /api/gcms/contracts/:id/change-orders` - Change orders
+**Financial Management**
+- POST /api/gcms/financial/invoices - Create invoice
+- POST /api/gcms/financial/invoices/:id/payments - Record payment
+- GET /api/gcms/financial/reports/cash-flow - Cash flow report
 
-#### Financial Management
-- `POST /api/gcms/financial/invoices` - Create invoice
-- `POST /api/gcms/financial/invoices/:id/payments` - Record payment
-- `GET /api/gcms/financial/reports/cash-flow` - Cash flow report
+**Compliance & Safety**
+- POST /api/gcms/compliance/checklists - Create checklist
+- POST /api/gcms/compliance/incidents - Report incident
+- GET /api/gcms/compliance/reports - Compliance reports
 
-#### Compliance & Safety
-- `POST /api/gcms/compliance/checklists` - Create checklist
-- `POST /api/gcms/compliance/incidents` - Report incident
-- `GET /api/gcms/compliance/reports` - Compliance reports
-
-### API Usage Examples
-
-#### Authentication
-
-```bash
-# Register
-curl -X POST http://localhost:5000/api/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "contractor@example.com",
-    "name": "John Contractor",
-    "password": "securepassword123",
-    "role": "CONTRACTOR"
-  }'
-
-# Login
-curl -X POST http://localhost:5000/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "contractor@example.com",
-    "password": "securepassword123"
-  }'
-```
-
-#### GCMS Project Management
-
-```bash
-# Create GCMS project
-curl -X POST http://localhost:5000/api/gcms/projects \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
-  -d '{
-    "name": "KL Office Complex",
-    "code": "PROJ-001",
-    "type": "COMMERCIAL",
-    "budget": 5000000,
-    "startDate": "2024-01-15",
-    "endDate": "2024-12-15"
-  }'
-
-# Get project dashboard
-curl -X GET http://localhost:5000/api/gcms/projects/dashboard \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
-```
-
-#### Engineering Calculations
-
-```bash
-# Civil engineering calculation
-curl -X POST http://localhost:5000/api/civil-engineering/calculate-capacity \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
-  -d '{
-    "concreteGrade": "C30",
-    "steelGrade": "B500",
-    "beamWidth": 300,
-    "beamDepth": 600,
-    "loadValue": 25
-  }'
-```
-
-#### GCMS Financial Management
-
-```bash
-# Create invoice
-curl -X POST http://localhost:5000/api/gcms/financial/invoices \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
-  -d '{
-    "type": "STANDARD",
-    "clientName": "ABC Corp",
-    "dueDate": "2024-02-01",
-    "invoiceItems": [{
-      "description": "Construction services",
-      "quantity": 1,
-      "unitPrice": 50000
-    }]
-  }'
-```
-
-## Testing
+## 🧪 Testing
 
 ### Comprehensive Test Suite
-- **API Testing**: 25+ core endpoints + 46+ GCMS endpoints
-- **Authentication Flow**: Registration, login, token refresh
-- **Engineering Calculations**: All module calculations tested
-- **GCMS Operations**: Project, contract, financial workflows
-- **Error Handling**: Edge cases and validation testing
+- API Testing: 25+ core endpoints + 46+ GCMS endpoints
+- Authentication Flow: Registration, login, token refresh
+- Engineering Calculations: All module calculations tested
+- GCMS Operations: Project, contract, financial workflows
+- Error Handling: Edge cases and validation testing
 
 ### Running Tests
-
 ```bash
 # Backend API tests
 cd backend
@@ -538,10 +412,9 @@ npm test -- --grep "Civil Engineering"
 - ✅ Error handling and validation
 - ✅ Performance and load testing
 
-## Deployment
+## 🚀 Deployment
 
 ### Production Build
-
 ```bash
 # Frontend build
 npm run build
@@ -552,15 +425,13 @@ npm ci --only=production
 ```
 
 ### Vercel Deployment (Frontend)
-
-1. **Automatic Deployment**: Connected to GitHub for auto-deploy
-2. **Build Optimization**: Uses `--legacy-peer-deps` for React 19 compatibility
-3. **Environment Variables**: Configure in Vercel dashboard
-4. **Custom Domain**: Support for custom domain configuration
+- Automatic Deployment: Connected to GitHub for auto-deploy
+- Build Optimization: Uses --legacy-peer-deps for React 19 compatibility
+- Environment Variables: Configure in Vercel dashboard
+- Custom Domain: Support for custom domain configuration
 
 ### Backend Deployment Options
-
-#### Docker Deployment
+**Docker Deployment**
 ```dockerfile
 FROM node:20-alpine
 WORKDIR /app
@@ -571,22 +442,21 @@ EXPOSE 5000
 CMD ["npm", "start"]
 ```
 
-#### Cloud Platforms
-- **Railway**: Easy Node.js deployment
-- **Heroku**: Traditional PaaS deployment
-- **AWS/DigitalOcean**: VPS or container deployment
-- **Vercel**: Full-stack deployment option
+**Cloud Platforms**
+- Railway: Easy Node.js deployment
+- Heroku: Traditional PaaS deployment
+- AWS/DigitalOcean: VPS or container deployment
+- Vercel: Full-stack deployment option
 
-### Database Options
-- **Neon**: Serverless PostgreSQL (recommended)
-- **Supabase**: PostgreSQL with additional features
-- **Railway**: Integrated PostgreSQL
-- **AWS RDS**: Enterprise PostgreSQL
+**Database Options**
+- Neon: Serverless PostgreSQL (recommended)
+- Supabase: PostgreSQL with additional features
+- Railway: Integrated PostgreSQL
+- AWS RDS: Enterprise PostgreSQL
 
 ### Environment Configuration
-
-#### Production Environment Variables
-```env
+**Production Environment Variables**
+```
 # Database
 DATABASE_URL="postgresql://user:pass@host:5432/db"
 
@@ -603,50 +473,45 @@ SMTP_USER="your-email@gmail.com"
 SMTP_PASS="app-password"
 ```
 
-## Contributing
+## 🤝 Contributing
 
 We welcome contributions to MC-Hub! Please follow these guidelines:
 
 ### Development Workflow
-1. **Fork** the repository
-2. **Create** feature branch (`git checkout -b feature/amazing-feature`)
-3. **Commit** changes (`git commit -m 'Add amazing feature'`)
-4. **Push** to branch (`git push origin feature/amazing-feature`)
-5. **Open** Pull Request
+1. Fork the repository
+2. Create feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing-feature`)
+5. Open Pull Request
 
 ### Code Standards
-- **ESLint**: Follow existing linting rules
-- **Prettier**: Use for code formatting
-- **Testing**: Add tests for new features
-- **Documentation**: Update docs for API changes
+- ESLint: Follow existing linting rules
+- Prettier: Use for code formatting
+- Testing: Add tests for new features
+- Documentation: Update docs for API changes
 
 ### Areas for Contribution
-- 🐛 **Bug Fixes**: Report and fix issues
-- ✨ **New Features**: Enhance existing modules
-- 📚 **Documentation**: Improve guides and examples
-- 🧪 **Testing**: Increase test coverage
-- 🎨 **UI/UX**: Improve user experience
-- 🔧 **Performance**: Optimize code and queries
+- 🐛 Bug Fixes: Report and fix issues
+- ✨ New Features: Enhance existing modules
+- 📚 Documentation: Improve guides and examples
+- 🧪 Testing: Increase test coverage
+- 🎨 UI/UX: Improve user experience
+- 🔧 Performance: Optimize code and queries
 
-## License
+## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the LICENSE file for details.
 
----
+## 🔄 Latest Updates (v0.4.0)
 
-## 🚀 Latest Updates (v0.2.1)
+✅ **Advanced Intelligence Features:** ML, Edge Computing, Blockchain integration  
+✅ **GCMS Integration:** Complete General Contracting Management System  
+✅ **Build Optimization:** Fixed React 19 compatibility issues  
+✅ **Documentation:** Organized all docs in /docs folder  
+✅ **46 GCMS Endpoints:** Full enterprise contracting features  
+✅ **Modern Stack:** Updated to latest versions (React 19, Vite 7, TailwindCSS 4)  
+✅ **Production Ready:** Optimized for Vercel deployment  
 
-- ✅ **GCMS Integration**: Complete General Contracting Management System
-- ✅ **Build Optimization**: Fixed React 19 compatibility issues
-- ✅ **Documentation**: Organized all docs in `/docs` folder
-- ✅ **46 GCMS Endpoints**: Full enterprise contracting features
-- ✅ **Modern Stack**: Updated to latest versions (React 19, Vite 7, TailwindCSS 4)
-- ✅ **Production Ready**: Optimized for Vercel deployment
+**Next Release (v0.5.0):** Mobile app, advanced analytics, AI integration
 
-**Next Release (v0.3.0)**: Mobile app, advanced analytics, AI integration
-
----
-
-*For detailed implementation guides, API documentation, and deployment instructions, see the `/docs` folder.*
-
-
+For detailed implementation guides, API documentation, and deployment instructions, see the `/docs` folder.
