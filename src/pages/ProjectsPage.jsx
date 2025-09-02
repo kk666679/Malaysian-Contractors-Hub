@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowLeft, Search, Filter, MapPin, Calendar, DollarSign, Users, Building2, ChevronDown, Plus, Loader2 } from 'lucide-react'

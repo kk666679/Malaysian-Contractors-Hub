@@ -1,3 +1,4 @@
+import React from 'react';
 import { Button } from '../ui/button'
 import PageTransition from './PageTransition.jsx'
 import { ArrowLeft, Construction } from 'lucide-react'

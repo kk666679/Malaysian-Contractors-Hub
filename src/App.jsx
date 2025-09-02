@@ -1,3 +1,4 @@
+import React from 'react';
 import { BrowserRouter, Routes, Route, useLocation, Outlet } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ThemeProvider as StyledThemeProvider } from 'styled-components'

@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowLeft, Bell, TrendingUp, TrendingDown, AlertTriangle, Package, Truck, Calendar, Filter, ChevronDown, Search, BarChart3, Percent, DollarSign, ShoppingCart, Clock, Loader2 } from 'lucide-react'

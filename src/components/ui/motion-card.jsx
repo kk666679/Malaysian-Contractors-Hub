@@ -1,3 +1,4 @@
+import React from 'react';
 import { motion } from 'framer-motion'
 import { cardVariants, layoutTransition } from '../../lib/animations'
 import { cn } from '../../lib/utils'

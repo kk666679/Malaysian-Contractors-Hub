@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowLeft, Search, Filter, MapPin, Star, Clock, Briefcase, Award, ChevronDown, Users, Phone, Mail, Calendar } from 'lucide-react'

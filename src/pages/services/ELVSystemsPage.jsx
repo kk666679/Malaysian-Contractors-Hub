@@ -1,4 +1,3 @@
-import React from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { Radio, Wifi, ShieldCheck, Video, Cpu } from 'lucide-react'

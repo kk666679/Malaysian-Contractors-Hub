@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 
 const AIAssistant = () => {

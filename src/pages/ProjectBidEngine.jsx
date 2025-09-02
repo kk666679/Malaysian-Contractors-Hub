@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowLeft, Calculator, FileText, Clock, DollarSign, BarChart3, Building, Truck, Users } from 'lucide-react'

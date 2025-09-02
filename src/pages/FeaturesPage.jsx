@@ -1,3 +1,4 @@
+import React from 'react';
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { Calculator, Building, Users, Cloud, Package, Building2, Search } from 'lucide-react'

@@ -1,4 +1,3 @@
-import React from 'react';
 import AdvancedIntelligenceDashboard from '../components/v4/AdvancedIntelligenceDashboard';
 
 const AdvancedIntelligencePage = () => {

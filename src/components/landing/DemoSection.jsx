@@ -1,3 +1,4 @@
+import React from 'react';
 import { motion } from 'framer-motion'
 import { Play, Building2 } from 'lucide-react'
 

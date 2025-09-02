@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Building2, MapPin, Calendar, DollarSign, User, FileText, Loader2 } from 'lucide-react';

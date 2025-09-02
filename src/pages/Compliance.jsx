@@ -1,3 +1,4 @@
+import React from 'react';
 import ComplianceChecker from '../components/compliance/ComplianceChecker';
 
 const Compliance = () => {

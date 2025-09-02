@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowLeft, Search, Filter, FileText, Shield, AlertTriangle, CheckCircle, Clock, Download, ExternalLink, ChevronDown } from 'lucide-react'

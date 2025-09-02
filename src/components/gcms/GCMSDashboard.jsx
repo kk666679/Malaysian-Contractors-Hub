@@ -1,3 +1,4 @@
+import React from 'react';
 // GCMS Main Dashboard Component
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';

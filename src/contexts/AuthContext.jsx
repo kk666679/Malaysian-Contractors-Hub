@@ -1,4 +1,3 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
 
 // Auth Context
 const AuthContext = createContext();

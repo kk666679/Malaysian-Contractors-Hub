@@ -1,3 +1,4 @@
+import React from 'react';
 import BidGenerator from '../components/bid/BidGenerator';
 
 const BidEngine = () => {

@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useEffect } from 'react';
 import { Download, X } from 'lucide-react';
 import { Button } from '../ui/button';

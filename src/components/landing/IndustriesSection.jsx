@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { HardHat, Zap, Wifi, Wind, Droplets, Building } from 'lucide-react'

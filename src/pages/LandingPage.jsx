@@ -1,3 +1,4 @@
+import React from 'react';
 import { motion } from "framer-motion";
 import { useTheme } from "../hooks/useTheme";
 import Navbar from "../components/layout/Navbar";
