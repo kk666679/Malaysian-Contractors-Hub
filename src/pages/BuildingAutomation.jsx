@@ -1,8 +1,13 @@
-import { Button } from '../components/ui/button.jsx'
-import { ArrowLeft, Building2 } from 'lucide-react'
-import PageTransition from '../components/features/PageTransition.jsx'
+import React, { useState } from 'react';
+import { Button } from '../components/ui/button.jsx';
+import { ArrowLeft, Building2 } from 'lucide-react';
+import PageTransition from '../components/features/PageTransition.jsx';
+import IoTDashboard from '../components/iot/IoTDashboard.jsx';
 
 const BuildingAutomation = () => {
+  const [activeTab, setActiveTab] = useState('monitoring');
+  const [selectedSite, setSelectedSite] = useState('site-001');
+
   return (
     <PageTransition>
       <section className="py-16 px-4 sm:px-6 lg:px-8">
@@ -17,24 +22,45 @@ const BuildingAutomation = () => {
               Back to Features
             </Button>
           </div>
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Building Automation</h2>
+          
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold mb-4">Building Automation & IoT Monitoring</h2>
             <p className="text-lg text-text-secondary max-w-3xl mx-auto">
-              Connect with building automation systems for smart building integration and management.
+              Real-time monitoring and control of construction site sensors and building automation systems.
             </p>
           </div>
-          <div className="max-w-3xl mx-auto text-left space-y-6">
-            <p>
-              This page provides tools and integrations to manage and monitor building automation systems,
-              including HVAC, lighting, security, and energy management.
-            </p>
-            <p>
-              Features will include real-time system status, alerts, control interfaces, and analytics dashboards.
-            </p>
-            <p>
-              Stay tuned for upcoming updates as we build out this functionality.
-            </p>
+
+          <div className="flex space-x-4 mb-6">
+            {['monitoring', 'analytics', 'alerts'].map(tab => (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`px-4 py-2 rounded ${
+                  activeTab === tab ? 'bg-blue-600 text-white' : 'bg-gray-200'
+                }`}
+              >
+                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+              </button>
+            ))}
           </div>
+
+          {activeTab === 'monitoring' && (
+            <IoTDashboard siteId={selectedSite} />
+          )}
+
+          {activeTab === 'analytics' && (
+            <div className="bg-white p-6 rounded-lg shadow">
+              <h3 className="text-xl font-semibold mb-4">Site Analytics</h3>
+              <p>Advanced analytics and reporting for IoT sensor data.</p>
+            </div>
+          )}
+
+          {activeTab === 'alerts' && (
+            <div className="bg-white p-6 rounded-lg shadow">
+              <h3 className="text-xl font-semibold mb-4">Alert Management</h3>
+              <p>Configure thresholds and manage alert notifications.</p>
+            </div>
+          )}
         </div>
       </section>
     </PageTransition>

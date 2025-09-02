@@ -1,87 +1,134 @@
-// Internationalization utility for Malaysian Contractors Hub
-// Simple i18n implementation to address JSX internationalization issues
-
 const translations = {
   en: {
-    // Common
-    'loading': 'Loading...',
-    'save': 'Save',
-    'cancel': 'Cancel',
-    'delete': 'Delete',
-    'edit': 'Edit',
-    'create': 'Create',
-    'update': 'Update',
-    
-    // Navigation
-    'dashboard': 'Dashboard',
-    'projects': 'Projects',
-    'services': 'Services',
-    'marketplace': 'Marketplace',
-    'compliance': 'Compliance',
-    
-    // Forms
-    'email': 'Email',
-    'password': 'Password',
-    'name': 'Name',
-    'description': 'Description',
-    'location': 'Location',
-    'budget': 'Budget',
-    
-    // Status
-    'active': 'Active',
-    'inactive': 'Inactive',
-    'completed': 'Completed',
-    'pending': 'Pending',
-    'in_progress': 'In Progress'
+    common: {
+      loading: 'Loading...',
+      save: 'Save',
+      cancel: 'Cancel',
+      delete: 'Delete',
+      edit: 'Edit',
+      search: 'Search',
+      filter: 'Filter'
+    },
+    dashboard: {
+      title: 'Dashboard',
+      projects: 'Projects',
+      tasks: 'Tasks',
+      notifications: 'Notifications',
+      analytics: 'Analytics'
+    },
+    projects: {
+      title: 'Projects',
+      create: 'Create Project',
+      name: 'Project Name',
+      description: 'Description',
+      budget: 'Budget',
+      status: 'Status',
+      startDate: 'Start Date',
+      endDate: 'End Date'
+    }
   },
   ms: {
-    // Common
-    'loading': 'Memuatkan...',
-    'save': 'Simpan',
-    'cancel': 'Batal',
-    'delete': 'Padam',
-    'edit': 'Edit',
-    'create': 'Cipta',
-    'update': 'Kemaskini',
-    
-    // Navigation
-    'dashboard': 'Papan Pemuka',
-    'projects': 'Projek',
-    'services': 'Perkhidmatan',
-    'marketplace': 'Pasaran',
-    'compliance': 'Pematuhan',
-    
-    // Forms
-    'email': 'E-mel',
-    'password': 'Kata Laluan',
-    'name': 'Nama',
-    'description': 'Penerangan',
-    'location': 'Lokasi',
-    'budget': 'Bajet',
-    
-    // Status
-    'active': 'Aktif',
-    'inactive': 'Tidak Aktif',
-    'completed': 'Selesai',
-    'pending': 'Menunggu',
-    'in_progress': 'Dalam Proses'
+    common: {
+      loading: 'Memuatkan...',
+      save: 'Simpan',
+      cancel: 'Batal',
+      delete: 'Padam',
+      edit: 'Edit',
+      search: 'Cari',
+      filter: 'Tapis'
+    },
+    dashboard: {
+      title: 'Papan Pemuka',
+      projects: 'Projek',
+      tasks: 'Tugasan',
+      notifications: 'Pemberitahuan',
+      analytics: 'Analitik'
+    },
+    projects: {
+      title: 'Projek',
+      create: 'Cipta Projek',
+      name: 'Nama Projek',
+      description: 'Penerangan',
+      budget: 'Bajet',
+      status: 'Status',
+      startDate: 'Tarikh Mula',
+      endDate: 'Tarikh Tamat'
+    }
+  },
+  zh: {
+    common: {
+      loading: '加载中...',
+      save: '保存',
+      cancel: '取消',
+      delete: '删除',
+      edit: '编辑',
+      search: '搜索',
+      filter: '筛选'
+    },
+    dashboard: {
+      title: '仪表板',
+      projects: '项目',
+      tasks: '任务',
+      notifications: '通知',
+      analytics: '分析'
+    },
+    projects: {
+      title: '项目',
+      create: '创建项目',
+      name: '项目名称',
+      description: '描述',
+      budget: '预算',
+      status: '状态',
+      startDate: '开始日期',
+      endDate: '结束日期'
+    }
   }
 };
 
-let currentLanguage = 'en';
+class I18n {
+  constructor() {
+    this.currentLanguage = localStorage.getItem('language') || 'en';
+  }
 
-export const setLanguage = (lang) => {
-  currentLanguage = lang;
-  localStorage.setItem('language', lang);
-};
+  setLanguage(lang) {
+    this.currentLanguage = lang;
+    localStorage.setItem('language', lang);
+    window.dispatchEvent(new CustomEvent('languageChanged', { detail: lang }));
+  }
 
-export const getLanguage = () => {
-  return currentLanguage || localStorage.getItem('language') || 'en';
-};
+  t(key) {
+    const keys = key.split('.');
+    let value = translations[this.currentLanguage];
+    
+    for (const k of keys) {
+      value = value?.[k];
+    }
+    
+    return value || key;
+  }
 
-export const t = (key) => {
-  const lang = getLanguage();
-  return translations[lang]?.[key] || translations.en[key] || key;
-};
+  formatCurrency(amount, currency = 'MYR') {
+    const locale = {
+      en: 'en-MY',
+      ms: 'ms-MY',
+      zh: 'zh-CN'
+    }[this.currentLanguage] || 'en-MY';
 
-export default { t, setLanguage, getLanguage };
+    return new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency
+    }).format(amount);
+  }
+
+  formatDate(date) {
+    const locale = {
+      en: 'en-MY',
+      ms: 'ms-MY',
+      zh: 'zh-CN'
+    }[this.currentLanguage] || 'en-MY';
+
+    return new Intl.DateTimeFormat(locale).format(new Date(date));
+  }
+}
+
+export default new I18n();

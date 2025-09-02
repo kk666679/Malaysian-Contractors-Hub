@@ -1,146 +1,60 @@
-import crypto from 'crypto';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
+import mongoSanitize from 'express-mongo-sanitize';
+import xss from 'xss';
 
-// Security headers middleware
-export const securityHeaders = (req, res, next) => {
-  // Generate nonce for CSP
-  const nonce = crypto.randomBytes(16).toString('base64');
-  res.locals.nonce = nonce;
+// Enhanced security headers
+export const securityHeaders = helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      imgSrc: ["'self'", "data:", "https:"],
+      scriptSrc: ["'self'"],
+      connectSrc: ["'self'", "wss:", "ws:"]
+    }
+  },
+  crossOriginEmbedderPolicy: false
+});
 
-  // Set security headers
-  res.set({
-    // Prevent XSS attacks
-    'X-XSS-Protection': '1; mode=block',
-    
-    // Prevent MIME type sniffing
-    'X-Content-Type-Options': 'nosniff',
-    
-    // Prevent clickjacking
-    'X-Frame-Options': 'DENY',
-    
-    // Force HTTPS in production
-    'Strict-Transport-Security': process.env.NODE_ENV === 'production' 
-      ? 'max-age=31536000; includeSubDomains; preload' 
-      : '',
-    
-    // Content Security Policy
-    'Content-Security-Policy': `
-      default-src 'self';
-      script-src 'self' 'nonce-${nonce}' 'unsafe-inline';
-      style-src 'self' 'unsafe-inline';
-      img-src 'self' data: https:;
-      font-src 'self' https:;
-      connect-src 'self' https:;
-      frame-ancestors 'none';
-    `.replace(/\s+/g, ' ').trim(),
-    
-    // Referrer Policy
-    'Referrer-Policy': 'strict-origin-when-cross-origin',
-    
-    // Permissions Policy
-    'Permissions-Policy': 'geolocation=(), microphone=(), camera=()'
-  });
-
-  next();
-};
-
-// Input sanitization middleware
+// Input sanitization
 export const sanitizeInput = (req, res, next) => {
-  const sanitize = (obj) => {
-    if (typeof obj === 'string') {
-      // Remove potential XSS patterns
-      return obj
-        .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
-        .replace(/javascript:/gi, '')
-        .replace(/on\w+\s*=/gi, '')
-        .trim();
+  // Sanitize against NoSQL injection
+  mongoSanitize()(req, res, () => {
+    // XSS protection
+    if (req.body) {
+      req.body = sanitizeObject(req.body);
     }
-    
-    if (Array.isArray(obj)) {
-      return obj.map(sanitize);
+    if (req.query) {
+      req.query = sanitizeObject(req.query);
     }
-    
-    if (obj && typeof obj === 'object') {
-      const sanitized = {};
-      for (const [key, value] of Object.entries(obj)) {
-        sanitized[key] = sanitize(value);
-      }
-      return sanitized;
+    if (req.params) {
+      req.params = sanitizeObject(req.params);
     }
-    
-    return obj;
-  };
-
-  if (req.body) {
-    req.body = sanitize(req.body);
-  }
-  
-  if (req.query) {
-    req.query = sanitize(req.query);
-  }
-  
-  if (req.params) {
-    req.params = sanitize(req.params);
-  }
-
-  next();
-};
-
-// Request size limiter
-export const requestSizeLimiter = (maxSize = '10mb') => {
-  return (req, res, next) => {
-    const contentLength = parseInt(req.headers['content-length'] || '0');
-    const maxBytes = parseSize(maxSize);
-    
-    if (contentLength > maxBytes) {
-      return res.status(413).json({
-        success: false,
-        message: 'Request entity too large'
-      });
-    }
-    
     next();
-  };
+  });
 };
 
-// Parse size string to bytes
-const parseSize = (size) => {
-  const units = {
-    b: 1,
-    kb: 1024,
-    mb: 1024 * 1024,
-    gb: 1024 * 1024 * 1024
-  };
-  
-  const match = size.toString().toLowerCase().match(/^(\d+(?:\.\d+)?)\s*(b|kb|mb|gb)?$/);
-  if (!match) return 0;
-  
-  const value = parseFloat(match[1]);
-  const unit = match[2] || 'b';
-  
-  return Math.floor(value * units[unit]);
-};
-
-// IP whitelist middleware
-export const ipWhitelist = (allowedIPs = []) => {
-  return (req, res, next) => {
-    if (allowedIPs.length === 0) {
-      return next(); // No restrictions if no IPs specified
+// Recursive object sanitization
+const sanitizeObject = (obj) => {
+  if (typeof obj === 'string') {
+    return xss(obj);
+  }
+  if (Array.isArray(obj)) {
+    return obj.map(sanitizeObject);
+  }
+  if (obj && typeof obj === 'object') {
+    const sanitized = {};
+    for (const [key, value] of Object.entries(obj)) {
+      sanitized[xss(key)] = sanitizeObject(value);
     }
-    
-    const clientIP = req.ip || req.connection.remoteAddress;
-    
-    if (!allowedIPs.includes(clientIP)) {
-      return res.status(403).json({
-        success: false,
-        message: 'Access denied from this IP address'
-      });
-    }
-    
-    next();
-  };
+    return sanitized;
+  }
+  return obj;
 };
 
-// Request logging middleware
+// Request logging with security info
 export const requestLogger = (req, res, next) => {
   const start = Date.now();
   
@@ -156,19 +70,50 @@ export const requestLogger = (req, res, next) => {
       timestamp: new Date().toISOString()
     };
     
-    // Log to console in development, could be sent to logging service in production
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Request:', logData);
+    // Log suspicious activity
+    if (res.statusCode === 429 || res.statusCode >= 400) {
+      console.warn('Security Alert:', logData);
     }
   });
   
   next();
 };
 
-export default {
-  securityHeaders,
-  sanitizeInput,
-  requestSizeLimiter,
-  ipWhitelist,
-  requestLogger
+// API key validation
+export const validateApiKey = (req, res, next) => {
+  const apiKey = req.headers['x-api-key'];
+  
+  if (!apiKey) {
+    return res.status(401).json({
+      success: false,
+      message: 'API key required'
+    });
+  }
+  
+  // Validate API key format and existence
+  if (!/^[a-zA-Z0-9]{32}$/.test(apiKey)) {
+    return res.status(401).json({
+      success: false,
+      message: 'Invalid API key format'
+    });
+  }
+  
+  // Add API key validation logic here
+  next();
+};
+
+// IP whitelist middleware
+export const ipWhitelist = (allowedIPs = []) => {
+  return (req, res, next) => {
+    const clientIP = req.ip || req.connection.remoteAddress;
+    
+    if (allowedIPs.length > 0 && !allowedIPs.includes(clientIP)) {
+      return res.status(403).json({
+        success: false,
+        message: 'Access denied from this IP address'
+      });
+    }
+    
+    next();
+  };
 };

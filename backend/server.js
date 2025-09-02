@@ -8,6 +8,9 @@ import socketService from './services/socketService.js';
 import { errorHandler, notFound } from './middleware/errorHandler.js';
 import { securityHeaders, sanitizeInput, requestLogger } from './middleware/security.js';
 import { apiLimiter } from './middleware/rateLimiter.js';
+import { cacheMiddleware } from './middleware/cache.js';
+import { compressionMiddleware } from './middleware/compression.js';
+import { queryOptimizer } from './middleware/queryOptimizer.js';
 
 // Import route modules
 import authRoutes from './routes/auth.js';
@@ -29,11 +32,18 @@ import elvRoutes from './routes/elv.js';
 import adminRoutes from './routes/admin.js';
 import bidRoutes from './routes/bid.js';
 import healthRoutes from './routes/health.js';
+import aiRoutes from './routes/ai.js';
+import analyticsRoutes from './routes/analytics.js';
+import iotRoutes from './routes/iot.js';
+import v4Routes from './routes/v4.js';
 
 // Create Express app
 const app = express();
 const server = createServer(app);
 const PORT = process.env.PORT || 5000;
+
+// Performance middleware
+app.use(compressionMiddleware);
 
 // Security middleware
 app.use(securityHeaders);
@@ -57,8 +67,15 @@ app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 // Logging middleware
 app.use(morgan('dev'));
 
+// Query optimization
+app.use('/api/', queryOptimizer);
+
 // Rate limiting
 app.use('/api/', apiLimiter);
+
+// Cache middleware for read-only endpoints
+app.use('/api/weather', cacheMiddleware(600)); // 10 minutes
+app.use('/api/civil-engineering/standards', cacheMiddleware(3600)); // 1 hour
 
 // Health check routes (no rate limiting)
 app.use('/health', healthRoutes);
@@ -82,6 +99,10 @@ app.use('/api/sewerage', sewerageRoutes);
 app.use('/api/elv', elvRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/bid', bidRoutes);
+app.use('/api/ai', aiRoutes);
+app.use('/api/analytics', analyticsRoutes);
+app.use('/api/iot', iotRoutes);
+app.use('/api/v4', v4Routes);
 
 // 404 handler
 app.use(notFound);

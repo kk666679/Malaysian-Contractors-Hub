@@ -1,0 +1,57 @@
+// IoT Monitoring Extension Schema
+
+model SensorReading {
+  id          String   @id @default(cuid())
+  siteId      String
+  sensorType  String   // temperature, humidity, co2, noise, dust
+  value       Float
+  unit        String
+  status      String   @default("NORMAL") // NORMAL, WARNING, ALERT
+  timestamp   DateTime @default(now())
+  createdAt   DateTime @default(now())
+
+  @@map("sensor_readings")
+}
+
+model Alert {
+  id        String   @id @default(cuid())
+  type      String   // SENSOR_THRESHOLD, SYSTEM_ERROR, MAINTENANCE
+  severity  String   // LOW, MEDIUM, HIGH, CRITICAL
+  message   String
+  siteId    String?
+  resolved  Boolean  @default(false)
+  metadata  Json?
+  createdAt DateTime @default(now())
+  resolvedAt DateTime?
+
+  @@map("alerts")
+}
+
+model IoTDevice {
+  id          String   @id @default(cuid())
+  deviceId    String   @unique
+  name        String
+  type        String   // sensor, controller, gateway
+  siteId      String
+  location    String?
+  status      String   @default("ACTIVE") // ACTIVE, INACTIVE, MAINTENANCE
+  lastSeen    DateTime?
+  metadata    Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("iot_devices")
+}
+
+model Site {
+  id          String   @id @default(cuid())
+  name        String
+  location    String
+  projectId   String?
+  coordinates Json?    // {lat, lng}
+  timezone    String   @default("Asia/Kuala_Lumpur")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("sites")
+}

@@ -1,0 +1,104 @@
+// v0.4.0 Advanced Intelligence Schema Extensions
+
+model MLModel {
+  id          String   @id @default(cuid())
+  name        String
+  type        String   // 'cost_prediction', 'risk_assessment', 'maintenance'
+  version     String
+  accuracy    Float?
+  trainedAt   DateTime
+  parameters  Json
+  status      String   @default("ACTIVE")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("ml_models")
+}
+
+model ARSession {
+  id            String   @id @default(cuid())
+  projectId     String
+  userId        String
+  status        String   @default("ACTIVE")
+  startTime     DateTime @default(now())
+  endTime       DateTime?
+  measurements  Json[]
+  annotations   Json[]
+  createdAt     DateTime @default(now())
+
+  @@map("ar_sessions")
+}
+
+model ARMeasurement {
+  id        String   @id @default(cuid())
+  sessionId String
+  projectId String
+  type      String   // 'distance', 'area', 'volume'
+  value     Float
+  unit      String
+  data      Json
+  createdAt DateTime @default(now())
+
+  @@map("ar_measurements")
+}
+
+model VRWalkthrough {
+  id        String   @id @default(cuid())
+  projectId String
+  modelUrl  String
+  data      Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("vr_walkthroughs")
+}
+
+model BlockchainTransaction {
+  id            String   @id @default(cuid())
+  blockIndex    Int
+  transactionId String   @unique
+  type          String
+  data          Json
+  hash          String
+  timestamp     DateTime @default(now())
+
+  @@map("blockchain_transactions")
+}
+
+model SmartContract {
+  id          String   @id @default(cuid())
+  projectId   String
+  type        String   // 'MILESTONE_CONTRACT', 'COMPLIANCE_RECORD'
+  status      String   @default("ACTIVE")
+  data        Json
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("smart_contracts")
+}
+
+model EdgeNode {
+  id               String   @id @default(cuid())
+  siteId           String
+  status           String   @default("ACTIVE")
+  processingLoad   Float    @default(0)
+  lastHeartbeat    DateTime @default(now())
+  capabilities     Json
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@map("edge_nodes")
+}
+
+model PredictiveMaintenance {
+  id                String   @id @default(cuid())
+  deviceId          String
+  siteId            String
+  maintenanceScore  Float
+  urgency           String   // 'LOW', 'MEDIUM', 'HIGH', 'CRITICAL'
+  predictedFailure  DateTime?
+  recommendations   Json[]
+  createdAt         DateTime @default(now())
+
+  @@map("predictive_maintenance")
+}

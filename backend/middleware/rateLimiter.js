@@ -87,9 +87,24 @@ export const strictLimiter = createRateLimiter({
   message: 'Rate limit exceeded for this endpoint'
 });
 
+// Advanced rate limiter with different tiers
+export const tieredLimiter = (userRole) => {
+  const limits = {
+    ADMIN: { maxRequests: 1000, windowMs: 15 * 60 * 1000 },
+    PROJECT_MANAGER: { maxRequests: 500, windowMs: 15 * 60 * 1000 },
+    CONTRACTOR: { maxRequests: 200, windowMs: 15 * 60 * 1000 },
+    CLIENT: { maxRequests: 100, windowMs: 15 * 60 * 1000 },
+    default: { maxRequests: 50, windowMs: 15 * 60 * 1000 }
+  };
+  
+  const config = limits[userRole] || limits.default;
+  return createRateLimiter(config);
+};
+
 export default {
   createRateLimiter,
   authLimiter,
   apiLimiter,
-  strictLimiter
+  strictLimiter,
+  tieredLimiter
 };
